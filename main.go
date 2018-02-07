@@ -1,24 +1,19 @@
 package main
 
 import (
-	"io/ioutil"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	index, err := ioutil.ReadFile("public/index.html")
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
+	someData := "some data"
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       string(index),
+		Body:       someData,
 		Headers: map[string]string{
-			"Content-Type": "text/html",
+			"Content-Type": "text/plain",
 		},
 	}, nil
 
