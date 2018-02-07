@@ -5,7 +5,7 @@ phases:
   install:
     commands:
 
-      # AWS Codebuild Go images use /go for the $GOPATH so let's symlink our 
+      # AWS Codebuild Go images use /go for the $GOPATH so let's symlink our
       # application source code into that directory structure.
       - ln -s "${CODEBUILD_SRC_DIR}" "/go/src/main"
 
@@ -36,9 +36,8 @@ phases:
       # Build our go application
       - go build -o main
 
-      # Copy static assets to S3, and package application with AWS CloudFormation/SAM
-      - aws s3 cp --recursive public/ s3://$WEBSITE_S3_BUCKET/public/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-      - sed -i -e "s|assets/|$WEBSITE_S3_PREFIX/public/assets/|g" public/index.html
+      # Copy static webapp assets to S3, and package application with AWS CloudFormation/SAM
+      - aws s3 cp --recursive webapp/ s3://$WEBSITE_S3_BUCKET/
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
 artifacts:
