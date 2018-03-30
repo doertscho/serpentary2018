@@ -12,7 +12,7 @@ Resources:
   GetSomeData:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: main
+      Handler: lambdas/main
       Runtime: go1.x
       Role:
         Fn::ImportValue:

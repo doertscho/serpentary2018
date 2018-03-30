@@ -5,39 +5,65 @@ phases:
   install:
     commands:
 
-      # AWS Codebuild Go images use /go for the $GOPATH so let's symlink our
-      # application source code into that directory structure.
-      - ln -s "${CODEBUILD_SRC_DIR}" "/go/src/main"
+      # Install protobuf compiler
+      # - ...
 
+      # == Go environment setup ==
+      # Symlink Lambdas source directory into GOPATH
+      - ln -s "${CODEBUILD_SRC_DIR}/lambdas" "$(go env GOPATH)/src/main"
       # Install golint
       - go get -u github.com/golang/lint/golint
 
   pre_build:
     commands:
 
-      # Make sure we're in the project directory within our GOPATH
-      - cd "/go/src/main"
+      # == Protocol Buffers compilation ==
+      # Enter the Protocol Buffers source directory
+      # - cd "${CODEBUILD_SRC_DIR}/protos"
+      # Build Go version
+      # - ...
+      # Build TypeScript version
+      # - ...
 
+      # == Lambdas source code checks ==
+      # Enter the Lambdas source directory (via the symlink)
+      - cd "$(go env GOPATH)/src/main"
       # Fetch all dependencies
       - go get ./...
-
       # Ensure code passes all lint tests
       - golint -set_exit_status
-
       # Check for common Go application problems with 'go tool vet'
       - go tool vet .
-
       # Run all tests included with our application
       - go test .
+
+      # == Web App source code checks ==
+      # Enter the Web App source directory
+      # - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Run all tests
+      # - ...
 
   build:
     commands:
 
-      # Build our go application
+      # == Go build ==
+      # Enter the Go source directory (via the symlink)
+      - cd "$(go env GOPATH)/src/main"
+      # Build our Go application
       - go build -o main
 
-      # Copy static webapp assets to S3, and package application with AWS CloudFormation/SAM
-      - aws s3 cp --recursive webapp/ s3://$WEBSITE_S3_BUCKET/
+      # == Web App build ==
+      # Enter the Web App root directory
+      - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Run webpack to perform compilation and packaging
+      - webpack
+
+      # == AWS deployment ==
+      # Enter the project root directory
+      - cd "${CODEBUILD_SRC_DIR}"
+      # Copy static webapp assets to S3
+      - aws s3 cp --recursive webapp/dist/ s3://$WEBSITE_S3_BUCKET/
+      # Package application with AWS CloudFormation/SAM
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
 artifacts:
