@@ -46,7 +46,7 @@ phases:
 
       # == Go build ==
       # Enter the Go source directory (via the symlink)
-      - cd "go/src/main"
+      - cd "/go/src/main"
       # Build our Go application
       - go build -o main
 
