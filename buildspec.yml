@@ -15,6 +15,10 @@ phases:
       - go get -u github.com/golang/lint/golint
 
       # == webpack setup ==
+      # Install nodejs and npm
+      - apt-get update
+      - apt-get install nodejs
+      - apt-get install npm
       # Install webpack and CLI tools via npm
       - npm install -g webpack
       - npm install -g webpack-cli
