@@ -10,9 +10,14 @@ phases:
 
       # == Go environment setup ==
       # Symlink Lambdas source directory into GOPATH
-      - ln -s "${CODEBUILD_SRC_DIR}/lambdas" "$(go env GOPATH)/src/main"
+      - ln -s "${CODEBUILD_SRC_DIR}/lambdas" "/go/src/main"
       # Install golint
       - go get -u github.com/golang/lint/golint
+
+      # == webpack setup ==
+      # Install webpack and CLI tools via npm
+      - npm install -g webpack
+      - npm install -g webpack-cli
 
   pre_build:
     commands:
@@ -27,7 +32,7 @@ phases:
 
       # == Lambdas source code checks ==
       # Enter the Lambdas source directory (via the symlink)
-      - cd "$(go env GOPATH)/src/main"
+      - cd "/go/src/main"
       # Fetch all dependencies
       - go get ./...
       # Ensure code passes all lint tests
@@ -39,7 +44,9 @@ phases:
 
       # == Web App source code checks ==
       # Enter the Web App source directory
-      # - cd "${CODEBUILD_SRC_DIR}/webapp"
+      - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Fetch dependencies
+      - npm install
       # Run all tests
       # - ...
 
