@@ -5,33 +5,18 @@ phases:
   install:
     commands:
 
-      # Install protobuf compiler
-      # - ...
-
       # == Go environment setup ==
       # Symlink Lambdas source directory into GOPATH
       - ln -s "${CODEBUILD_SRC_DIR}/lambdas" "/go/src/main"
-      # Install golint
-      - go get -u github.com/golang/lint/golint
-
-      # == webpack setup ==
-      # Install nodejs and npm
-      - apt-get update
-      - apt-get -y install nodejs
-      - apt-get -y install npm
-      # Install webpack and CLI tools via npm
-      - npm config set strict-ssl false
-      - npm install -g webpack
-      - npm install -g webpack-cli
 
   pre_build:
     commands:
 
       # == Protocol Buffers compilation ==
       # Enter the Protocol Buffers source directory
-      # - cd "${CODEBUILD_SRC_DIR}/protos"
+      - cd "${CODEBUILD_SRC_DIR}/protos"
       # Build Go version
-      # - ...
+      - protoc --go_out=../lambdas/generated-protos *
       # Build TypeScript version
       # - ...
 
@@ -60,7 +45,7 @@ phases:
 
       # == Go build ==
       # Enter the Go source directory (via the symlink)
-      - cd "$(go env GOPATH)/src/main"
+      - cd "go/src/main"
       # Build our Go application
       - go build -o main
 
