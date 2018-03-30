@@ -16,6 +16,7 @@ phases:
       # Enter the Protocol Buffers source directory
       - cd "${CODEBUILD_SRC_DIR}/protos"
       # Build Go version
+      - mkdir "${CODEBUILD_SRC_DIR}/lambdas/generated-protos"
       - protoc --go_out=../lambdas/generated-protos *
       # Build TypeScript version
       # - ...
