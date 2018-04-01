@@ -13,9 +13,6 @@ phases:
     commands:
 
       # == Fetch dependencies ==
-      # Get Go package dependencies for Lambdas
-      - cd "/go/src/main"
-      - go get ./...
       # Get npm package dependencies for Web App
       - cd "${CODEBUILD_SRC_DIR}/webapp"
       - npm install
@@ -33,6 +30,8 @@ phases:
       # == Lambdas source code checks ==
       # Enter the Lambdas source directory (via the symlink)
       - cd "/go/src/main"
+      # Get Go package dependencies for Lambdas
+      - go get ./...
       # Ensure code passes all lint tests
       - golint -set_exit_status
       # Check for common Go application problems with 'go tool vet'
