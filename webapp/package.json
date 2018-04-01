@@ -11,8 +11,12 @@
   "dependencies": {
     "@types/react": "^16.1.0",
     "@types/react-dom": "^16.0.4",
+    "@types/react-redux": "^5.0.15",
+    "protobufjs": "^6.8.6",
     "react": "^16.3.0",
-    "react-dom": "^16.3.0"
+    "react-dom": "^16.3.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^4.0.1",

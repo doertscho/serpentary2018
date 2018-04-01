@@ -1,11 +1,24 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
-import { Hello } from "./components/Hello";
+import { createStore } from 'redux'
+import { StoreState } from './types'
+import { models } from './types/models.js'
+import { rootReducer } from './reducers'
+import { Provider } from 'react-redux';
 
-require('file-loader?name=[name].[ext]!../index.html');
+import { VisibleMatchList } from './containers/VisibleMatchList'
+
+require('file-loader?name=[name].[ext]!../index.html')
+
+const store = createStore<StoreState>(
+  rootReducer,
+  { matches: new Map<number, models.Match>() }
+)
 
 ReactDOM.render(
-  <Hello compiler="TypeScript" framework="React" />,
-  document.getElementById("app")
+  <Provider store={store}>
+    <VisibleMatchList />
+  </Provider>,
+  document.getElementById('app')
 )

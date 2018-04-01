@@ -7,25 +7,32 @@ phases:
 
       # == Go environment setup ==
       # Symlink Lambdas source directory into GOPATH
-      - ln -s "${CODEBUILD_SRC_DIR}/lambdas" "/go/src/main"
+      - ln -s "${CODEBUILD_SRC_DIR}/lambdas/src" "/go/src/main"
 
   pre_build:
     commands:
 
-      # == Protocol Buffers compilation ==
-      # Enter the Protocol Buffers source directory
-      - cd "${CODEBUILD_SRC_DIR}/protos"
-      # Build Go version
-      - mkdir "${CODEBUILD_SRC_DIR}/lambdas/generated-protos"
-      - protoc --go_out=../lambdas/generated-protos *
-      # Build TypeScript version
-      # - ...
+      # == Fetch dependencies ==
+      # Get Go package dependencies for Lambdas
+      - cd "/go/src/main"
+      - go get ./...
+      # Get npm package dependencies for Web App
+      - cd "${CODEBUILD_SRC_DIR}/webapp"
+      - npm install
+
+      # == Build Protocol Buffer definitions ==
+      # Go back to project root
+      - cd "${CODEBUILD_SRC_DIR}"
+      # Compile protos to includable Go files for Lambdas
+      - chmod +x ./build-protos-for-lambdas.sh
+      - ./build-protos-for-lambdas.sh
+      # Compile protobufs to TypeScript definitions for Web App
+      - chmod +x ./build-protos-for-webapp.sh
+      - ./build-protos-for-webapp.sh
 
       # == Lambdas source code checks ==
       # Enter the Lambdas source directory (via the symlink)
       - cd "/go/src/main"
-      # Fetch all dependencies
-      - go get ./...
       # Ensure code passes all lint tests
       - golint -set_exit_status
       # Check for common Go application problems with 'go tool vet'
@@ -36,8 +43,6 @@ phases:
       # == Web App source code checks ==
       # Enter the Web App source directory
       - cd "${CODEBUILD_SRC_DIR}/webapp"
-      # Fetch dependencies
-      - npm install
       # Run all tests
       # - ...
 
@@ -45,10 +50,11 @@ phases:
     commands:
 
       # == Go build ==
-      # Enter the Go source directory (via the symlink)
-      - cd "/go/src/main"
+      # Enter the handlers source directory (via the symlink)
+      - cd "/go/src/main/handlers"
       # Build our Go application
-      - go build -o main
+      # TODO: automate to build all files in lambdas/src/handlers
+      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/main main.go
 
       # == Web App build ==
       # Enter the Web App root directory

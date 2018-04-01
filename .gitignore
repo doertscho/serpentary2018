@@ -1,4 +1,7 @@
 **/node_modules
 **/package-lock.json
 **/dist
-lambdas/generated-protos
+
+# generated from protobuf definitions
+lambdas/src/models
+webapp/src/types/models*

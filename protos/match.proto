@@ -1,5 +1,5 @@
 syntax = "proto3";
-package serpentary;
+package models;
 
 message Match {
   int32 id = 1;

@@ -11,8 +11,10 @@ ENV DOCKER_BUCKET="download.docker.com" \
     DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" \
     DOCKER_COMPOSE_VERSION="1.16.1"
 
-################
-# Install basics
+################################################################################
+# Install basic tools.
+# TODO: Some of these are probably not required for the build process, so there
+# may be potential for size optimization.
 
 RUN    apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -36,8 +38,9 @@ RUN    apt-get update \
     && apt-get install -y -qq \
          less=458-* groff=1.22.2-*
 
-####################################
-# Build git from source with openssl
+################################################################################
+# Build git from source with openssl.
+# Ubuntu's standard git is built with broken gnutls.
 
 RUN    apt-get -qy build-dep \
          git=1:1.9.1 \
@@ -55,8 +58,9 @@ RUN    apt-get -qy build-dep \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-################
-# Install Docker
+################################################################################
+# Install Docker toolset.
+
 RUN    set -x \
     && curl -fSL -o docker.tgz \
          https://${DOCKER_BUCKET}/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz \
@@ -77,9 +81,10 @@ RUN    set -x \
     && chmod +x /usr/local/bin/dind /usr/local/bin/docker-compose \
     && docker-compose version
 
-###############################################################################
+################################################################################
 # Install dependencies by all python images equivalent to buildpack-deps:jessie
 # on the public repos.
+# TODO: May not be necessary after all, check for potential optimization.
 
 RUN    wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py \
     && python /tmp/get-pip.py \
@@ -90,8 +95,8 @@ VOLUME /var/lib/docker
 
 COPY dockerd-entrypoint.sh /usr/local/bin/
 
-###########################
-# Install protobuf compiler
+################################################################################
+# Install protobuf compiler and make include files available.
 
 RUN    curl -OL \
          https://github.com/google/protobuf/releases/download/v3.5.1/protoc-3.5.1-linux-x86_64.zip \
@@ -99,7 +104,7 @@ RUN    curl -OL \
     && mv protoc3/bin/* /usr/local/bin/ \
     && mv protoc3/include/* /usr/local/include/
 
-########################
+################################################################################
 # Install Go environment
 
 ENV GOLANG_VERSION="1.10" \
@@ -129,8 +134,8 @@ WORKDIR $GOPATH
 RUN    go get -u github.com/golang/lint/golint \
     && go get -u github.com/golang/protobuf/protoc-gen-go
 
-########################
-# Install nodejs and npm, and webpack
+################################################################################
+# Install nodejs, npm, and webpack, required for the webapp build process.
 
 ENV NODE_VERSION="8.11.1"
 
@@ -143,7 +148,7 @@ RUN    wget -O nodejs.tar.gz \
 
 RUN npm install -g webpack@4.4.1 webpack-cli@2.0.13
 
-##########
-# Finalize
+################################################################################
+# Finalize.
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
