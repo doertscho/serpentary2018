@@ -31,13 +31,14 @@ phases:
       # Enter the Lambdas source directory (via the symlink)
       - cd "/go/src/main"
       # Get Go package dependencies for Lambdas
+      # (this will only work after protobuf compilation)
       - go get ./...
       # Ensure code passes all lint tests
       - golint -set_exit_status
       # Check for common Go application problems with 'go tool vet'
       - go tool vet .
       # Run all tests included with our application
-      - go test .
+      - go test main/handlers
 
       # == Web App source code checks ==
       # Enter the Web App source directory
