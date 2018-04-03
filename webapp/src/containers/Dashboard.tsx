@@ -1,20 +1,15 @@
 import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { models } from '../types/models.js'
-import { MatchList } from '../components/MatchList'
 import { Action } from '../actions';
+import { DashboardView } from '../components/DashboardView'
 
 const mapStateToProps = (state: StoreState) => {
-  return {
-    matches: Array.from(state.matches.values())
-  }
+  return { }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return { }
 }
 
-export const VisibleMatchList = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MatchList)
+export const Dashboard = connect(mapStateToProps)(DashboardView)

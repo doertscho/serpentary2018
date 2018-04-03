@@ -1,6 +1,7 @@
 **/node_modules
 **/package-lock.json
 **/dist
+.DS_Store
 
 # generated from protobuf definitions
 lambdas/src/models

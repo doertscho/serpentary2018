@@ -1,3 +1,4 @@
+import { Map } from 'immutable'
 import { models } from './models.js'
 
 export interface StoreState {
