@@ -1,13 +1,13 @@
 import * as constants from '../constants';
 
-export interface DoSomething {
-  type: constants.DO_SOMETHING
+export interface RequestTournamentsRefresh {
+  type: constants.REQUEST_TOURNAMENTS_REFRESH
 }
 
-export type Action = DoSomething
+export type Action = RequestTournamentsRefresh
 
-export function doSomething(): DoSomething {
+export function requestTournamentsRefresh(): RequestTournamentsRefresh {
   return {
-    type: constants.DO_SOMETHING
+    type: constants.REQUEST_TOURNAMENTS_REFRESH
   }
 }

@@ -1,15 +1,22 @@
 import { connect, Dispatch } from 'react-redux'
+
 import { StoreState } from '../types'
 import { models } from '../types/models.js'
-import { Action } from '../actions';
+import { Action, requestTournamentsRefresh } from '../actions';
 import { DashboardView } from '../components/DashboardView'
+import { getTournaments } from '../selectors/index'
 
 const mapStateToProps = (state: StoreState) => {
-  return { }
+  return {
+    tournaments: getTournaments(state)
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return { }
+  return {
+    refreshTournaments: () => dispatch(requestTournamentsRefresh())
+  }
 }
 
-export const Dashboard = connect(mapStateToProps)(DashboardView)
+export const Dashboard =
+  connect(mapStateToProps, mapDispatchToProps)(DashboardView)

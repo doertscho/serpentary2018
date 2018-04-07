@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 
 import { Dashboard } from './containers/Dashboard'
+import { Tournament } from './containers/Tournament'
 import { MatchDay } from './containers/MatchDay'
 import { Ranking } from './containers/Ranking'
 import { NotFound } from './components/NotFound'
@@ -13,15 +14,16 @@ export const App = () =>
       <h1>serpentary 2018</h1>
       <nav>
         <ul>
-          <li><Link to='/home'>Home</Link></li>
-          <li><Link to='/match-day'>Match day</Link></li>
+          <li><Link to='/'>Home</Link></li>
+          <li><Link to='/match-days/current'>Match day</Link></li>
           <li><Link to='/ranking'>Ranking</Link></li>
         </ul>
       </nav>
       <main>
         <Switch>
-          <Route path='/home' component={ Dashboard } />
-          <Route path='/match-day' component={ MatchDay } />
+          <Route exact path='/' component={ Dashboard } />
+          <Route path='/tournaments/:id' component={ Tournament } />
+          <Route path='/match-days/:id' component={ MatchDay } />
           <Route path='/ranking' component={ Ranking } />
           <Route component={ NotFound } />
         </Switch>

@@ -14,7 +14,7 @@ require('file-loader?name=[name].[ext]!../index.html')
 
 const store = createStore<StoreState>(
   rootReducer,
-  { matches: Map<number, models.Match>() }
+  StoreState.SAMPLE
 )
 
 ReactDOM.render(
