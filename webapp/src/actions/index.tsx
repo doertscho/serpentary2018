@@ -12,8 +12,8 @@ export interface FetchDataRequest {
 }
 export function fetchDataRequest(path: string): FetchDataRequest {
   return {
-    type: constants.FETCH_DATA_REQUEST,
-    path: path
+    type: constants.FETCH_DATA_REQUEST
+  , path: path
   }
 }
 
@@ -24,9 +24,9 @@ export interface FetchDataResponse {
 }
 export function fetchDataResponse(path: string, data: models.Update): FetchDataResponse {
   return {
-    type: constants.FETCH_DATA_RESPONSE,
-    path: path,
-    data: data
+    type: constants.FETCH_DATA_RESPONSE
+  , path: path
+  , data: data
   }
 }
 
@@ -37,34 +37,35 @@ export interface FetchDataError {
 }
 export function fetchDataError(path: string, error: any): FetchDataError {
   return {
-    type: constants.FETCH_DATA_ERROR,
-    path: path,
-    error: error
+    type: constants.FETCH_DATA_ERROR
+  , path: path
+  , error: error
   }
 }
 
-const get = (path: string, dispatch: Dispatch<StoreState>) =>
-  axios.get(API_BASE_URL + path)
+const fetch = (path: string, dispatch: Dispatch<StoreState>) =>
+  axios.request({
+      url: API_BASE_URL + path
+    , method: 'get'
+    , responseType: 'arraybuffer'
+    })
     .then(response => {
-      console.log("received response:", response)
-      console.log("received data:", response.data)
-      const update = models.Update.decode(response.data)
-      console.log("parsed:", update)
+      const update = models.Update.decode(new Uint8Array(response.data))
       dispatch(fetchDataResponse(path, update))
     })
     .catch(error => {
-      console.log("error occurred:", error)
       dispatch(fetchDataError(path, error))
     })
 
 function fetchData(path: string) {
   return function(dispatch: Dispatch<StoreState>) {
     dispatch(fetchDataRequest(path))
-    return get(path, dispatch)
+    return fetch(path, dispatch)
   }
 }
 
 export const fetchTournaments = () => fetchData('/data')
+export const fetchTournament = (id: number) => fetchData('/data')
 
 export type Action =
   FetchDataRequest | FetchDataResponse | FetchDataError

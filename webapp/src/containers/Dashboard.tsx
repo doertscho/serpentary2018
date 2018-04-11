@@ -2,7 +2,7 @@ import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
 import { models } from '../types/models.js'
-import { Action, fetchTournaments } from '../actions';
+import { Action, fetchTournaments } from '../actions'
 import { DashboardView } from '../components/DashboardView'
 import { getTournaments } from '../selectors/index'
 

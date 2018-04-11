@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { models } from '../types/models.js'
 import { TournamentView } from '../components/TournamentView'
-import { Action } from '../actions'
+import { Action, fetchTournament } from '../actions'
 import { makeGetNumberUrlParameter } from '../selectors/util'
 import { makeGetTournament, makeGetMatchDays } from '../selectors/Tournament'
 
@@ -21,4 +21,13 @@ const makeMapStateToProps = () => {
   }
 }
 
-export const Tournament = connect(makeMapStateToProps)(TournamentView)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    refreshTournament: (id: number) => {
+      dispatch(fetchTournament(id))
+    }
+  }
+}
+
+export const Tournament =
+  connect(makeMapStateToProps, mapDispatchToProps)(TournamentView)
