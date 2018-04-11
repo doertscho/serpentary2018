@@ -2,7 +2,9 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 import { Map } from 'immutable'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+
 import { StoreState } from './types'
 import { models } from './types/models.js'
 import { rootReducer } from './reducers'
@@ -14,7 +16,8 @@ require('file-loader?name=[name].[ext]!../index.html')
 
 const store = createStore<StoreState>(
   rootReducer,
-  StoreState.SAMPLE
+  StoreState.SAMPLE,
+  applyMiddleware(thunkMiddleware)
 )
 
 ReactDOM.render(

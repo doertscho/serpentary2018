@@ -1,0 +1,13 @@
+syntax = "proto3";
+package models;
+
+import "Tournament.proto";
+import "MatchDay.proto";
+import "Match.proto";
+
+message Update {
+
+  repeated Tournament tournaments = 1;
+  repeated MatchDay match_days = 2;
+  repeated Match matches = 3;
+}

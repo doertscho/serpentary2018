@@ -2,7 +2,7 @@ import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
 import { models } from '../types/models.js'
-import { Action, requestTournamentsRefresh } from '../actions';
+import { Action, fetchTournaments } from '../actions';
 import { DashboardView } from '../components/DashboardView'
 import { getTournaments } from '../selectors/index'
 
@@ -14,7 +14,7 @@ const mapStateToProps = (state: StoreState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    refreshTournaments: () => dispatch(requestTournamentsRefresh())
+    refreshTournaments: () => dispatch(fetchTournaments())
   }
 }
 

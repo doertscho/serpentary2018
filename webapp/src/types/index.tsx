@@ -1,5 +1,5 @@
 import { Map, Record } from 'immutable'
-import { models } from './models.js'
+import { models } from './models'
 
 interface StoreStateProps {
   tournaments: Map<number, models.Tournament>

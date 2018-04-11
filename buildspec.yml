@@ -59,6 +59,8 @@ phases:
       # == Web App build ==
       # Enter the Web App root directory
       - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Pass in some configuration
+      - echo "export const API_BASE_URL = '${API_BASE_URL}'" > src/api-conf.tsx
       # Run webpack to perform compilation and packaging
       - webpack
 
