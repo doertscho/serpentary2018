@@ -1,21 +1,22 @@
 import { Map, Record } from 'immutable'
 import { models } from './models'
+import { imodels } from './imodels'
 
 interface StoreStateProps {
-  tournaments: Map<number, models.Tournament>
+  tournaments: Map<number, imodels.Tournament>
   matchDays: Map<number, models.MatchDay>
-  matches: Map<number, models.Match>
+  matches: [id: number]: models.Match
 }
 
 const StoreStateRecord = Record({
-  tournaments: Map<number, models.Tournament>()
+  tournaments: Map<number, imodels.Tournament>()
 , matchDays: Map<number, models.MatchDay>()
 , matches: Map<number, models.Match>()
 })
 
 export class StoreState extends StoreStateRecord implements StoreStateProps {
 
-    tournaments: Map<number, models.Tournament>
+    tournaments: Map<number, imodels.Tournament>
     matchDays: Map<number, models.MatchDay>
     matches: Map<number, models.Match>
 
@@ -26,8 +27,8 @@ export class StoreState extends StoreStateRecord implements StoreStateProps {
     public static EMPTY: StoreState = new StoreState({})
 
     public static SAMPLE: StoreState = new StoreState({
-      tournaments: Map<number, models.Tournament>()
-        .set(1, models.Tournament.create({ id: 1, name: 'Test' }))
+      tournaments: Map<number, imodels.Tournament>()
+        .set(1, new imodels.Tournament({ id: 1, name: 'Test' }))
     , matchDays: Map<number, models.MatchDay>()
         .set(1, models.MatchDay.create({ id: 1, tournamentId: 1, name: "Erster Spieltag" }))
     , matches: Map<number, models.Match>()

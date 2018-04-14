@@ -13,7 +13,6 @@ const makeMapStateToProps = () => {
   const getTournament = makeGetTournament(getIdFromUrl)
   const getMatchDays = makeGetMatchDays(getIdFromUrl)
   return (state: StoreState, props: any) => {
-    console.log("state: ", state);
     return {
       tournament: getTournament(state, props),
       matchDays: getMatchDays(state, props)

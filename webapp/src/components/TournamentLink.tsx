@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom'
 
-import { models } from '../types/models'
+import { imodels } from '../types/imodels'
 
 export interface Props {
-  tournament: models.Tournament
+  tournament: imodels.Tournament
 }
 
 export const TournamentLink = ({ tournament }: Props) =>

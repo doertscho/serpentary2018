@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { Seq } from 'immutable'
 
-import { models } from '../types/models.js'
+import { models } from '../types/models'
+import { imodels } from '../types/imodels'
 import { MatchDayLink } from './MatchDayLink'
 
 export interface Props {
-  tournament: models.Tournament
+  tournament: imodels.Tournament
   matchDays: Seq.Indexed<models.MatchDay>
   refreshTournament: (id: number) => void
 }

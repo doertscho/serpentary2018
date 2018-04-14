@@ -1,6 +1,7 @@
 import * as constants from '../constants'
 import { StoreState } from '../types'
 import { models } from '../types/models'
+import { imodels } from '../types/imodels'
 import { Action } from '../actions'
 
 function mergeWithUpdate(state: StoreState, update: models.Update): StoreState {
@@ -10,7 +11,7 @@ function mergeWithUpdate(state: StoreState, update: models.Update): StoreState {
   var mergedTournaments = oldTournaments
   for (let t of newTournaments) {
     console.log("adding/updating tournament:", t)
-    mergedTournaments = mergedTournaments.set(t.id, models.Tournament.create(t))
+    mergedTournaments = mergedTournaments.set(t.id, new imodels.Tournament(t))
   }
 
   const oldMatchDays = state.matchDays
