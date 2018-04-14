@@ -6,7 +6,7 @@ import { NumberSelector } from './util'
 
 export const makeGetTournament = (getTournamentId: NumberSelector) =>
   (store: StoreState, props?: any) =>
-    store.tournaments.get(getTournamentId(store, props))
+    store.tournaments[getTournamentId(store, props)]
 
 export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
   createSelector(

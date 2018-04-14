@@ -1,38 +1,42 @@
-import { Map, Record } from 'immutable'
-import { models } from './models'
-import { imodels } from './imodels'
+import { models as m } from './models'
 
-interface StoreStateProps {
-  tournaments: Map<number, imodels.Tournament>
-  matchDays: Map<number, models.MatchDay>
-  matches: [id: number]: models.Match
+export interface Entity {
+  id?: number
+  updated?: number
 }
 
-const StoreStateRecord = Record({
-  tournaments: Map<number, imodels.Tournament>()
-, matchDays: Map<number, models.MatchDay>()
-, matches: Map<number, models.Match>()
-})
+export type ParentChildTable = number[][]
 
-export class StoreState extends StoreStateRecord implements StoreStateProps {
+export interface StoreState {
+  tournaments: m.Tournament[]
+  matchDays: m.MatchDay[]
+  matchDaysByTournament: ParentChildTable
+  matches: m.Match[]
+  matchesByMatchDay: ParentChildTable
+}
 
-    tournaments: Map<number, imodels.Tournament>
-    matchDays: Map<number, models.MatchDay>
-    matches: Map<number, models.Match>
+export const EMPTY: StoreState = {
+  tournaments: [],
+  matchDays: [],
+  matchDaysByTournament: [],
+  matches: [],
+  matchesByMatchDay: []
+}
 
-    constructor(props: Partial<StoreStateProps>) {
-      super(props)
-    }
-
-    public static EMPTY: StoreState = new StoreState({})
-
-    public static SAMPLE: StoreState = new StoreState({
-      tournaments: Map<number, imodels.Tournament>()
-        .set(1, new imodels.Tournament({ id: 1, name: 'Test' }))
-    , matchDays: Map<number, models.MatchDay>()
-        .set(1, models.MatchDay.create({ id: 1, tournamentId: 1, name: "Erster Spieltag" }))
-    , matches: Map<number, models.Match>()
-        .set(1, models.Match.create({ id: 1, matchDayId: 1, homeTeamId: 1, awayTeamId: 1}))
-        .set(2, models.Match.create({ id: 2, matchDayId: 1, homeTeamId: 3, awayTeamId: 4}))
-    })
+const sampleTournaments = []
+sampleTournaments[1] = m.Tournament.create({ id: 1, name: 'Test' })
+const sampleMatchDays = []
+sampleMatchDays[1] =
+  m.MatchDay.create({ id: 1, tournamentId: 1, name: 'Erster Spieltag' })
+const sampleMatches = []
+sampleMatches[1] =
+  m.Match.create({ id: 1, matchDayId: 1, homeTeamId: 1, awayTeamId: 1})
+sampleMatches[2] =
+  m.Match.create({ id: 2, matchDayId: 1, homeTeamId: 3, awayTeamId: 4})
+export const SAMPLE: StoreState = {
+  tournaments: sampleTournaments,
+  matchDays: sampleMatchDays,
+  matchDaysByTournament: [ [], [1] ],
+  matches: sampleMatches,
+  matchesByMatchDay: [ [], [1, 2] ]
 }

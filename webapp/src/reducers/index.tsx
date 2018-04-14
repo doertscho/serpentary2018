@@ -1,34 +1,7 @@
 import * as constants from '../constants'
-import { StoreState } from '../types'
-import { models } from '../types/models'
-import { imodels } from '../types/imodels'
+import { StoreState, Entity, ParentChildTable } from '../types'
+import { models as m } from '../types/models'
 import { Action } from '../actions'
-
-function mergeWithUpdate(state: StoreState, update: models.Update): StoreState {
-
-  const oldTournaments = state.tournaments
-  const newTournaments = update.tournaments
-  var mergedTournaments = oldTournaments
-  for (let t of newTournaments) {
-    console.log("adding/updating tournament:", t)
-    mergedTournaments = mergedTournaments.set(t.id, new imodels.Tournament(t))
-  }
-
-  const oldMatchDays = state.matchDays
-  const newMatchDays = update.matchDays
-  var mergedMatchDays = oldMatchDays
-  for (let md of newMatchDays) {
-    console.log("adding/updating match day:", md)
-    mergedMatchDays = mergedMatchDays.set(md.id, models.MatchDay.create(md))
-  }
-  console.log("old/new:", oldTournaments, mergedTournaments);
-  console.log("old/new:", oldMatchDays, mergedMatchDays);
-
-  return new StoreState({
-    tournaments: mergedTournaments
-  , matchDays: mergedMatchDays
-  })
-}
 
 export function rootReducer(state: StoreState, action: Action): StoreState {
   switch (action.type) {
@@ -41,4 +14,100 @@ export function rootReducer(state: StoreState, action: Action): StoreState {
     default:
       return state
   }
+}
+
+function mergeWithUpdate(state: StoreState, update: m.Update): StoreState {
+
+  const newTournaments = mergeRecords(
+      state.tournaments, update.tournaments, m.Tournament.create)
+
+  const matchDayData = mergeRecordsAndRefs(
+      state.matchDays, state.matchDaysByTournament, update.matchDays,
+      m.MatchDay.create, u => u.tournamentId)
+  const newMatchDays = matchDayData.state
+  const newMatchDaysByTournament = matchDayData.refs
+
+  const matchData = mergeRecordsAndRefs(
+      state.matches, state.matchesByMatchDay, update.matches,
+      m.Match.create, u => u.matchDayId)
+  const newMatches = matchData.state
+  const newMatchesByMatchDay = matchData.refs
+
+  return {
+    tournaments: newTournaments,
+    matchDays: newMatchDays,
+    matchDaysByTournament: newMatchDaysByTournament,
+    matches: newMatches,
+    matchesByMatchDay: newMatchesByMatchDay
+  }
+}
+
+function mergeRecords<I extends Entity, R extends I>(
+    state: R[], update: I[], makeRecord: (u: I) => R): R[] {
+  const changed: R[] = []
+  update.forEach(u => {
+    if (u.id && updateIsNewer(state[u.id], u)) changed.push(makeRecord(u))
+  })
+  if (changed.length == 0) return state
+  else return copyAndMergeRecordArray(state, changed)
+}
+
+function mergeRecordsAndRefs<I extends Entity, R extends I>(
+    state: R[], refs: ParentChildTable,
+    update: I[],
+    makeRecord: (u: I) => R,
+    getParentId: (u: I) => number
+): { state: R[], refs: ParentChildTable } {
+
+  const changed: R[] = []
+  const newRefs: Relation[] = []
+  update.forEach(u => {
+    if (u.id && updateIsNewer(state[u.id], u)) {
+      changed.push(makeRecord(u))
+      if (!state[u.id])
+        newRefs.push({ parentId: getParentId(u), childId: u.id })
+    }
+  })
+  if (changed.length == 0) return { state, refs }
+  if (newRefs.length == 0)
+    return { state: copyAndMergeRecordArray(state, changed), refs }
+  else
+    return {
+      state: copyAndMergeRecordArray(state, changed),
+      refs: copyAndMergeReferenceArray(refs, newRefs)
+    }
+}
+
+function updateIsNewer<T extends Entity>(state: T, update: T): boolean {
+  return (!state || !state.updated
+      || (update.updated && state.updated < update.updated))
+}
+
+function copyAndMergeRecordArray<T extends Entity>(
+    input: T[], changes: T[]): T[] {
+  const output: T[] = []
+  input.forEach(e => { output[e.id] = e })
+  changes.forEach(e => { output[e.id] = e })
+  return output
+}
+
+interface Relation {
+  parentId: number
+  childId: number
+}
+
+function copyAndMergeReferenceArray(
+    input: ParentChildTable, newLinks: Relation[]): ParentChildTable {
+  const output: ParentChildTable = []
+  input.forEach((refs: number[], parentId: number) => {
+    if (refs) {
+      output[parentId] = []
+      refs.forEach(childId => { output[parentId].push(childId) })
+    }
+  })
+  newLinks.forEach(r => {
+    if (!output[r.parentId]) output[r.parentId] = [r.childId]
+    else output[r.parentId].push(r.childId)
+  })
+  return output
 }

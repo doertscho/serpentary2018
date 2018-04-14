@@ -1,8 +1,8 @@
 import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
-import { models } from '../types/models.js'
+import { models } from '../types/models'
 import { RankingView } from '../components/RankingView'
-import { Action } from '../actions';
+import { Action } from '../actions'
 
 const mapStateToProps = (state: StoreState) => {
   return { }

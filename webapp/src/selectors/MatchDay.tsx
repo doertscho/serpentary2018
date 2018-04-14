@@ -6,7 +6,7 @@ import { getMatches } from './index'
 const getMatchDayId = (_: StoreState, props: any) => props.id
 
 export const getMatchDay = (store: StoreState, props: any) =>
-  store.matchDays.get(getMatchDayId(store, props))
+  store.matchDays[getMatchDayId(store, props)]
 
 export const makeGetMatches = () =>
   createSelector(

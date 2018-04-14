@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { models } from '../types/models'
+import { models as m } from '../types/models'
 
 export interface Props {
-  match: models.Match
+  match: m.Match
 }
 
 export const Match = ({ match }: Props) =>

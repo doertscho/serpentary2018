@@ -1,7 +1,6 @@
 import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
-import { models } from '../types/models.js'
 import { TournamentView } from '../components/TournamentView'
 import { Action, fetchTournament } from '../actions'
 import { makeGetNumberUrlParameter } from '../selectors/util'
