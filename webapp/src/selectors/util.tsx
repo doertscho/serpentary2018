@@ -1,4 +1,5 @@
 import { createSelector, ParametricSelector } from 'reselect'
+
 import { StoreState } from '../types'
 
 export const makeGetUrlParameter = (key: string) =>

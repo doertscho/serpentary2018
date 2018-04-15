@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'
+
 import { StoreState } from '../types'
 
 export const getTournaments = (state: StoreState) => state.tournaments

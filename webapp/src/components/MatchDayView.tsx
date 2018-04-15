@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { models as m } from '../types/models.js'
+import { models as m } from '../types/models'
 import { Match } from './Match'
 
 export interface Props {

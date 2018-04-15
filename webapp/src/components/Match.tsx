@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 
 import { models as m } from '../types/models'
 
