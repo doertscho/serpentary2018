@@ -59,8 +59,12 @@ phases:
       # == Web App build ==
       # Enter the Web App root directory
       - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Make sure config is never passed in through Git-managed files
+      - rm -rf conf
+      - mkdir conf
       # Pass in some configuration
-      - echo "export const API_BASE_URL = '${API_BASE_URL}'" > src/api-conf.tsx
+      - printf "export const API_BASE_URL = '${API_BASE_URL}'" > conf/api.tsx
+      - printf "export const COGNITO_REGION = '${COGNITO_REGION}'\nexport const COGNITO_USER_POOL_ID = '${COGNITO_USER_POOL_ID}'\nexport const COGNITO_CLIENT_ID = '${COGNITO_CLIENT_ID}'\n" > conf/cognito.tsx
       # Run webpack to perform compilation and packaging
       - webpack
 

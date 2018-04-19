@@ -1,8 +1,11 @@
-export const FETCH_DATA_REQUEST = 'FETCH_DATA_REQUEST'
-export type FETCH_DATA_REQUEST = typeof FETCH_DATA_REQUEST
+export const REQUEST = 'REQUEST'
+export type REQUEST = typeof REQUEST
+export const RESPONSE = 'RESPONSE'
+export type RESPONSE = typeof RESPONSE
+export const ERROR = 'ERROR'
+export type ERROR = typeof ERROR
 
-export const FETCH_DATA_RESPONSE = 'FETCH_DATA_RESPONSE'
-export type FETCH_DATA_RESPONSE = typeof FETCH_DATA_RESPONSE
-
-export const FETCH_DATA_ERROR = 'FETCH_DATA_ERROR'
-export type FETCH_DATA_ERROR = typeof FETCH_DATA_ERROR
+export const DATA = 'DATA'
+export type DATA = typeof DATA
+export const SESSION = 'SESSION'
+export type SESSION = typeof SESSION

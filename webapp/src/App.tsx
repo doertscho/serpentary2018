@@ -3,6 +3,8 @@ import * as ReactDOM from 'react-dom'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 
 import { Dashboard } from './containers/Dashboard'
+import { SignUp } from './containers/SignUp'
+import { LogIn } from './containers/LogIn'
 import { Tournament } from './containers/Tournament'
 import { MatchDay } from './containers/MatchDay'
 import { Ranking } from './containers/Ranking'
@@ -18,14 +20,25 @@ export const App = () =>
           <li><Link to='/match-days/current'>Match day</Link></li>
           <li><Link to='/ranking'>Ranking</Link></li>
         </ul>
+        <ul>
+          <li><Link to='/log-in'>Log in</Link></li>
+          <li><Link to='/sign-up'>Sign up</Link></li>
+        </ul>
       </nav>
       <main>
         <Switch>
+
           <Route exact path='/' component={ Dashboard } />
-          <Route path='/tournaments/:id(\\d+)' component={ Tournament } />
-          <Route path='/match-days/:id(\\d+)' component={ MatchDay } />
+
+          <Route path='/sign-up' component={ SignUp } />
+          <Route path='/log-in' component={ LogIn } />
+
+          <Route path='/tournaments/:id(\d+)' component={ Tournament } />
+          <Route path='/match-days/:id(\d+)' component={ MatchDay } />
           <Route path='/ranking' component={ Ranking } />
+
           <Route component={ NotFound } />
+
         </Switch>
       </main>
     </div>

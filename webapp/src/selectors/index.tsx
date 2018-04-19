@@ -2,6 +2,5 @@ import { createSelector } from 'reselect'
 
 import { StoreState } from '../types'
 
-export const getTournaments = (state: StoreState) => state.tournaments
-export const getMatchDays = (state: StoreState) => state.matchDays
-export const getMatches = (state: StoreState) => state.matches
+export const getData = (state: StoreState) => state.data
+export const getSession = (state: StoreState) => state.session

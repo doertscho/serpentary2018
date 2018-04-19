@@ -1,9 +1,10 @@
 import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
-import { Action, fetchTournaments } from '../actions'
+import { Action } from '../actions'
+import { fetchTournaments } from '../actions/data'
 import { DashboardView } from '../components/DashboardView'
-import { getTournaments } from '../selectors/index'
+import { getTournaments } from '../selectors/data'
 
 const mapStateToProps = (state: StoreState) => {
   return {
