@@ -1,8 +1,9 @@
 import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
-import { MatchDayView } from '../components/MatchDayView'
 import { makeGetMatches } from '../selectors/MatchDay'
+
+import view from '../components/MatchDayView'
 
 const makeMapStateToProps = () => {
   const getMatches = makeGetMatches()
@@ -13,4 +14,4 @@ const makeMapStateToProps = () => {
   }
 }
 
-export const MatchDay = connect(makeMapStateToProps)(MatchDayView)
+export default connect(makeMapStateToProps)(view)

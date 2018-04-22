@@ -1,12 +1,12 @@
 import { createSelector } from 'reselect'
 
 import { StoreState } from '../types'
-import { getMatches } from './index'
+import { getMatches, getMatchDays } from './data'
 
 const getMatchDayId = (_: StoreState, props: any) => props.id
 
-export const getMatchDay = (store: StoreState, props: any) =>
-  store.matchDays[getMatchDayId(store, props)]
+export const getMatchDay = (state: StoreState, props: any) =>
+  getMatchDays(state)[getMatchDayId(state, props)]
 
 export const makeGetMatches = () =>
   createSelector(

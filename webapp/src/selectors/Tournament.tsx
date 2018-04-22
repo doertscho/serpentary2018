@@ -1,12 +1,12 @@
 import { createSelector, ParametricSelector } from 'reselect'
 
 import { StoreState } from '../types'
-import { getMatchDays } from './index'
+import { getMatchDays, getTournaments } from './data'
 import { NumberSelector } from './util'
 
 export const makeGetTournament = (getTournamentId: NumberSelector) =>
-  (store: StoreState, props?: any) =>
-    store.tournaments[getTournamentId(store, props)]
+  (state: StoreState, props?: any) =>
+    getTournaments(state)[getTournamentId(state, props)]
 
 export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
   createSelector(

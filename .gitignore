@@ -8,4 +8,5 @@ lambdas/src/models
 webapp/src/types/models*
 
 # config to be added at build time
+webapp/conf
 webapp/src/api-conf.tsx

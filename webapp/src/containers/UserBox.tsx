@@ -2,21 +2,22 @@ import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
 import { Action } from '../actions'
-import { fetchTournaments } from '../actions/data'
-import { getTournaments } from '../selectors/data'
+import { logOut } from '../actions/session'
+import { getLoginStatus, getUserId } from '../selectors/session'
 
-import view from '../components/DashboardView'
+import view from '../components/UserBoxView'
 
 const mapStateToProps = (state: StoreState) => {
   return {
-    tournaments: getTournaments(state)
+    loginStatus: getLoginStatus(state),
+    userId: getUserId(state)
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    refreshTournaments: () => {
-      dispatch(fetchTournaments())
+    logOut: () => {
+      dispatch(logOut())
     }
   }
 }

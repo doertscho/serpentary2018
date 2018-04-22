@@ -1,16 +1,15 @@
 import * as React from 'react'
 
 import { models as m } from '../types/models'
-import { MatchDayLink } from './MatchDayLink'
+import MatchDayLink from './MatchDayLink'
 
-export interface Props {
+interface Props {
   tournament: m.Tournament
   matchDays: m.MatchDay[]
   refreshTournament: (id: number) => void
 }
 
-export const TournamentView = ({
-    tournament, matchDays, refreshTournament }: Props) => {
+export default ({ tournament, matchDays, refreshTournament }: Props) => {
   return (
     <div>
       <h1>Match days in tournament {tournament.name}</h1>
