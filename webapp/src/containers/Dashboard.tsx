@@ -3,8 +3,9 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { fetchTournaments } from '../actions/data'
-import { DashboardView } from '../components/DashboardView'
 import { getTournaments } from '../selectors/data'
+
+import view from '../components/DashboardView'
 
 const mapStateToProps = (state: StoreState) => {
   return {
@@ -20,5 +21,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export const Dashboard =
-  connect(mapStateToProps, mapDispatchToProps)(DashboardView)
+export default connect(mapStateToProps, mapDispatchToProps)(view)

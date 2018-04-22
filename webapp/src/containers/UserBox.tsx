@@ -3,12 +3,13 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logOut } from '../actions/session'
-import { isLoggedIn, getUserId } from '../selectors/session'
-import { UserBoxView } from '../components/UserBoxView'
+import { getLoginStatus, getUserId } from '../selectors/session'
+
+import view from '../components/UserBoxView'
 
 const mapStateToProps = (state: StoreState) => {
   return {
-    isLoggedIn: isLoggedIn(state),
+    loginStatus: getLoginStatus(state),
     userId: getUserId(state)
   }
 }
@@ -21,5 +22,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export const UserBox =
-  connect(mapStateToProps, mapDispatchToProps)(UserBoxView)
+export default connect(mapStateToProps, mapDispatchToProps)(view)

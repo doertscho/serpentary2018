@@ -4,7 +4,8 @@ import { StoreState } from '../types'
 import { Action } from '../actions'
 import { signUp } from '../actions/session'
 import { getSessionErrorMessage } from '../selectors/session'
-import { SignUpView } from '../components/SignUpView'
+
+import view from '../components/SignUpView'
 
 const mapStateToProps = (state: StoreState) => {
   return {
@@ -17,13 +18,11 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
     signUp: (
         userId: string,
         password: string,
-        nickName: string,
         email: string
       ) => {
-        dispatch(signUp(userId, password, nickName, email))
+        dispatch(signUp(userId, password, email))
       }
   }
 }
 
-export const SignUp =
-  connect(mapStateToProps, mapDispatchToProps)(SignUpView)
+export default connect(mapStateToProps, mapDispatchToProps)(view)

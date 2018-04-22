@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 
 import { models as m } from '../types/models'
 
-export interface Props {
+interface Props {
   matchDay: m.MatchDay
 }
 
-export const MatchDayLink = ({ matchDay }: Props) =>
+export default ({ matchDay }: Props) =>
   <Link to={'/match-days/' + matchDay.id}>
     {matchDay.name} (#{matchDay.id})
   </Link>

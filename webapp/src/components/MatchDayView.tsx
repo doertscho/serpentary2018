@@ -1,13 +1,13 @@
 import * as React from 'react'
 
 import { models as m } from '../types/models'
-import { Match } from './Match'
+import Match from './Match'
 
-export interface Props {
+interface Props {
   matches: m.Match[]
 }
 
-export const MatchDayView = ({ matches }: Props) =>
+export default ({ matches }: Props) =>
   <div>
     <h1>Match list</h1>
     <ul>

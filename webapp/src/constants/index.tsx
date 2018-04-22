@@ -7,6 +7,8 @@ export const ERROR = 'ERROR'
 export type ERROR = typeof ERROR
 
 // top-level action categories
+export const INIT = 'INIT'
+export type INIT = typeof INIT
 export const DATA = 'DATA'
 export type DATA = typeof DATA
 export const SESSION = 'SESSION'
@@ -19,3 +21,10 @@ export const LOG_IN = 'LOG_IN'
 export type LOG_IN = typeof LOG_IN
 export const LOG_OUT = 'LOG_OUT'
 export type LOG_OUT = typeof LOG_OUT
+
+// status enums
+export enum LoginStatus {
+  NotLoggedIn = 1,
+  Unconfirmed,
+  LoggedIn
+}

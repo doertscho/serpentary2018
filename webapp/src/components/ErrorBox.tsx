@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-export interface Props {
+interface Props {
   message?: string
 }
 
-export const ErrorBox = ({ message }: Props) => {
+export default ({ message }: Props) => {
   if (message && message.length > 0)
     return (
       <div>

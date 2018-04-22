@@ -5,7 +5,7 @@ import { DataAction } from '../actions'
 import { DataResponse } from '../actions/data'
 import { Reducer } from './base'
 
-export const dataReducer: Reducer<DataState> = (state, action) => {
+export const dataReducer: Reducer<DataState, DataAction> = (state, action) => {
   switch(action.event) {
     case constants.RESPONSE:
       return {

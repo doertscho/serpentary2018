@@ -1,45 +1,33 @@
 import * as React from 'react'
+import { Redirect } from 'react-router-dom'
 
-export interface Props {
+import { LoginStatus } from '../constants'
+
+interface Props {
+  loginStatus: LoginStatus
+  referrer: string
   logIn: (username: string, password: string) => void
 }
 
-export interface State {
-  username: string
+interface State {
+  userId: string
   password: string
 }
 
-export class LogInView extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = { username: '', password: '' }
-
-    this.onUsernameChange = this.onUsernameChange.bind(this)
-    this.onPasswordChange = this.onPasswordChange.bind(this)
-    this.onButtonClick = this.onButtonClick.bind(this)
-  }
-
-  onUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ username: event.target.value })
-  }
-
-  onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ password: event.target.value })
-  }
-
-  onButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    this.props.logIn(
-      this.state.username, this.state.password)
-  }
+export default class LogInView extends React.Component<Props, State> {
 
   render() {
+    if (this.props.loginStatus == LoginStatus.LoggedIn) {
+      return <Redirect to={ this.props.referrer || '/' } />
+    }
+
     return (
       <div>
         <h1>Log in</h1>
         <div>
           <input type="text"
             placeholder="Your user ID, or nick name, or email address"
-            value={this.state.username} onChange={this.onUsernameChange} />
+            value={this.state.userId} onChange={this.onUserIdChange} />
         </div>
         <div>
           <input type="password" placeholder="Your password"
@@ -50,5 +38,29 @@ export class LogInView extends React.Component<Props, State> {
         </div>
       </div>
     )
+  }
+
+  constructor(props: Props) {
+    super(props)
+    this.state = { userId: '', password: '' }
+
+    this.onUserIdChange = this.onUserIdChange.bind(this)
+    this.onPasswordChange = this.onPasswordChange.bind(this)
+    this.onButtonClick = this.onButtonClick.bind(this)
+  }
+
+  onUserIdChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ userId: event.target.value })
+  }
+
+  onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ password: event.target.value })
+  }
+
+  onButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
+    let userId = this.state.userId
+    let password = this.state.password
+    this.setState({ password: '' })
+    this.props.logIn(userId, password)
   }
 }

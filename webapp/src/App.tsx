@@ -1,43 +1,83 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { connect, Dispatch } from 'react-redux'
 
-import { Dashboard } from './containers/Dashboard'
-import { SignUp } from './containers/SignUp'
-import { LogIn } from './containers/LogIn'
-import { Tournament } from './containers/Tournament'
-import { MatchDay } from './containers/MatchDay'
-import { Ranking } from './containers/Ranking'
-import { UserBox } from './containers/UserBox'
-import { NotFound } from './components/NotFound'
+import { StoreState } from './types'
+import { Action } from './actions'
+import { initSession } from './actions/session'
+import { isInitialised } from './selectors'
 
-export const App = () =>
-  <BrowserRouter>
-    <div className='page-container'>
-      <h1>serpentary 2018</h1>
-      <nav>
-        <ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/match-days/current'>Match day</Link></li>
-          <li><Link to='/ranking'>Ranking</Link></li>
-        </ul>
-        <UserBox />
-      </nav>
-      <main>
-        <Switch>
+import Dashboard from './containers/Dashboard'
+import SignUp from './containers/SignUp'
+import LogIn from './containers/LogIn'
+import Tournament from './containers/Tournament'
+import MatchDay from './containers/MatchDay'
+import Ranking from './containers/Ranking'
+import UserBox from './containers/UserBox'
+import NotFound from './components/NotFound'
 
-          <Route exact path='/' component={ Dashboard } />
+interface Props {
+  isInitialised: boolean
+  initApp: () => void
+}
 
-          <Route path='/sign-up' component={ SignUp } />
-          <Route path='/log-in' component={ LogIn } />
+class App extends React.Component<Props, any> {
 
-          <Route path='/tournaments/:id(\d+)' component={ Tournament } />
-          <Route path='/match-days/:id(\d+)' component={ MatchDay } />
-          <Route path='/ranking' component={ Ranking } />
+  render() {
+    if (!this.props.isInitialised) {
+      return <div>Initialising ...</div>
+    }
+    return (
+      <BrowserRouter>
+        <div className='page-container'>
+          <h1>serpentary 2018</h1>
+          <nav>
+            <ul>
+              <li><Link to='/'>Home</Link></li>
+              <li><Link to='/match-days/current'>Match day</Link></li>
+              <li><Link to='/ranking'>Ranking</Link></li>
+            </ul>
+            <UserBox />
+          </nav>
+          <main>
+            <Switch>
 
-          <Route component={ NotFound } />
+              <Route exact path='/' component={ Dashboard } />
 
-        </Switch>
-      </main>
-    </div>
-  </BrowserRouter>
+              <Route path='/sign-up' component={ SignUp } />
+              <Route path='/log-in' component={ LogIn } />
+
+              <Route path='/tournaments/:id(\d+)' component={ Tournament } />
+              <Route path='/match-days/:id(\d+)' component={ MatchDay } />
+              <Route path='/ranking' component={ Ranking } />
+
+              <Route component={ NotFound } />
+
+            </Switch>
+          </main>
+        </div>
+      </BrowserRouter>
+    )
+  }
+
+  componentWillMount() {
+    this.props.initApp()
+  }
+}
+
+const mapStateToProps = (state: StoreState) => {
+  return {
+    isInitialised: isInitialised(state)
+  }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    initApp: () => {
+      dispatch(initSession())
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

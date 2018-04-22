@@ -1,10 +1,11 @@
+import { LoginStatus } from '../constants'
 
 export interface SessionState {
-  isLoggedIn: boolean
+  loginStatus: LoginStatus
   userId?: string
   errorMessage?: string
 }
 
 export const INITIAL_SESSION_STATE: SessionState = {
-  isLoggedIn: false
+  loginStatus: LoginStatus.NotLoggedIn
 }

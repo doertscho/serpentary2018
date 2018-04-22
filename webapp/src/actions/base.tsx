@@ -3,6 +3,10 @@ import { StoreState } from '../types'
 import { DataState } from '../types/data'
 import { SessionState } from '../types/session'
 
+export interface InitAction {
+  type: constants.INIT
+}
+
 export type ActionType = constants.DATA | constants.SESSION
 
 export type ActionEvent =

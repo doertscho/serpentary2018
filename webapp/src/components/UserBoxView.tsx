@@ -1,15 +1,17 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-export interface Props {
-  isLoggedIn: boolean
+import { LoginStatus } from '../constants'
+
+interface Props {
+  loginStatus: LoginStatus
   userId?: string
   logOut: () => void
 }
 
-export const UserBoxView = ({ isLoggedIn, userId, logOut }: Props) => {
+export default ({ loginStatus, userId, logOut }: Props) => {
   console.log("UserBoxView re-rendering")
-  if (isLoggedIn)
+  if (loginStatus == LoginStatus.LoggedIn)
     return (
       <div>
         Hello, { userId }!{' '}

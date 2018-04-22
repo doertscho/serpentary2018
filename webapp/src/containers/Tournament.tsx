@@ -1,11 +1,12 @@
 import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
-import { TournamentView } from '../components/TournamentView'
 import { Action } from '../actions'
 import { fetchTournament } from '../actions/data'
 import { makeGetNumberUrlParameter } from '../selectors/util'
 import { makeGetTournament, makeGetMatchDays } from '../selectors/Tournament'
+
+import view from '../components/TournamentView'
 
 const getIdFromUrl = makeGetNumberUrlParameter('id')
 
@@ -28,5 +29,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   }
 }
 
-export const Tournament =
-  connect(makeMapStateToProps, mapDispatchToProps)(TournamentView)
+export default connect(makeMapStateToProps, mapDispatchToProps)(view)
