@@ -1,5 +1,7 @@
 import * as constants from '../constants'
-import { StoreState, DataState, SessionState } from '../types'
+import { StoreState } from '../types'
+import { DataState } from '../types/data'
+import { SessionState } from '../types/session'
 
 export type ActionType = constants.DATA | constants.SESSION
 
@@ -11,10 +13,14 @@ export interface BaseAction<StateType> {
   event: ActionEvent
 }
 
-export interface DataAction extends BaseAction<DataState> {
+export interface BaseDataAction extends BaseAction<DataState> {
   type: constants.DATA
 }
 
-export interface SessionAction extends BaseAction<SessionState> {
+export type SessionOperation =
+  constants.SIGN_UP | constants.LOG_IN | constants.LOG_OUT
+
+export interface BaseSessionAction extends BaseAction<SessionState> {
   type: constants.SESSION
+  operation: SessionOperation
 }

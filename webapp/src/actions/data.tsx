@@ -5,12 +5,12 @@ import { API_BASE_URL } from '../../conf/api'
 import * as constants from '../constants'
 import { models } from '../types/models'
 import { StoreState } from '../types'
-import { DataAction } from './base'
+import { BaseDataAction } from './base'
 
 export const fetchTournaments = () => fetchData('/data')
 export const fetchTournament = (id: number) => fetchData('/data')
 
-export interface DataRequest extends DataAction {
+export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST
   path: string
 }
@@ -22,7 +22,7 @@ export function dataRequest(path: string): DataRequest {
   }
 }
 
-export interface DataResponse extends DataAction {
+export interface DataResponse extends BaseDataAction {
   event: constants.RESPONSE
   path: string
   data: models.Update
@@ -37,7 +37,7 @@ export function dataResponse(
   }
 }
 
-export interface DataError extends DataAction {
+export interface DataError extends BaseDataAction {
   event: constants.ERROR
   path: string
   error: any

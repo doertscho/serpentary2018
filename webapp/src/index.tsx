@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 
-import { StoreState, SAMPLE_STATE } from './types'
+import { StoreState, INITIAL_STATE } from './types'
 import { models } from './types/models'
 import { rootReducer } from './reducers'
 import { Provider } from 'react-redux'
@@ -13,7 +13,7 @@ require('file-loader?name=[name].[ext]!./index.html')
 
 const store = createStore<StoreState>(
   rootReducer,
-  SAMPLE_STATE,
+  INITIAL_STATE,
   applyMiddleware(thunkMiddleware)
 )
 

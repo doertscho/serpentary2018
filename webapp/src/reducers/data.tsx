@@ -1,8 +1,7 @@
 import * as constants from '../constants'
-import { DataState, Entity, ParentChildTable } from '../types'
+import { DataState, Entity, ParentChildTable } from '../types/data'
 import { models as m } from '../types/models'
-import { Action } from '../actions'
-import { DataAction } from '../actions/base'
+import { DataAction } from '../actions'
 import { DataResponse } from '../actions/data'
 import { Reducer } from './base'
 

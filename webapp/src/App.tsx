@@ -8,6 +8,7 @@ import { LogIn } from './containers/LogIn'
 import { Tournament } from './containers/Tournament'
 import { MatchDay } from './containers/MatchDay'
 import { Ranking } from './containers/Ranking'
+import { UserBox } from './containers/UserBox'
 import { NotFound } from './components/NotFound'
 
 export const App = () =>
@@ -20,10 +21,7 @@ export const App = () =>
           <li><Link to='/match-days/current'>Match day</Link></li>
           <li><Link to='/ranking'>Ranking</Link></li>
         </ul>
-        <ul>
-          <li><Link to='/log-in'>Log in</Link></li>
-          <li><Link to='/sign-up'>Sign up</Link></li>
-        </ul>
+        <UserBox />
       </nav>
       <main>
         <Switch>

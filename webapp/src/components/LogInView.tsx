@@ -35,13 +35,14 @@ export class LogInView extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <h1>Login</h1>
+        <h1>Log in</h1>
         <div>
-          <input type="text" placeholder="Nick name"
+          <input type="text"
+            placeholder="Your user ID, or nick name, or email address"
             value={this.state.username} onChange={this.onUsernameChange} />
         </div>
         <div>
-          <input type="password" placeholder="Password"
+          <input type="password" placeholder="Your password"
             value={this.state.password} onChange={this.onPasswordChange} />
         </div>
         <div>
