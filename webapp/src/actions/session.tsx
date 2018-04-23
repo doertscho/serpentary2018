@@ -231,3 +231,17 @@ export function sessionError(
     rawError: data.rawError
   }
 }
+
+export interface SetLocale extends BaseSessionAction {
+  event: constants.REQUEST
+  operation: constants.SET_LOCALE
+  locale: constants.LocaleIdentifier
+}
+export function setLocale(locale: constants.LocaleIdentifier): SetLocale {
+  return {
+    type: constants.SESSION,
+    event: constants.REQUEST,
+    operation: constants.SET_LOCALE,
+    locale: locale
+  }
+}

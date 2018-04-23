@@ -1,25 +1,30 @@
-import { Locale, Localiser } from './base'
-import { de } from './locale_de'
+import { createSelector } from 'reselect'
 
-const locales: { [name: string]: Locale } = {
-  de: de,
+import { Locale } from './base'
+import { de } from './locale_de'
+import { StoreState } from '../types'
+import { getLocale } from '../selectors/session'
+
+export type Localiser =
+  (key: string, fallback?: string, ...args: any[]) => string
+
+export interface Localisable {
+  l: Localiser
 }
 
 const empty: Locale = { }
 
-var preferredLocale: Locale = empty
-
-export function setPreferredLocale(locale: string) {
-  if (!locales[locale]) {
-    console.log("requested unknown locale", locale)
-    return
-  }
-  preferredLocale = locales[locale]
+const locales: { [name: string]: Locale } = {
+  de: de,
+  en: empty,
 }
 
 function integrateArgs(template: string, ...args: any[]): string {
-  // TODO
-  return template
+  var result = template
+  for (var idx in args) {
+    result = result.replace('{}', args[idx])
+  }
+  return result
 }
 
 function localiseWithLocale(locale: Locale): Localiser {
@@ -38,8 +43,22 @@ const localiseWithFallback: Localiser = (key, fallback, args) => {
   return key
 }
 
-export function getLocaliser(locale?: string): Localiser {
-  if (locale && locales[locale])
-    return localiseWithLocale(locales[locale])
-  return localiseWithFallback
+export const getLocaliser =
+    createSelector(
+      [getLocale],
+      (locale) => {
+        if (locale && locales[locale])
+          return localiseWithLocale(locales[locale])
+        return localiseWithFallback
+      }
+    )
+
+export function withLocaliser(
+    mapProps: (state: StoreState, props?: any) => any) {
+
+  return function(state: StoreState, props?: any) {
+    let result = mapProps(state, props) || { }
+    result.l = getLocaliser(state)
+    return result
+  }
 }

@@ -21,10 +21,17 @@ export const LOG_IN = 'LOG_IN'
 export type LOG_IN = typeof LOG_IN
 export const LOG_OUT = 'LOG_OUT'
 export type LOG_OUT = typeof LOG_OUT
+export const SET_LOCALE = 'SET_LOCALE'
+export type SET_LOCALE = typeof SET_LOCALE
 
 // status enums
 export enum LoginStatus {
   NotLoggedIn = 1,
   Unconfirmed,
   LoggedIn
+}
+
+export enum LocaleIdentifier {
+  de = 'de',
+  en = 'en'
 }

@@ -13,6 +13,9 @@ export const sessionReducer: Reducer<SessionState, SessionAction> =
     case constants.LOG_OUT:
       return handleLogOutEvent(state, action)
   }
+  if (action.operation == constants.SET_LOCALE)
+    return { session: copyWith(state, { locale: (action as any).locale }) }
+  return { }
 }
 
 const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
@@ -66,6 +69,7 @@ function copyWith(
   return {
     loginStatus: changed.loginStatus || state.loginStatus,
     userId: changed.userId || state.userId,
-    errorMessage: changed.errorMessage || state.errorMessage
+    errorMessage: changed.errorMessage || state.errorMessage,
+    locale: changed.locale || state.locale,
   }
 }

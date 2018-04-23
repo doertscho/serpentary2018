@@ -6,6 +6,7 @@ import { dataReducer } from './data'
 import { sessionReducer } from './session'
 
 export function rootReducer(state: StoreState, action: Action): StoreState {
+  console.log("got action:", action)
   switch (action.type) {
     case constants.DATA:
       return copyWith(state, dataReducer(state.data, action))
