@@ -1,12 +1,11 @@
+import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
-import { StoreState } from '../types'
-import { models } from '../types/models'
-import { Action } from '../actions'
 
-import view from '../components/RankingView'
+import { Localisable, localisableComponent } from '../locales'
 
-const mapStateToProps = (state: StoreState) => {
-  return { }
-}
+const view = ({ l }: Localisable) =>
+  <div>
+    <h1>Ranking</h1>
+  </div>
 
-export default connect(mapStateToProps)(view)
+export default localisableComponent(view)

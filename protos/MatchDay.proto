@@ -8,5 +8,4 @@ message MatchDay {
 
   int32 tournament_id = 3;
 
-  string name = 4;
 }

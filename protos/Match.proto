@@ -11,6 +11,4 @@ message Match {
   int32 home_team_id = 4;
   int32 away_team_id = 5;
   int32 stadium_id = 6;
-
-  string name = 7;
 }

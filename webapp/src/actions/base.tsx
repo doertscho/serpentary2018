@@ -22,7 +22,8 @@ export interface BaseDataAction extends BaseAction<DataState> {
 }
 
 export type SessionOperation =
-  constants.SIGN_UP | constants.LOG_IN | constants.LOG_OUT
+  constants.SIGN_UP | constants.LOG_IN | constants.LOG_OUT |
+  constants.SET_LOCALE
 
 export interface BaseSessionAction extends BaseAction<SessionState> {
   type: constants.SESSION

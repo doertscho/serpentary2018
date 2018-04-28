@@ -7,9 +7,11 @@ export type DataAction =
   data.DataRequest | data.DataResponse | data.DataError
 
 export type SessionAction =
-  session.SessionRequest | session.SessionResponse | session.SessionError
+  session.SessionRequest | session.SessionResponse | session.SessionError |
+  session.SetLocale
 
 export type Action =
   InitAction |
   data.DataRequest | data.DataResponse | data.DataError |
-  session.SessionRequest | session.SessionResponse | session.SessionError
+  session.SessionRequest | session.SessionResponse | session.SessionError |
+  session.SetLocale
