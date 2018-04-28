@@ -2,6 +2,14 @@ import { Locale } from './base'
 
 export const de: Locale = {
 
+  // page-wide
+  REFRESH: 'Neu laden',
+
+  // navigation links
+  NAV_HOME: 'Übersicht',
+  NAV_MATCH_DAY: 'Spieltag',
+  NAV_RANKING: 'Rangliste',
+
   // user box
   GREETING: 'Hallo, {}!',
   GREETING_GUEST: 'Hallo, Gast!',
@@ -17,4 +25,10 @@ export const de: Locale = {
   PASSWORD_INPUT: 'Passwort',
   EMAIL_INPUT: 'Deine E-Mail-Adresse',
   SIGN_UP_BUTTON: 'Bin dabei!',
+
+  // dashboard page
+  DASHBOARD_PAGE_TITLE: 'Übersicht',
+
+  // tournament details page
+  TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo'
 }

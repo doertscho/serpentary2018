@@ -1,0 +1,17 @@
+syntax = "proto3";
+package models;
+
+message LocalisableString {
+
+  repeated Localisation localisations = 1;
+}
+
+message Localisation {
+  Locale locale = 1;
+  string value = 2;
+}
+
+enum Locale {
+  EN = 0;
+  DE = 1;
+}

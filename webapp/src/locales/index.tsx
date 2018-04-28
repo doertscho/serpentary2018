@@ -1,12 +1,18 @@
 import { createSelector } from 'reselect'
+import { connect } from 'react-redux'
 
-import { Locale } from './base'
-import { de } from './locale_de'
+import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { getLocale } from '../selectors/session'
+import { Locale } from './base'
+import { de } from './locale_de'
 
 export type Localiser =
-  (key: string, fallback?: string, ...args: any[]) => string
+  (
+    ref: string | m.ILocalisableString,
+    fallback?: string,
+    ...args: any[]
+  ) => string
 
 export interface Localisable {
   l: Localiser
@@ -19,6 +25,13 @@ const locales: { [name: string]: Locale } = {
   en: empty,
 }
 
+const localeIds: { [name: string]: number } = {
+  de: m.Locale.DE,
+  en: m.Locale.EN,
+}
+
+const defaultLocale = m.Locale.EN
+
 function integrateArgs(template: string, ...args: any[]): string {
   var result = template
   for (var idx in args) {
@@ -27,20 +40,46 @@ function integrateArgs(template: string, ...args: any[]): string {
   return result
 }
 
-function localiseWithLocale(locale: Locale): Localiser {
-  return (key, fallback, args) => {
-    if (locale[key])
-      return integrateArgs(locale[key], args)
-    if (fallback)
-      return integrateArgs(fallback, args)
-    return key
+function selectFromLocalisableString(
+    localisable: m.ILocalisableString, preferredLocale: number) {
+
+  let count = localisable.localisations.length
+  if (count == 0) {
+    return '???'
+  }
+
+  for (var i = 0; i < count; i++) {
+    let entry = localisable.localisations[i]
+    if (entry.locale == preferredLocale) {
+      return entry.value
+    }
+  }
+
+  return localisable.localisations[0].value
+}
+
+function localiseWithLocale(locale: Locale, localeId: number): Localiser {
+  return (ref, fallback, args) => {
+    if (typeof ref == 'string') {
+      if (locale[ref])
+        return integrateArgs(locale[ref], args)
+      if (fallback)
+        return integrateArgs(fallback, args)
+      return ref
+    } else {
+      return selectFromLocalisableString(ref, localeId)
+    }
   }
 }
 
-const localiseWithFallback: Localiser = (key, fallback, args) => {
-  if (fallback)
-    return integrateArgs(fallback, args)
-  return key
+const localiseWithFallback: Localiser = (ref, fallback, args) => {
+  if (typeof ref == 'string') {
+    if (fallback)
+      return integrateArgs(fallback, args)
+    return ref
+  } else {
+    return selectFromLocalisableString(ref, defaultLocale)
+  }
 }
 
 export const getLocaliser =
@@ -48,7 +87,7 @@ export const getLocaliser =
       [getLocale],
       (locale) => {
         if (locale && locales[locale])
-          return localiseWithLocale(locales[locale])
+          return localiseWithLocale(locales[locale], localeIds[locale])
         return localiseWithFallback
       }
     )
@@ -61,4 +100,8 @@ export function withLocaliser(
     result.l = getLocaliser(state)
     return result
   }
+}
+
+export function localisableComponent(view: any) {
+  return connect(withLocaliser(() => {}))(view)
 }

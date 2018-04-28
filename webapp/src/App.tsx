@@ -8,13 +8,14 @@ import { Action } from './actions'
 import { initSession } from './actions/session'
 import { isInitialised } from './selectors'
 
+import UserBox from './containers/UserBox'
+import Navigation from './containers/Navigation'
 import Dashboard from './containers/Dashboard'
 import SignUp from './containers/SignUp'
 import LogIn from './containers/LogIn'
 import Tournament from './containers/Tournament'
 import MatchDay from './containers/MatchDay'
 import Ranking from './containers/Ranking'
-import UserBox from './containers/UserBox'
 import NotFound from './components/NotFound'
 
 interface Props {
@@ -33,11 +34,7 @@ class App extends React.Component<Props, any> {
         <div className='page-container'>
           <h1>serpentary 2018</h1>
           <nav>
-            <ul>
-              <li><Link to='/'>Home</Link></li>
-              <li><Link to='/match-days/current'>Match day</Link></li>
-              <li><Link to='/ranking'>Ranking</Link></li>
-            </ul>
+            <Navigation />
             <UserBox />
           </nav>
           <main>

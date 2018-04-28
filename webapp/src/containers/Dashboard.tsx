@@ -3,36 +3,39 @@ import { connect, Dispatch } from 'react-redux'
 
 import { StoreState } from '../types'
 import { Action } from '../actions'
+import { models as m } from '../types/models'
+import { Localisable, withLocaliser } from '../locales'
 import { fetchTournaments } from '../actions/data'
 import { getTournaments } from '../selectors/data'
-import { models as m } from '../types/models'
 
 import TournamentLink from '../components/TournamentLink'
 
-interface Props {
+interface Props extends Localisable {
   tournaments: m.Tournament[]
   refreshTournaments: () => void
 }
 
-const view = ({ tournaments, refreshTournaments }: Props) => {
+const view = ({ tournaments, refreshTournaments, l }: Props) => {
   console.log("Dashboard re-rendering")
   return (
     <div>
-      <h1>Tournament list</h1>
+      <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
       <ul>
         { tournaments.map(t => <li><TournamentLink tournament={t} /></li>) }
       </ul>
       <div>
-        <span onClick={refreshTournaments}>Neu laden</span>
+        <span onClick={refreshTournaments}>
+          { l('REFRESH', 'Refresh') }
+        </span>
       </div>
     </div>
   )
 }
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
     tournaments: getTournaments(state)
   }
-}
+})
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
