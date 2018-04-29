@@ -19,27 +19,55 @@ export const dataReducer: Reducer<DataState, DataAction> = (state, action) => {
 function mergeWithUpdate(
     state: DataState, update: m.Update): DataState {
 
-  const newTournaments = mergeRecords(
+  let newTournaments = mergeRecords(
       state.tournaments, update.tournaments, m.Tournament.create)
 
-  const matchDayData = mergeRecordsAndRefs(
-      state.matchDays, state.matchDaysByTournament, update.matchDays,
-      m.MatchDay.create, u => u.tournamentId)
-  const newMatchDays = matchDayData.state
-  const newMatchDaysByTournament = matchDayData.refs
+  let matchDayData = mergeRecordsAndRefs(
+      state.matchDays, update.matchDays, m.MatchDay.create,
+      [state.matchDaysByTournament],
+      [c => c.tournamentId]
+    )
+  let newMatchDays = matchDayData.state
+  let newMatchDaysByTournament = matchDayData.refs[0]
 
-  const matchData = mergeRecordsAndRefs(
-      state.matches, state.matchesByMatchDay, update.matches,
-      m.Match.create, u => u.matchDayId)
-  const newMatches = matchData.state
-  const newMatchesByMatchDay = matchData.refs
+  let matchData = mergeRecordsAndRefs(
+      state.matches, update.matches, m.Match.create,
+      [state.matchesByMatchDay],
+      [c => c.matchDayId]
+    )
+  let newMatches = matchData.state
+  let newMatchesByMatchDay = matchData.refs[0]
+
+  let newUsers = mergeRecords(state.users, update.users, m.User.create)
+
+  let newSquads = mergeRecords(state.squads, update.squads, m.Squad.create)
+
+  let poolsData = mergeRecordsAndRefs(
+      state.pools, update.pools, m.Pool.create,
+      [state.poolsByTournament, state.poolsBySquad],
+      [c => c.tournamentId,     c => c.squadId])
+  let newPools = poolsData.state
+  let newPoolsByTournament = poolsData.refs[0]
+  let newPoolsBySquad = poolsData.refs[1]
+
+  let newBets = mergeRecords(
+      state.bets, update.bets, m.MatchDayBetBucket.create)
 
   return {
     tournaments: newTournaments,
     matchDays: newMatchDays,
     matchDaysByTournament: newMatchDaysByTournament,
     matches: newMatches,
-    matchesByMatchDay: newMatchesByMatchDay
+    matchesByMatchDay: newMatchesByMatchDay,
+
+    users: newUsers,
+
+    squads: newSquads,
+    pools: newPools,
+    poolsByTournament: newPoolsByTournament,
+    poolsBySquad: newPoolsBySquad,
+
+    bets: newBets,
   }
 }
 
@@ -54,29 +82,43 @@ function mergeRecords<I extends Entity, R extends I>(
 }
 
 function mergeRecordsAndRefs<I extends Entity, R extends I>(
-    state: R[], refs: ParentChildTable,
+    state: R[],
     update: I[],
     makeRecord: (u: I) => R,
-    getParentId: (u: I) => number
-): { state: R[], refs: ParentChildTable } {
+    refs: ParentChildTable[],
+    getParentId: ((u: I) => number)[]
+): { state: R[], refs: ParentChildTable[] } {
 
-  const changed: R[] = []
-  const newRefs: Relation[] = []
-  update.forEach(u => {
+  let changed: R[] = []
+  let newRefs: Relation[][] = []
+  for (var i = 0; i < getParentId.length; i++) {
+    newRefs[i] = []
+  }
+
+  for (var i = 0; i < update.length; i++) {
+    let u = update[i]
     if (u.id && updateIsNewer(state[u.id], u)) {
       changed.push(makeRecord(u))
-      if (!state[u.id])
-        newRefs.push({ parentId: getParentId(u), childId: u.id })
+      if (!state[u.id]) {
+        for (var j = 0; j < getParentId.length; j++) {
+          newRefs[j].push({ parentId: getParentId[j](u), childId: u.id })
+        }
+      }
     }
-  })
+  }
   if (changed.length == 0) return { state, refs }
-  if (newRefs.length == 0)
+  if (newRefs.length == 0 || newRefs[0].length == 0)
     return { state: copyAndMergeRecordArray(state, changed), refs }
-  else
+  else {
+    let mergedRefs = []
+    for (var i = 0; i < getParentId.length; i++) {
+      mergedRefs[i] = copyAndMergeReferenceArray(refs[i], newRefs[i])
+    }
     return {
       state: copyAndMergeRecordArray(state, changed),
-      refs: copyAndMergeReferenceArray(refs, newRefs)
+      refs: mergedRefs
     }
+  }
 }
 
 function updateIsNewer<T extends Entity>(state: T, update: T): boolean {
