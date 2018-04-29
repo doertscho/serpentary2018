@@ -1,0 +1,35 @@
+syntax = "proto3";
+package models;
+
+message MatchDayBetBucket {
+
+  int32 id = 1;
+  int32 updated = 2;
+
+  int32 pool_id = 3;
+  int32 match_day_id = 4;
+
+  repeated MatchBetBucket bets = 5;
+}
+
+message MatchBetBucket {
+
+  int32 match_id = 1;
+
+  repeated Bet bets = 2;
+}
+
+message Bet {
+
+  int32 user_id = 1;
+
+  BetStatus status = 2;
+
+  int32 home_goals = 3;
+  int32 away_goals = 4;
+}
+
+enum BetStatus {
+  MISSING = 0;
+  HIDDEN = 1;
+}

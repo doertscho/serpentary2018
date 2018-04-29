@@ -1,0 +1,11 @@
+syntax = "proto3";
+package models;
+
+message Squad {
+
+  int32 id = 1;
+  int32 updated = 2;
+  string name = 3;
+
+  repeated int32 members = 4;
+}

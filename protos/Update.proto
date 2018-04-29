@@ -4,10 +4,21 @@ package models;
 import "Tournament.proto";
 import "MatchDay.proto";
 import "Match.proto";
+import "User.proto";
+import "Squad.proto";
+import "Pool.proto";
+import "MatchDayBetBucket.proto";
 
 message Update {
 
   repeated Tournament tournaments = 1;
   repeated MatchDay match_days = 2;
   repeated Match matches = 3;
+
+  repeated User users = 4;
+
+  repeated Squad squads = 5;
+  repeated Pool pools = 6;
+
+  repeated MatchDayBetBucket bets = 7;
 }
