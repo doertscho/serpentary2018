@@ -6,14 +6,14 @@ import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logOut, setLocale } from '../actions/session'
 import { getLoginStatus, getUserId, getLocale } from '../selectors/session'
-import { Localisable, withLocaliser } from '../locales'
-import { LocaleIdentifier, LoginStatus } from '../constants'
+import { Localisable, withLocaliser, supportedLocales } from '../locales'
+import { LoginStatus } from '../constants'
 
 interface Props extends Localisable {
   loginStatus: LoginStatus
   userId?: string
   logOut: () => void
-  setLocale: (locale: LocaleIdentifier) => void
+  setLocale: (locale: string) => void
 }
 
 const userView = ({ userId, logOut, l }: Props) =>
@@ -38,12 +38,22 @@ const guestView = ({ l }: Props) =>
     <Link to="/sign-up">{ l('SIGN_UP', 'Sign up') }</Link>
   </span>
 
-const localeSelector = ({ setLocale }: Props) =>
+const localeSelector = ({ setLocale }: Props) => (
   <span>
-    <a href="#" onClick={() => setLocale(LocaleIdentifier.de)}>de</a>
-    { ' / ' }
-    <a href="#" onClick={() => setLocale(LocaleIdentifier.en)}>en</a>
+    { supportedLocales.map(locale => {
+      let onClick = (event: any) => {
+        event.preventDefault()
+        setLocale(locale)
+      }
+      return (
+        <span>
+          <a href="#" onClick={onClick}>{ locale }</a>
+          {' '}
+        </span>
+      )
+    }) }
   </span>
+)
 
 const view = (props: Props) => {
 
@@ -77,7 +87,7 @@ const mapStateToProps = withLocaliser((state: StoreState) => {
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     logOut: () => { dispatch(logOut()) },
-    setLocale: (locale: LocaleIdentifier) => { dispatch(setLocale(locale)) }
+    setLocale: (locale: string) => { dispatch(setLocale(locale)) }
   }
 }
 

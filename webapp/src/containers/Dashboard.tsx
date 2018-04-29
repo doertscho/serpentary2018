@@ -16,7 +16,7 @@ interface Props extends Localisable {
 }
 
 const view = ({ tournaments, refreshTournaments, l }: Props) => {
-  console.log("Dashboard re-rendering")
+  console.log("Dashboard rendering")
   return (
     <div>
       <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
@@ -31,6 +31,7 @@ const view = ({ tournaments, refreshTournaments, l }: Props) => {
     </div>
   )
 }
+
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
     tournaments: getTournaments(state)

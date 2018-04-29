@@ -9,7 +9,9 @@ import {
 
 import * as conf from '../../conf/cognito'
 import * as constants from '../constants'
+import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { supportedLocales } from '../locales'
 import { InitAction, BaseSessionAction, SessionOperation } from './base'
 
 const config = {
@@ -21,6 +23,19 @@ const cognitoUserPool: CognitoUserPool = new CognitoUserPool(config)
 var cognitoUser: CognitoUser = cognitoUserPool.getCurrentUser()
 
 export function initSession() {
+  return function(dispatch: Dispatch<StoreState>) {
+    dispatch(initLocale())
+    dispatch(initUser())
+  }
+}
+
+function initLocale() {
+  return function(dispatch: Dispatch<StoreState>) {
+    dispatch(determineLocale(window.navigator.language || ''))
+  }
+}
+
+function initUser() {
   return function(dispatch: Dispatch<StoreState>) {
     if (cognitoUser) {
       dispatch(recoverSession())
@@ -66,8 +81,23 @@ function fetchAttributes() {
       result.forEach(entry => {
         if (entry.getName() == 'preferred_username')
           dispatch(sessionResponse(constants.LOG_IN, null, entry.getValue()))
+        if (entry.getName() == 'locale')
+          dispatch(determineLocale(entry.getValue()))
       })
     })
+  }
+}
+
+function determineLocale(name: string) {
+  return function(dispatch: Dispatch<StoreState>) {
+    let lowerName = name.toLowerCase()
+    for (var i = 0; i < supportedLocales.length; i++) {
+      let locale = supportedLocales[i].toLowerCase();
+      if (lowerName.indexOf(locale) !== -1) {
+        dispatch(setLocale(locale))
+        return
+      }
+    }
   }
 }
 
@@ -235,9 +265,9 @@ export function sessionError(
 export interface SetLocale extends BaseSessionAction {
   event: constants.REQUEST
   operation: constants.SET_LOCALE
-  locale: constants.LocaleIdentifier
+  locale: string
 }
-export function setLocale(locale: constants.LocaleIdentifier): SetLocale {
+export function setLocale(locale: string): SetLocale {
   return {
     type: constants.SESSION,
     event: constants.REQUEST,
