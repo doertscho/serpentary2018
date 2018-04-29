@@ -18,6 +18,7 @@ interface Props extends Localisable {
 }
 
 const view = ({ tournament, matchDays, refreshTournament, l }: Props) => {
+  console.log('Tournament rendering')
   return (
     <div>
       <h1>{ l('TOURNAMENT_PAGE_TITLE', 'Tournament details') }</h1>
@@ -27,7 +28,9 @@ const view = ({ tournament, matchDays, refreshTournament, l }: Props) => {
           <li><MatchDayLink matchDay={matchDay} /></li>) }
       </ul>
       <div>
-        <span onClick={() => refreshTournament(tournament.id)}>Neu laden</span>
+        <span onClick={() => refreshTournament(tournament.id)}>
+          { l('REFRESH', 'Refresh') }
+        </span>
       </div>
     </div>
   )

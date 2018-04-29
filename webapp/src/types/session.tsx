@@ -1,10 +1,11 @@
-import { LoginStatus, LocaleIdentifier } from '../constants'
+import { models as m } from './models'
+import { LoginStatus } from '../constants'
 
 export interface SessionState {
   loginStatus: LoginStatus
   userId?: string
   errorMessage?: string
-  locale?: LocaleIdentifier
+  locale?: string
 }
 
 export const INITIAL_SESSION_STATE: SessionState = {

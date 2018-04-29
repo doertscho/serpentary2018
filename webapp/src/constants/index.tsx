@@ -30,8 +30,3 @@ export enum LoginStatus {
   Unconfirmed,
   LoggedIn
 }
-
-export enum LocaleIdentifier {
-  de = 'de',
-  en = 'en'
-}

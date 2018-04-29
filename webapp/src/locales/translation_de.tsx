@@ -1,6 +1,6 @@
-import { Locale } from './base'
+import { Translation } from './base'
 
-export const de: Locale = {
+const translation_de: Translation = {
 
   // page-wide
   REFRESH: 'Neu laden',
@@ -32,3 +32,5 @@ export const de: Locale = {
   // tournament details page
   TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo'
 }
+
+export default translation_de

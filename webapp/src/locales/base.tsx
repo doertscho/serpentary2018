@@ -1,1 +1,1 @@
-export type Locale = { [key: string]: string }
+export type Translation = { [key: string]: string }
