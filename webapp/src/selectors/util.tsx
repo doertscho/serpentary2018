@@ -5,7 +5,9 @@ import { StoreState } from '../types'
 export const makeGetUrlParameter = (key: string) =>
   (_: StoreState, props?: any) => props.match.params[key]
 
+export type StringSelector = ParametricSelector<StoreState, any, string>
 export type NumberSelector = ParametricSelector<StoreState, any, number>
+export type ModelSelector<M> = ParametricSelector<StoreState, any, M>
 
 export const makeGetNumberUrlParameter = (key: string) => {
   const getUrlParameter = makeGetUrlParameter(key)

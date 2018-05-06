@@ -1,0 +1,48 @@
+@import defs
+
+$betCellBorderWidth: 2px
+$betCellMargin: 2px
+$betCellPadding: 4px
+$betCellWidth: 100px
+$betCellHeight: 40px
+$matchCellMargin: $betCellMargin
+$matchCellPadding: $betCellPadding
+$matchCellHeight: 80px
+
+.betMatrix
+  border: $betCellBorderWidth solid $primary
+  display: flex
+
+  .matches
+    display: flex
+
+  .users
+    margin-top: $matchCellHeight + $matchCellMargin
+
+  .users .user,
+  .matches .match,
+  .matches .bet
+    margin: $betCellMargin
+    padding: $betCellPadding
+    width: $betCellWidth
+
+  .matches .match,
+  .matches .bet
+    display: flex
+    justify-content: center
+
+  .matches .match
+    height: $matchCellHeight
+
+  .users .user,
+  .matches .bet
+    display: flex
+    align-items: center
+    height: $betCellHeight
+
+  .matches .bet
+    border: $betCellBorderWidth solid $primary
+    &.missing
+      background-color: #c99
+    &.hidden
+      background-color: #ccc

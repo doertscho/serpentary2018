@@ -30,6 +30,7 @@ message Bet {
 }
 
 enum BetStatus {
-  MISSING = 0;
-  HIDDEN = 1;
+  HIDDEN = 0;
+  MISSING = 1;
+  VISIBLE = 2;
 }

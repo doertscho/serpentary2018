@@ -30,7 +30,17 @@ const translation_de: Translation = {
   DASHBOARD_PAGE_TITLE: 'Übersicht',
 
   // tournament details page
-  TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo'
+  TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo',
+  TOURNAMENT_MATCH_DAYS: 'Spieltage in diesem Wettbewerb',
+
+  // match day details page
+  MATCH_DAY_PAGE_TITLE: 'Spieltagsinfo',
+  MATCH_DAY_MATCHES: 'Spiele an diesem Spieltag',
+  MATCH_DAY_SQUADS: 'Tipps für diesen Spieltag',
+
+  // match day bets page
+  MATCH_DAY_BETS_PAGE_TITLE: 'Spieltag: Tipps',
+  MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
 }
 
 export default translation_de

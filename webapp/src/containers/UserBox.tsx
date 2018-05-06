@@ -46,7 +46,7 @@ const localeSelector = ({ setLocale }: Props) => (
         setLocale(locale)
       }
       return (
-        <span>
+        <span key={locale}>
           <a href="#" onClick={onClick}>{ locale }</a>
           {' '}
         </span>

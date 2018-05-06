@@ -9,6 +9,17 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
+func NotFound() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{StatusCode: 404}
+}
+
+func BadRequest(message string) events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 400,
+		Body:       message,
+	}
+}
+
 func BuildResponse(data *models.Update) events.APIGatewayProxyResponse {
 
 	serialised, err := proto.Marshal(data)

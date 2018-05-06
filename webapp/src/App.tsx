@@ -15,6 +15,7 @@ import SignUp from './containers/SignUp'
 import LogIn from './containers/LogIn'
 import Tournament from './containers/Tournament'
 import MatchDay from './containers/MatchDay'
+import MatchDayBets from './containers/MatchDayBets'
 import Ranking from './containers/Ranking'
 import NotFound from './components/NotFound'
 
@@ -46,7 +47,11 @@ class App extends React.Component<Props, any> {
               <Route path='/log-in' component={ LogIn } />
 
               <Route path='/tournaments/:id(\d+)' component={ Tournament } />
+
+              <Route path='/match-days/:id(\d+)/bets/:squad'
+                  component={ MatchDayBets } />
               <Route path='/match-days/:id(\d+)' component={ MatchDay } />
+
               <Route path='/ranking' component={ Ranking } />
 
               <Route component={ NotFound } />

@@ -51,10 +51,10 @@ phases:
 
       # == Go build ==
       # Enter the handlers source directory (via the symlink)
-      - cd "/go/src/main/handlers"
+      - cd "/go/src/main/dispatchers"
       # Build our Go application
       # TODO: automate to build all files in lambdas/src/handlers
-      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/main main.go
+      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get get.go
 
       # == Web App build ==
       # Enter the Web App root directory
@@ -67,6 +67,8 @@ phases:
       - printf "export const COGNITO_REGION = '${COGNITO_REGION}'\nexport const COGNITO_USER_POOL_ID = '${COGNITO_USER_POOL_ID}'\nexport const COGNITO_CLIENT_ID = '${COGNITO_CLIENT_ID}'\n" > conf/cognito.tsx
       # Run webpack to perform compilation and packaging
       - webpack --mode=production
+      # Don't want to deploy source maps
+      - rm dist/*.map
 
       # == AWS deployment ==
       # Enter the project root directory
