@@ -9,10 +9,10 @@ Parameters:
     Description: AWS CodeStar projectID used to associate new resources to team members
 
 Resources:
-  GetSomeData:
+  GetData:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: lambdas/dist/main
+      Handler: lambdas/dist/get
       Runtime: go1.x
       Role:
         Fn::ImportValue:
@@ -21,5 +21,10 @@ Resources:
         GetEvent:
           Type: Api
           Properties:
-            Path: /data
+            Path: /tournaments
+            Method: get
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}
             Method: get

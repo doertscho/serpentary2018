@@ -21,7 +21,8 @@ const view = ({ tournaments, refreshTournaments, l }: Props) => {
     <div>
       <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
       <ul>
-        { tournaments.map(t => <li><TournamentLink tournament={t} /></li>) }
+        { tournaments.map(t =>
+          <li key={t.id}><TournamentLink tournament={t} /></li>) }
       </ul>
       <div>
         <span onClick={refreshTournaments}>
@@ -40,9 +41,7 @@ const mapStateToProps = withLocaliser((state: StoreState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    refreshTournaments: () => {
-      dispatch(fetchTournaments())
-    }
+    refreshTournaments: () => { dispatch(fetchTournaments()) }
   }
 }
 

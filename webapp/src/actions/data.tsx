@@ -7,8 +7,8 @@ import { models } from '../types/models'
 import { StoreState } from '../types'
 import { BaseDataAction } from './base'
 
-export const fetchTournaments = () => fetchData('/data')
-export const fetchTournament = (id: number) => fetchData('/data')
+export const fetchTournaments = () => fetchData('/tournaments')
+export const fetchTournament = (id: number) => fetchData('/tournaments/' + id)
 
 export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST

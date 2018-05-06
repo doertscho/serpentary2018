@@ -23,9 +23,10 @@ const view = ({ tournament, matchDays, refreshTournament, l }: Props) => {
     <div>
       <h1>{ l('TOURNAMENT_PAGE_TITLE', 'Tournament details') }</h1>
       <h2>{ l(tournament.name) }</h2>
+      <h3>{ l('TOURNAMENT_MATCH_DAYS', 'Match days in this tournament') }</h3>
       <ul>
         { matchDays.map(matchDay =>
-          <li><MatchDayLink matchDay={matchDay} /></li>) }
+          <li key={matchDay.id}><MatchDayLink matchDay={matchDay} /></li>) }
       </ul>
       <div>
         <span onClick={() => refreshTournament(tournament.id)}>
@@ -39,8 +40,8 @@ const view = ({ tournament, matchDays, refreshTournament, l }: Props) => {
 const getIdFromUrl = makeGetNumberUrlParameter('id')
 
 const makeMapStateToProps = () => {
-  const getTournament = makeGetTournament(getIdFromUrl)
-  const getMatchDays = makeGetMatchDays(getIdFromUrl)
+  let getTournament = makeGetTournament(getIdFromUrl)
+  let getMatchDays = makeGetMatchDays(getIdFromUrl)
   return withLocaliser((state: StoreState, props: any) => {
     return {
       tournament: getTournament(state, props),
