@@ -9,7 +9,7 @@ export type StringSelector = ParametricSelector<StoreState, any, string>
 export type NumberSelector = ParametricSelector<StoreState, any, number>
 export type ModelSelector<M> = ParametricSelector<StoreState, any, M>
 
-export const makeGetNumberUrlParameter = (key: string) => {
+export function makeGetNumberUrlParameter(key: string): NumberSelector {
   const getUrlParameter = makeGetUrlParameter(key)
   return createSelector(
     [getUrlParameter],

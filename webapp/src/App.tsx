@@ -27,9 +27,9 @@ interface Props {
 class App extends React.Component<Props, any> {
 
   render() {
-    if (!this.props.isInitialised) {
+    if (!this.props.isInitialised)
       return <div>Initialising ...</div>
-    }
+
     return (
       <BrowserRouter>
         <div className='page-container'>

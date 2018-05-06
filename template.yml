@@ -6,7 +6,8 @@ Transform:
 Parameters:
   ProjectId:
     Type: String
-    Description: AWS CodeStar projectID used to associate new resources to team members
+    Description:
+      AWS CodeStar projectID used to associate new resources to team members
 
 Resources:
   GetTournaments:
@@ -36,4 +37,18 @@ Resources:
           Type: Api
           Properties:
             Path: /tournaments/{tournamentId}
+            Method: get
+  GetMatchDayById:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas/dist/get
+      Runtime: go1.x
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Events:
+        GetEvent:
+          Type: Api
+          Properties:
+            Path: /match-days/{matchDayId}
             Method: get

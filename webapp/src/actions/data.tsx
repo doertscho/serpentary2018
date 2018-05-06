@@ -9,6 +9,9 @@ import { BaseDataAction } from './base'
 
 export const fetchTournaments = () => fetchData('/tournaments')
 export const fetchTournament = (id: number) => fetchData('/tournaments/' + id)
+export const fetchMatchDay =
+    (id: number, onSuccess?: () => void, onError?: () => void) =>
+      fetchData('/match-days/' + id, onSuccess, onError)
 
 export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST
@@ -51,7 +54,12 @@ export function dataError(path: string, error: any): DataError {
   }
 }
 
-const fetch = (path: string, dispatch: Dispatch<StoreState>) =>
+const fetch = (
+  path: string,
+  dispatch: Dispatch<StoreState>,
+  onSuccess?: () => void,
+  onError?: () => void
+) =>
   axios.request({
       url: API_BASE_URL + path,
       method: 'get',
@@ -60,14 +68,20 @@ const fetch = (path: string, dispatch: Dispatch<StoreState>) =>
     .then(response => {
       const update = models.Update.decode(new Uint8Array(response.data))
       dispatch(dataResponse(path, update))
+      if (onSuccess) onSuccess()
     })
     .catch(error => {
       dispatch(dataError(path, error))
+      if (onError) onError()
     })
 
-function fetchData(path: string) {
+function fetchData(
+  path: string,
+  onSuccess?: () => void,
+  onError?: () => void
+) {
   return function(dispatch: Dispatch<StoreState>) {
     dispatch(dataRequest(path))
-    return fetch(path, dispatch)
+    return fetch(path, dispatch, onSuccess, onError)
   }
 }
