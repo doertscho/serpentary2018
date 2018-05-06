@@ -16,6 +16,8 @@ phases:
       # Get npm package dependencies for Web App
       - cd "${CODEBUILD_SRC_DIR}/webapp"
       - npm install
+      # Link global webpack installation
+      - npm link webpack
 
       # == Build Protocol Buffer definitions ==
       # Go back to project root
