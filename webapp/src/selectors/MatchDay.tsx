@@ -30,9 +30,11 @@ export const makeGetMatchDay = (getMatchDayId: NumberSelector) =>
 export const makeGetMatches = (getMatchDayId: NumberSelector) =>
   createSelector(
     [getMatches, getMatchesByMatchDay, getMatchDayId],
-    (   matches,    matchesByMatchDay,    matchDayId) =>
-
-      matchesByMatchDay[matchDayId].map(matchId => matches[matchId])
+    (   matches,    matchesByMatchDay,    matchDayId) => {
+      let matchIds = matchesByMatchDay[matchDayId]
+      if (!matchIds) return null
+      return matchIds.map(matchId => matches[matchId])
+    }
   )
 
 export const makeGetSquad = (getSquadName: StringSelector) =>

@@ -21,6 +21,9 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	if doesMatch, rest := lib.MatchPrefix(path, "tournaments"); doesMatch {
 		return handlers.DispatchTournamentRequest(rest), nil
 	}
+	if doesMatch, rest := lib.MatchPrefix(path, "match-days"); doesMatch {
+		return handlers.DispatchMatchDayRequest(rest), nil
+	}
 
 	return lib.NotFound(), nil
 }
