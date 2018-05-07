@@ -21,6 +21,13 @@ const config = {
 const cognitoUserPool: CognitoUserPool = new CognitoUserPool(config)
 
 var cognitoUser: CognitoUser = cognitoUserPool.getCurrentUser()
+var cognitoSession: CognitoUserSession = null
+
+export function getIdentityToken() {
+  console.log('getIdentityToken', cognitoSession)
+  if (!cognitoSession || !cognitoSession.getIdToken()) return null
+  return cognitoSession.getIdToken().getJwtToken()
+}
 
 export function initSession() {
   return function(dispatch: Dispatch<StoreState>) {
@@ -55,6 +62,7 @@ function recoverSession() {
         return
       }
       console.log('Received session from local recovery.', session)
+      cognitoSession = session
       let accessToken =
           session.getAccessToken() || { decodePayload: () => null }
       let payload = accessToken.decodePayload() || {}
