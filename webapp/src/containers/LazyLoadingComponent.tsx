@@ -64,7 +64,6 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
     return <div>Data available!</div>
   }
 
-
   getRequiredProps(): string[] {
     // override in implementation!
     return []
