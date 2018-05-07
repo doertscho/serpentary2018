@@ -6,7 +6,7 @@ import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
-import { fetchMatchDay } from '../actions/data'
+import { Callbacks, fetchMatchDay } from '../actions/data'
 import {
   makeGetMatchDay,
   makeGetMatches,
@@ -23,15 +23,27 @@ interface Props extends Localisable {
   matchDay: m.MatchDay
   matches: m.Match[]
   squads: m.Squad[]
-  fetchMatchDay:
-      (id: number, onSuccess?: () => void, onError?: () => void) => void
+  fetchMatchDay: (id: number, callbacks?: Callbacks) => void
 }
 
 class matchDayPage extends LazyLoadingComponent<Props, {}> {
 
+  getRequiredProps() {
+    return ['matchDay']
+  }
+
+  shouldRefreshOnMount() {
+    let matches = this.props.matches
+    return (!matches || !matches.length)
+  }
+
+  requestData() {
+    this.props.fetchMatchDay(this.props.matchDayId, this.requestDataCallbacks)
+  }
+
   renderWithData() {
     let matchDay = this.props.matchDay
-    let matches = this.props.matches
+    let matches = this.props.matches || []
     let squads = this.props.squads || []
     let l = this.props.l
     return (
@@ -51,19 +63,8 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
             </li>
           ) }
         </ul>
+        { this.refreshComponent }
       </div>
-    )
-  }
-
-  getRequiredProps() {
-    return ['matchDay', 'matches']
-  }
-
-  requestData() {
-    this.props.fetchMatchDay(
-      this.props.matchDayId,
-      () => this.onRequestDataSuccess(),
-      () => this.onRequestDataError()
     )
   }
 }
@@ -87,12 +88,8 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    fetchMatchDay: (
-        id: number,
-        onSuccess?: () => void,
-        onError?: () => void
-      ) => {
-        dispatch(fetchMatchDay(id, onSuccess, onError))
+    fetchMatchDay: (id: number, callbacks?: Callbacks) => {
+      dispatch(fetchMatchDay(id, callbacks))
     }
   }
 }

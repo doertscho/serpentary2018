@@ -5,32 +5,48 @@ import { StoreState } from '../types'
 import { Action } from '../actions'
 import { models as m } from '../types/models'
 import { Localisable, withLocaliser } from '../locales'
-import { fetchTournaments } from '../actions/data'
+import { fetchTournaments, Callbacks } from '../actions/data'
 import { getTournaments } from '../selectors/data'
 
+import { LazyLoadingComponent } from './LazyLoadingComponent'
 import TournamentLink from '../components/TournamentLink'
 
 interface Props extends Localisable {
   tournaments: m.Tournament[]
-  refreshTournaments: () => void
+  fetchTournaments: (callbacks?: Callbacks) => void
 }
 
-const view = ({ tournaments, refreshTournaments, l }: Props) => {
-  console.log("Dashboard rendering")
-  return (
-    <div>
-      <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
-      <ul>
-        { tournaments.map(t =>
-          <li key={t.id}><TournamentLink tournament={t} /></li>) }
-      </ul>
+class dashboardPage extends LazyLoadingComponent<Props, {}> {
+
+  getRequiredProps() {
+    return ['tournaments']
+  }
+
+  shouldRefreshOnMount() {
+    // TODO:  this should not happen every time but only when it hasn't been
+    // checked in a while (#15)
+    let tournaments = this.props.tournaments
+    return (!tournaments || !tournaments.length)
+  }
+
+  requestData() {
+    this.props.fetchTournaments(this.requestDataCallbacks)
+  }
+
+  renderWithData() {
+    let tournaments = this.props.tournaments
+    let l = this.props.l
+    return (
       <div>
-        <span onClick={refreshTournaments}>
-          { l('REFRESH', 'Refresh') }
-        </span>
+        <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
+        <ul>
+          { tournaments.map(t =>
+            <li key={t.id}><TournamentLink tournament={t} /></li>) }
+        </ul>
+        { this.refreshComponent }
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 const mapStateToProps = withLocaliser((state: StoreState) => {
@@ -41,8 +57,10 @@ const mapStateToProps = withLocaliser((state: StoreState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    refreshTournaments: () => { dispatch(fetchTournaments()) }
+    fetchTournaments: (callbacks?: Callbacks) => {
+      dispatch(fetchTournaments(callbacks))
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(view)
+export default connect(mapStateToProps, mapDispatchToProps)(dashboardPage)
