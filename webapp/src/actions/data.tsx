@@ -7,11 +7,20 @@ import { models } from '../types/models'
 import { StoreState } from '../types'
 import { BaseDataAction } from './base'
 
-export const fetchTournaments = () => fetchData('/tournaments')
-export const fetchTournament = (id: number) => fetchData('/tournaments/' + id)
-export const fetchMatchDay =
-    (id: number, onSuccess?: () => void, onError?: () => void) =>
-      fetchData('/match-days/' + id, onSuccess, onError)
+export interface Callbacks {
+  onSuccess?: () => void
+  onError?: () => void
+}
+
+export const fetchTournaments = (callbacks?: Callbacks) =>
+  fetchData('/tournaments', callbacks)
+export const fetchTournament = (id: number, callbacks?: Callbacks) =>
+  fetchData('/tournaments/' + id, callbacks)
+export const fetchMatchDay = (id: number, callbacks?: Callbacks) =>
+  fetchData('/match-days/' + id, callbacks)
+export const fetchBets =
+    (matchDayId: number, squadName: string, callbacks?: Callbacks) =>
+        fetchData('/match-days/' + matchDayId + '/bets/' + squadName, callbacks)
 
 export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST
@@ -57,8 +66,7 @@ export function dataError(path: string, error: any): DataError {
 const fetch = (
   path: string,
   dispatch: Dispatch<StoreState>,
-  onSuccess?: () => void,
-  onError?: () => void
+  callbacks?: Callbacks
 ) =>
   axios.request({
       url: API_BASE_URL + path,
@@ -68,20 +76,16 @@ const fetch = (
     .then(response => {
       const update = models.Update.decode(new Uint8Array(response.data))
       dispatch(dataResponse(path, update))
-      if (onSuccess) onSuccess()
+      if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
     })
     .catch(error => {
       dispatch(dataError(path, error))
-      if (onError) onError()
+      if (callbacks && callbacks.onError) callbacks.onError()
     })
 
-function fetchData(
-  path: string,
-  onSuccess?: () => void,
-  onError?: () => void
-) {
+function fetchData(path: string, callbacks?: Callbacks) {
   return function(dispatch: Dispatch<StoreState>) {
     dispatch(dataRequest(path))
-    return fetch(path, dispatch, onSuccess, onError)
+    return fetch(path, dispatch, callbacks)
   }
 }
