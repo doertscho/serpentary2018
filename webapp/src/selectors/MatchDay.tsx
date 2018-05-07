@@ -55,7 +55,10 @@ export const makeGetTournamentId =
     (getMatchDay: ModelSelector<m.MatchDay>) =>
   createSelector(
     [getMatchDay],
-    (   matchDay) => matchDay.tournamentId
+    (   matchDay) => {
+      if (matchDay) return matchDay.tournamentId
+      return null
+    }
   )
 
 export const makeGetMatchDayBetBucket = (
