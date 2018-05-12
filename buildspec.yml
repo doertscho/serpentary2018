@@ -58,7 +58,7 @@ phases:
       - rm -rf conf
       - mkdir conf
       # Pass in some configuration
-      printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
+      - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
       # Enter the handlers source directory (via the symlink)
       - cd "/go/src/main/dispatchers"
       # Build our Go application
