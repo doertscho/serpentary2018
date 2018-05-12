@@ -30,8 +30,13 @@ phases:
       - ./build-protos-for-webapp.sh
 
       # == Lambdas source code checks ==
-      # Enter the Lambdas source directory (via the symlink)
+      # Enter the lambda source directory (via the symlink)
       - cd "/go/src/main"
+      # Make sure config is never passed in through Git-managed files
+      - rm -rf conf
+      - mkdir conf
+      # Pass in some configuration
+      - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
       # Get Go package dependencies for Lambdas
       # (this will only work after protobuf compilation)
       - go get ./...
@@ -45,6 +50,12 @@ phases:
       # == Web App source code checks ==
       # Enter the Web App source directory
       - cd "${CODEBUILD_SRC_DIR}/webapp"
+      # Make sure config is never passed in through Git-managed files
+      - rm -rf conf
+      - mkdir conf
+      # Pass in some configuration
+      - printf "export const API_BASE_URL = '${API_BASE_URL}'" > conf/api.tsx
+      - printf "export const COGNITO_REGION = '${COGNITO_REGION}'\nexport const COGNITO_USER_POOL_ID = '${COGNITO_USER_POOL_ID}'\nexport const COGNITO_CLIENT_ID = '${COGNITO_CLIENT_ID}'\n" > conf/cognito.tsx
       # Run all tests
       # - ...
 
@@ -52,13 +63,6 @@ phases:
     commands:
 
       # == Go build ==
-      # Enter the lambda source directory (via the symlink)
-      - cd "/go/src/main"
-      # Make sure config is never passed in through Git-managed files
-      - rm -rf conf
-      - mkdir conf
-      # Pass in some configuration
-      - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
       # Enter the handlers source directory (via the symlink)
       - cd "/go/src/main/dispatchers"
       # Build our Go application
@@ -68,12 +72,6 @@ phases:
       # == Web App build ==
       # Enter the Web App root directory
       - cd "${CODEBUILD_SRC_DIR}/webapp"
-      # Make sure config is never passed in through Git-managed files
-      - rm -rf conf
-      - mkdir conf
-      # Pass in some configuration
-      - printf "export const API_BASE_URL = '${API_BASE_URL}'" > conf/api.tsx
-      - printf "export const COGNITO_REGION = '${COGNITO_REGION}'\nexport const COGNITO_USER_POOL_ID = '${COGNITO_USER_POOL_ID}'\nexport const COGNITO_CLIENT_ID = '${COGNITO_CLIENT_ID}'\n" > conf/cognito.tsx
       # Run webpack to perform compilation and packaging
       - webpack --mode=production
       # Don't want to deploy source maps
