@@ -36,7 +36,7 @@ phases:
       - rm -rf conf
       - mkdir conf
       # Pass in some configuration
-      - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
+      - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\"" > conf/api.go
       # Get Go package dependencies for Lambdas
       # (this will only work after protobuf compilation)
       - go get ./...
