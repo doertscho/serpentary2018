@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"log"
 	"main/handlers"
 	"main/lib"
 	"strings"
@@ -15,6 +17,15 @@ func main() {
 
 func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
+
+	requestDebug, err := json.Marshal(request)
+	if err != nil {
+		log.Println("received request: " + string(requestDebug))
+	}
+
+	if request.HTTPMethod == "OPTIONS" {
+		return lib.Options(), nil
+	}
 
 	path := parsePath(request.Path)
 

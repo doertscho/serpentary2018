@@ -6,6 +6,7 @@ import * as constants from '../constants'
 import { models } from '../types/models'
 import { StoreState } from '../types'
 import { BaseDataAction } from './base'
+import { getIdentityToken } from './session'
 
 export interface Callbacks {
   onSuccess?: () => void
@@ -66,13 +67,19 @@ export function dataError(path: string, error: any): DataError {
 const fetch = (
   path: string,
   dispatch: Dispatch<StoreState>,
-  callbacks?: Callbacks
-) =>
-  axios.request({
-      url: API_BASE_URL + path,
-      method: 'get',
-      responseType: 'arraybuffer'
-    })
+  callbacks?: Callbacks,
+  withIdentity?: boolean
+) => {
+  let options = {
+    url: API_BASE_URL + path,
+    method: 'get',
+    responseType: 'arraybuffer',
+    headers: { }
+  }
+  if (withIdentity) {
+    options.headers = { Authorization: getIdentityToken() }
+  }
+  axios.request(options)
     .then(response => {
       const update = models.Update.decode(new Uint8Array(response.data))
       dispatch(dataResponse(path, update))
@@ -82,10 +89,15 @@ const fetch = (
       dispatch(dataError(path, error))
       if (callbacks && callbacks.onError) callbacks.onError()
     })
+}
 
-function fetchData(path: string, callbacks?: Callbacks) {
+function fetchData(
+  path: string,
+  callbacks?: Callbacks,
+  withIdentity?: boolean
+) {
   return function(dispatch: Dispatch<StoreState>) {
     dispatch(dataRequest(path))
-    return fetch(path, dispatch, callbacks)
+    return fetch(path, dispatch, callbacks, withIdentity)
   }
 }

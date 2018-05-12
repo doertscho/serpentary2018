@@ -52,6 +52,13 @@ phases:
     commands:
 
       # == Go build ==
+      # Enter the lambda source directory (via the symlink)
+      - cd "/go/src/main"
+      # Make sure config is never passed in through Git-managed files
+      - rm -rf conf
+      - mkdir conf
+      # Pass in some configuration
+      printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\""
       # Enter the handlers source directory (via the symlink)
       - cd "/go/src/main/dispatchers"
       # Build our Go application

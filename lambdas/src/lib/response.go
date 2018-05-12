@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"main/conf"
 	"main/models"
 
 	"log"
@@ -10,13 +11,35 @@ import (
 )
 
 func NotFound() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{StatusCode: 404}
+	return events.APIGatewayProxyResponse{
+		StatusCode: 404,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
 }
 
 func BadRequest(message string) events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
 		StatusCode: 400,
 		Body:       message,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
+func Options() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type":                 "text/plain",
+			"Access-Control-Allow-Origin":  conf.AllowOrigin,
+			"Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+			"Access-Control-Allow-Headers": "Authorization",
+		},
 	}
 }
 
@@ -36,7 +59,7 @@ func BuildResponse(data *models.Update) events.APIGatewayProxyResponse {
 
 		Headers: map[string]string{
 			"Content-Type":                "application/octet-stream",
-			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
 		},
 	}
 }

@@ -10,7 +10,7 @@ Parameters:
       AWS CodeStar projectID used to associate new resources to team members
 
 Resources:
-  GetTournaments:
+  DataProvider:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambdas/dist/get
@@ -19,36 +19,28 @@ Resources:
         Fn::ImportValue:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
       Events:
-        GetEvent:
+        GetTournaments:
           Type: Api
           Properties:
             Path: /tournaments
             Method: get
-  GetTournamentById:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: lambdas/dist/get
-      Runtime: go1.x
-      Role:
-        Fn::ImportValue:
-          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
-      Events:
-        GetEvent:
+        GetTournamentsOptions:
+          Type: Api
+          Properties:
+            Path: /tournaments
+            Method: options
+        GetTournamentById:
           Type: Api
           Properties:
             Path: /tournaments/{tournamentId}
             Method: get
-  GetMatchDayById:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: lambdas/dist/get
-      Runtime: go1.x
-      Role:
-        Fn::ImportValue:
-          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
-      Events:
-        GetEvent:
+        GetMatchDayById:
           Type: Api
           Properties:
             Path: /match-days/{matchDayId}
+            Method: get
+        GetBetsByMatchDayIdAndSquad:
+          Type: Api
+          Properties:
+            Path: /match-days/{matchDayId}/bets/{squadName}
             Method: get
