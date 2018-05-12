@@ -18,8 +18,10 @@ func main() {
 func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
-	requestDebug, _ := json.Marshal(request)
-	log.Println("received request: " + string(requestDebug))
+	requestDebug, err := json.Marshal(request)
+	if err != nil {
+		log.Println("received request: " + string(requestDebug))
+	}
 
 	if request.HTTPMethod == "OPTIONS" {
 		return lib.Options(), nil

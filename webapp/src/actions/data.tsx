@@ -14,7 +14,7 @@ export interface Callbacks {
 }
 
 export const fetchTournaments = (callbacks?: Callbacks) =>
-  fetchData('/tournaments', callbacks, true) // TODO: for auth testing
+  fetchData('/tournaments', callbacks)
 export const fetchTournament = (id: number, callbacks?: Callbacks) =>
   fetchData('/tournaments/' + id, callbacks)
 export const fetchMatchDay = (id: number, callbacks?: Callbacks) =>

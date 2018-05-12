@@ -83,8 +83,11 @@ export const makeGetBetsByMatch = (
   createSelector(
     [getParticipants, getMatches, getMatchDayBetBucket],
     (   participants,    matches,    matchDayBetBucket) => {
+      var betsInBucket: m.IMatchBetBucket[] = []
+      if (matchDayBetBucket && matchDayBetBucket.bets)
+        betsInBucket = matchDayBetBucket.bets
       let betsByMatch: m.IBet[][] = []
-      matchDayBetBucket.bets.forEach(matchBetBucket => {
+      betsInBucket.forEach(matchBetBucket => {
         let matchBetsByUserId: m.IBet[] = []
         matchBetBucket.bets.forEach(bet => {
           matchBetsByUserId[bet.userId] = bet
