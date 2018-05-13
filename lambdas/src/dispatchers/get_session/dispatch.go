@@ -5,7 +5,6 @@ import (
 	"log"
 	"main/conf"
 	"main/lib"
-	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -27,7 +26,7 @@ func dispatch(request events.APIGatewayProxyRequest) (
 		return lib.Options(), nil
 	}
 
-	path := parsePath(request.Path)
+	path := lib.ParsePath(request.Path)
 
 	if doesMatch, rest := lib.MatchPrefix(path, "my"); doesMatch {
 
@@ -49,26 +48,14 @@ func dispatch(request events.APIGatewayProxyRequest) (
 							"Access-Control-Allow-Origin": conf.AllowOrigin,
 						},
 					}, nil
+
 				} else {
 
-					return events.APIGatewayProxyResponse{
-
-						StatusCode: 500,
-						Body:       err.Error(),
-
-						Headers: map[string]string{
-							"Content-Type":                "text/plain",
-							"Access-Control-Allow-Origin": conf.AllowOrigin,
-						},
-					}, nil
+					return events.APIGatewayProxyResponse{StatusCode: 500}, err
 				}
 			}
 		}
 	}
 
 	return lib.NotFound(), nil
-}
-
-func parsePath(path string) []string {
-	return lib.TrimAndFilterEmpty(strings.Split(path, "/"))
 }

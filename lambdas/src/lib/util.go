@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+func ParsePath(path string) []string {
+	return TrimAndFilterEmpty(strings.Split(path, "/"))
+}
+
 func TrimAndFilterEmpty(in []string) (filtered []string) {
 	for i := range in {
 		trimmed := strings.TrimSpace(in[i])
