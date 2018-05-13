@@ -24,6 +24,7 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	}
 
 	if request.HTTPMethod == "OPTIONS" {
+		log.Println("returning options response")
 		return lib.Options(), nil
 	}
 
