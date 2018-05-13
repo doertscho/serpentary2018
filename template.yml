@@ -8,8 +8,19 @@ Parameters:
     Type: String
     Description:
       AWS CodeStar projectID used to associate new resources to team members
+  CognitoUserPoolId:
+    Type: String
+    Description: ARN of the user pool to be used for authorized requests
 
 Resources:
+  CognitoAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      Type: COGNITO_USER_POOLS
+      Name: CognitoAuthorizer
+      IdentitySource: Authorization
+      ProviderARNs: [!Ref 'CognitoUserPoolId']
+      RestApiId: !Ref 'ServerlessRestApi'
   DataProvider:
     Type: AWS::Serverless::Function
     Properties:
@@ -53,6 +64,9 @@ Resources:
           Properties:
             Path: /my/id
             Method: get
+            AuthorizationType: COGNITO_USER_POOLS
+            AuthorizerId:
+              Fn::ImportValue: !Ref 'CognitoAuthorizer'
         GetMyIdOptions:
           Type: Api
           Properties:

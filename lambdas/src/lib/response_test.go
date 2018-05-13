@@ -12,6 +12,11 @@ func TestNotFoundHasCode404(t *testing.T) {
 	assert.Equal(t, 404, actual.StatusCode)
 }
 
+func TestInternalErrorHasCode500(t *testing.T) {
+	actual := InternalError()
+	assert.Equal(t, 500, actual.StatusCode)
+}
+
 func TestBadRequestHasCode400(t *testing.T) {
 	message := "I don't get it."
 	actual := BadRequest(message)

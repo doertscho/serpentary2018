@@ -18,9 +18,11 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
 	requestDebug, err := json.Marshal(request)
-	if err == nil {
-		log.Println("received request: " + string(requestDebug))
+	if err != nil {
+		log.Println("failed to serialise request data: " + err.Error())
+		return lib.InternalError(), nil
 	}
+	log.Println("received request: " + string(requestDebug))
 
 	if request.HTTPMethod == "OPTIONS" {
 		return lib.Options(), nil
@@ -34,33 +36,23 @@ func dispatch(request events.APIGatewayProxyRequest) (
 
 			if len(rest) == 0 {
 
-				identityDebug, err := json.Marshal(request.RequestContext.Identity)
+				authorizerDebug, err := json.Marshal(request.RequestContext.Authorizer)
 
-				if err == nil {
-
-					return events.APIGatewayProxyResponse{
-
-						StatusCode: 200,
-						Body:       string(identityDebug),
-
-						Headers: map[string]string{
-							"Content-Type":                "application/json",
-							"Access-Control-Allow-Origin": conf.AllowOrigin,
-						},
-					}, nil
-
-				} else {
-
-					return events.APIGatewayProxyResponse{
-						StatusCode: 500,
-						Body:       "failed to serialise identity",
-
-						Headers: map[string]string{
-							"Content-Type":                "text/plain",
-							"Access-Control-Allow-Origin": conf.AllowOrigin,
-						},
-					}, nil
+				if err != nil {
+					return lib.InternalError(), nil
 				}
+
+				return events.APIGatewayProxyResponse{
+
+					StatusCode: 200,
+					Body:       string(authorizerDebug),
+
+					Headers: map[string]string{
+						"Content-Type":                "application/json",
+						"Access-Control-Allow-Origin": conf.AllowOrigin,
+					},
+				}, nil
+
 			}
 		}
 	}

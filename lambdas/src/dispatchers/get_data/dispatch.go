@@ -18,12 +18,13 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
 	requestDebug, err := json.Marshal(request)
-	if err == nil {
-		log.Println("received request: " + string(requestDebug))
+	if err != nil {
+		log.Println("failed to serialise request data: " + err.Error())
+		return lib.InternalError(), nil
 	}
+	log.Println("received request: " + string(requestDebug))
 
 	if request.HTTPMethod == "OPTIONS" {
-		log.Println("returning options response")
 		return lib.Options(), nil
 	}
 

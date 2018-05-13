@@ -20,6 +20,16 @@ func NotFound() events.APIGatewayProxyResponse {
 	}
 }
 
+func InternalError() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 500,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
 func BadRequest(message string) events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
 		StatusCode: 400,
