@@ -3,6 +3,7 @@ package lib
 import (
 	"encoding/json"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -60,6 +61,10 @@ func GetUserId(request events.APIGatewayProxyRequest) *int32 {
 		log.Println("Authorizer field did not contain claims")
 		return nil
 	}
+
+	reflectedType := reflect.TypeOf(claims)
+	log.Println("claims appears to have type " + reflectedType.PkgPath() + " -> " + reflectedType.Name())
+	log.Println(reflectedType.String())
 
 	claimsMapPointer, convertible := claims.(*map[string]string)
 	if !convertible {
