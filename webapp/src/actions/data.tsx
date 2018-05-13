@@ -1,11 +1,9 @@
-import axios from 'axios'
 import { Dispatch } from 'redux'
 
-import { API_BASE_URL } from '../../conf/api'
 import * as constants from '../constants'
-import { models } from '../types/models'
+import { models as m } from '../types/models'
 import { StoreState } from '../types'
-import { BaseDataAction } from './base'
+import { BaseDataAction, apiRequest } from './base'
 import { sessionManager } from '../session'
 
 export interface Callbacks {
@@ -38,10 +36,10 @@ export function dataRequest(path: string): DataRequest {
 export interface DataResponse extends BaseDataAction {
   event: constants.RESPONSE
   path: string
-  data: models.Update
+  data: m.Update
 }
 export function dataResponse(
-    path: string, data: models.Update): DataResponse {
+    path: string, data: m.Update): DataResponse {
   return {
     type: constants.DATA,
     event: constants.RESPONSE,
@@ -70,18 +68,9 @@ const fetch = (
   callbacks?: Callbacks,
   withIdentity?: boolean
 ) => {
-  let options = {
-    url: API_BASE_URL + path,
-    method: 'get',
-    responseType: 'arraybuffer',
-    headers: { }
-  }
-  if (withIdentity) {
-    options.headers = sessionManager.getHeadersForAuthorisedRequest()
-  }
-  axios.request(options)
+  apiRequest(path, withIdentity)
     .then(response => {
-      const update = models.Update.decode(new Uint8Array(response.data))
+      const update = m.Update.decode(new Uint8Array(response.data))
       dispatch(dataResponse(path, update))
       if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
     })
