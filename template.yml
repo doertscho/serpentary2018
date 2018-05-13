@@ -13,7 +13,7 @@ Resources:
   DataProvider:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: lambdas/dist/get
+      Handler: lambdas/dist/get_data
       Runtime: go1.x
       Role:
         Fn::ImportValue:
@@ -24,11 +24,6 @@ Resources:
           Properties:
             Path: /tournaments
             Method: get
-        GetTournamentsOptions:
-          Type: Api
-          Properties:
-            Path: /tournaments
-            Method: options
         GetTournamentById:
           Type: Api
           Properties:
@@ -44,3 +39,22 @@ Resources:
           Properties:
             Path: /match-days/{matchDayId}/bets/{squadName}
             Method: get
+  SessionManager:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas/dist/get_session
+      Runtime: go1.x
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Events:
+        GetMyId:
+          Type: Api
+          Properties:
+            Path: /my/id
+            Method: get
+        GetMyIdOptions:
+          Type: Api
+          Properties:
+            Path: /my/id
+            Method: options

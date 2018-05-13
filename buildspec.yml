@@ -66,8 +66,9 @@ phases:
       # Enter the handlers source directory (via the symlink)
       - cd "/go/src/main/dispatchers"
       # Build our Go application
-      # TODO: automate to build all files in lambdas/src/handlers
-      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get get.go
+      # TODO: automate to build all files in lambdas/src/dispatchers
+      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get_data get_data/dispatch.go
+      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get_session get_session/dispatch.go
 
       # == Web App build ==
       # Enter the Web App root directory
