@@ -64,9 +64,6 @@ Resources:
           Properties:
             Path: /my/id
             Method: get
-            AuthorizationType: COGNITO_USER_POOLS
-            AuthorizerId:
-              Fn::ImportValue: !Ref 'CognitoAuthorizer'
         GetMyIdOptions:
           Type: Api
           Properties:
