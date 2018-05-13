@@ -3,6 +3,7 @@ package lib
 import (
 	"encoding/json"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -61,29 +62,34 @@ func GetUserId(request events.APIGatewayProxyRequest) *int32 {
 		return nil
 	}
 
-	claimsMapPointer, convertible := claims.(*map[string]string)
+	reflectedType := reflect.TypeOf(claims)
+	log.Println("claims appears to have type " + reflectedType.PkgPath() + " -> " + reflectedType.Name())
+	log.Println(reflectedType.String())
+
+	claimsMap, convertible := claims.(map[string]interface{})
 	if !convertible {
 		log.Println("claims could not be converted to map pointer")
 		return nil
 	}
 
-	if claimsMapPointer == nil {
-		log.Println("claims pointer was nil")
+	userNameRaw, contained := claimsMap["cognito:username"]
+	if !contained {
+		log.Println("claims did not contain entry cognito:username")
 		return nil
 	}
 
-	claimsMap := *claimsMapPointer
-	userName, contained := claimsMap["cognito:username"]
-	if !contained {
-		log.Println("claims did not contain cognito username")
+	userName, convertible := userNameRaw.(string)
+	if !convertible {
+		log.Println("user name could not be converted to string")
 		return nil
 	}
 
 	if len(userName) == 0 {
-		log.Println("username was blank")
+		log.Println("user name was blank")
 		return nil
 	}
 
+	log.Println("extracted user name " + userName)
 	var userId int32 = 1
 	return &userId
 }
