@@ -23,13 +23,13 @@ func dispatch(request events.APIGatewayProxyRequest) (
 
 	userId := lib.GetUserId(request)
 	if userId == nil {
-		return lib.Unauthorized()
+		return lib.Unauthorized(), nil
 	}
 
 	path := lib.ParsePath(request.Path)
 
 	if doesMatch, rest := lib.MatchPrefix(path, "me"); doesMatch {
-		return handlers.DispatchMeRequest(rest, &userId), nil
+		return handlers.DispatchMeRequest(rest, *userId), nil
 	}
 
 	return lib.NotFound(), nil
