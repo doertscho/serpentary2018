@@ -18,7 +18,7 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
 	requestDebug, err := json.Marshal(request)
-	if err != nil {
+	if err == nil {
 		log.Println("received request: " + string(requestDebug))
 	}
 

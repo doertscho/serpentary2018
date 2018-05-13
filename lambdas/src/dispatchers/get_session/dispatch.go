@@ -18,7 +18,7 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
 	requestDebug, err := json.Marshal(request)
-	if err != nil {
+	if err == nil {
 		log.Println("received request: " + string(requestDebug))
 	}
 
@@ -36,7 +36,7 @@ func dispatch(request events.APIGatewayProxyRequest) (
 
 				identityDebug, err := json.Marshal(request.RequestContext.Identity)
 
-				if err != nil {
+				if err == nil {
 
 					return events.APIGatewayProxyResponse{
 
@@ -51,7 +51,15 @@ func dispatch(request events.APIGatewayProxyRequest) (
 
 				} else {
 
-					return events.APIGatewayProxyResponse{StatusCode: 500}, err
+					return events.APIGatewayProxyResponse{
+						StatusCode: 500,
+						Body:       "failed to serialise identity",
+
+						Headers: map[string]string{
+							"Content-Type":                "text/plain",
+							"Access-Control-Allow-Origin": conf.AllowOrigin,
+						},
+					}, nil
 				}
 			}
 		}
