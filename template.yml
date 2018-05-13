@@ -59,13 +59,13 @@ Resources:
         Fn::ImportValue:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
       Events:
-        GetMyId:
+        MeOptions:
           Type: Api
           Properties:
-            Path: /my/id
-            Method: get
-        GetMyIdOptions:
-          Type: Api
-          Properties:
-            Path: /my/id
+            Path: /me
             Method: options
+        GetMe:
+          Type: Api
+          Properties:
+            Path: /me
+            Method: get

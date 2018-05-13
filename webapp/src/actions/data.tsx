@@ -6,7 +6,7 @@ import * as constants from '../constants'
 import { models } from '../types/models'
 import { StoreState } from '../types'
 import { BaseDataAction } from './base'
-import { getIdentityToken } from './session'
+import { sessionManager } from '../session'
 
 export interface Callbacks {
   onSuccess?: () => void
@@ -77,7 +77,7 @@ const fetch = (
     headers: { }
   }
   if (withIdentity) {
-    options.headers = { Authorization: getIdentityToken() }
+    options.headers = sessionManager.getHeadersForAuthorisedRequest()
   }
   axios.request(options)
     .then(response => {

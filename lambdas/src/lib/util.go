@@ -1,9 +1,22 @@
 package lib
 
 import (
+	"encoding/json"
+	"log"
 	"strconv"
 	"strings"
+
+	"github.com/aws/aws-lambda-go/events"
 )
+
+func LogRequest(request events.APIGatewayProxyRequest) {
+	requestDebug, err := json.Marshal(request)
+	if err != nil {
+		log.Println("failed to serialise request data: " + err.Error())
+		return
+	}
+	log.Println("received request: " + string(requestDebug))
+}
 
 func ParsePath(path string) []string {
 	return TrimAndFilterEmpty(strings.Split(path, "/"))
@@ -38,4 +51,33 @@ func MatchInt(pathElements []string) (parsed *int, rest []string) {
 	}
 	parsedInt := int(parsedInt64)
 	return &parsedInt, pathElements[1:]
+}
+
+func GetUserId(request events.APIGatewayProxyRequest) *int32 {
+
+	claims, contained := request.RequestContext.Authorizer["claims"]
+	if !contained {
+		log.Println("Authorizer field did not contain claims")
+		return nil
+	}
+
+	claimsMap, convertible := claims.(map[string]string)
+	if !convertible {
+		log.Println("claims could not be converted to map")
+		return nil
+	}
+
+	userName, contained := claimsMap["cognito:username"]
+	if !contained {
+		log.Println("claims did not contain cognito username")
+		return nil
+	}
+
+	if len(userName) == 0 {
+		log.Println("username was blank")
+		return nil
+	}
+
+	var userId int32 = 1
+	return &userId
 }

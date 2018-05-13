@@ -10,6 +10,39 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
+func Options() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type":                 "text/plain",
+			"Access-Control-Allow-Origin":  conf.AllowOrigin,
+			"Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+			"Access-Control-Allow-Headers": "Authorization",
+		},
+	}
+}
+
+func BadRequest(message string) events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 400,
+		Body:       message,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
+func Unauthorized() events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 401,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
 func NotFound() events.APIGatewayProxyResponse {
 	return events.APIGatewayProxyResponse{
 		StatusCode: 404,
@@ -30,30 +63,28 @@ func InternalError() events.APIGatewayProxyResponse {
 	}
 }
 
-func BadRequest(message string) events.APIGatewayProxyResponse {
+func BuildUpdate(data *models.Update) events.APIGatewayProxyResponse {
+
+	serialised, err := proto.Marshal(data)
+
+	if err != nil {
+		log.Fatal("Failed to serialise data")
+		return events.APIGatewayProxyResponse{StatusCode: 500}
+	}
+
 	return events.APIGatewayProxyResponse{
-		StatusCode: 400,
-		Body:       message,
+
+		StatusCode: 200,
+		Body:       string(serialised),
+
 		Headers: map[string]string{
-			"Content-Type":                "text/plain",
+			"Content-Type":                "application/octet-stream",
 			"Access-Control-Allow-Origin": conf.AllowOrigin,
 		},
 	}
 }
 
-func Options() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Headers: map[string]string{
-			"Content-Type":                 "text/plain",
-			"Access-Control-Allow-Origin":  conf.AllowOrigin,
-			"Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-			"Access-Control-Allow-Headers": "Authorization",
-		},
-	}
-}
-
-func BuildResponse(data *models.Update) events.APIGatewayProxyResponse {
+func BuildSession(data *models.Session) events.APIGatewayProxyResponse {
 
 	serialised, err := proto.Marshal(data)
 
