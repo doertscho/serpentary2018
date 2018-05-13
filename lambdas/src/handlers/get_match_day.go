@@ -45,7 +45,7 @@ func getMatchDayById(id int) events.APIGatewayProxyResponse {
 		Matches:   matches,
 	}
 
-	return lib.BuildResponse(data)
+	return lib.BuildUpdate(data)
 }
 
 func getSampleMatchDay1() *models.MatchDay {

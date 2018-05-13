@@ -23,7 +23,7 @@ func getTournaments() events.APIGatewayProxyResponse {
 
 	data := &models.Update{Tournaments: tournaments}
 
-	return lib.BuildResponse(data)
+	return lib.BuildUpdate(data)
 }
 
 func getTournamentById(id int) events.APIGatewayProxyResponse {
@@ -43,7 +43,7 @@ func getTournamentById(id int) events.APIGatewayProxyResponse {
 		MatchDays:   matchDays,
 	}
 
-	return lib.BuildResponse(data)
+	return lib.BuildUpdate(data)
 }
 
 func getSampleTournament1() *models.Tournament {

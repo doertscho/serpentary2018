@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
 	"main/handlers"
 	"main/lib"
 
@@ -17,12 +15,7 @@ func main() {
 func dispatch(request events.APIGatewayProxyRequest) (
 	events.APIGatewayProxyResponse, error) {
 
-	requestDebug, err := json.Marshal(request)
-	if err != nil {
-		log.Println("failed to serialise request data: " + err.Error())
-		return lib.InternalError(), nil
-	}
-	log.Println("received request: " + string(requestDebug))
+	lib.LogRequest(request)
 
 	if request.HTTPMethod == "OPTIONS" {
 		return lib.Options(), nil

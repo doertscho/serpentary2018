@@ -1,0 +1,11 @@
+syntax = "proto3";
+package models;
+
+import "Update.proto";
+
+message Session {
+
+  int32 user_id = 1;
+
+  Update update = 2;
+}
