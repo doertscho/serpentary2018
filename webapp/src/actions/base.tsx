@@ -1,7 +1,11 @@
+import axios from 'axios'
+
+import { API_BASE_URL } from '../../conf/api'
 import * as constants from '../constants'
 import { StoreState } from '../types'
 import { DataState } from '../types/data'
 import { SessionState } from '../types/session'
+import { sessionManager } from '../session'
 
 export interface InitAction {
   type: constants.INIT
@@ -28,4 +32,17 @@ export type SessionOperation =
 export interface BaseSessionAction extends BaseAction<SessionState> {
   type: constants.SESSION
   operation: SessionOperation
+}
+
+export const apiRequest = (path: string, withIdentity?: boolean) => {
+  let options = {
+    url: API_BASE_URL + path,
+    method: 'get',
+    responseType: 'arraybuffer',
+    headers: { }
+  }
+  if (withIdentity) {
+    options.headers = sessionManager.getHeadersForAuthorisedRequest()
+  }
+  return axios.request(options)
 }

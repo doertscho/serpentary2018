@@ -5,7 +5,13 @@ import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { supportedLocales } from '../locales'
 import { sessionManager } from '../session'
-import { InitAction, BaseSessionAction, SessionOperation } from './base'
+import {
+  InitAction,
+  BaseSessionAction,
+  SessionOperation,
+  apiRequest
+} from './base'
+import { dataResponse } from './data'
 
 export function initSession() {
   return function(dispatch: Dispatch<StoreState>) {
@@ -36,6 +42,7 @@ function recoverSession() {
     sessionManager.retrieveSession(
       (userName: string) => {
         dispatch(sessionResponse(constants.LOG_IN, userName))
+        dispatch(getMe())
         dispatch(fetchAttributes())
         // Attributes are not mandatory, signal initialisation completion now.
         dispatch(initComplete())
@@ -107,6 +114,7 @@ export function logIn(userName: string, password: string) {
       password,
       () => {
         dispatch(sessionResponse(operation, userName))
+        dispatch(getMe())
       },
       (errorMessage: string) => {
         dispatch(sessionError(operation, errorMessage))
@@ -129,6 +137,24 @@ export function logOut() {
         dispatch(sessionError(operation, errorMessage))
       }
     )
+  }
+}
+
+function getMe() {
+  return function(dispatch: Dispatch<StoreState>) {
+    apiRequest('/me', true)
+      .then(response => {
+        const session = m.Session.decode(new Uint8Array(response.data))
+        if (!session) return
+        console.log('received user id', session)
+        if (session.update) {
+          let update = m.Update.create(session.update)
+          dispatch(dataResponse('me', update))
+        }
+      })
+      .catch(error => {
+        console.log('failed to retrieve user id')
+      })
   }
 }
 

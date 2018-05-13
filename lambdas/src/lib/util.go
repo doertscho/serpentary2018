@@ -61,12 +61,18 @@ func GetUserId(request events.APIGatewayProxyRequest) *int32 {
 		return nil
 	}
 
-	claimsMap, convertible := claims.(map[string]string)
+	claimsMapPointer, convertible := claims.(*map[string]string)
 	if !convertible {
-		log.Println("claims could not be converted to map")
+		log.Println("claims could not be converted to map pointer")
 		return nil
 	}
 
+	if claimsMapPointer == nil {
+		log.Println("claims pointer was nil")
+		return nil
+	}
+
+	claimsMap := *claimsMapPointer
 	userName, contained := claimsMap["cognito:username"]
 	if !contained {
 		log.Println("claims did not contain cognito username")
