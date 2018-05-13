@@ -1,4 +1,4 @@
-package get_data
+package main
 
 import (
 	"encoding/json"

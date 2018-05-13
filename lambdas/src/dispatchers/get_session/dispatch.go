@@ -1,4 +1,4 @@
-package get_session
+package main
 
 import (
 	"encoding/json"
