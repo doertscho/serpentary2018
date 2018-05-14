@@ -3,7 +3,6 @@ package lib
 import (
 	"encoding/json"
 	"log"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -62,13 +61,9 @@ func GetUserId(request events.APIGatewayProxyRequest) *int32 {
 		return nil
 	}
 
-	reflectedType := reflect.TypeOf(claims)
-	log.Println("claims appears to have type " + reflectedType.PkgPath() + " -> " + reflectedType.Name())
-	log.Println(reflectedType.String())
-
 	claimsMap, convertible := claims.(map[string]interface{})
 	if !convertible {
-		log.Println("claims could not be converted to map")
+		log.Println("claims could not be converted to map pointer")
 		return nil
 	}
 
