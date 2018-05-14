@@ -37,6 +37,8 @@ phases:
       - mkdir conf
       # Pass in some configuration
       - printf "package conf\nconst AllowOrigin string = \"${WEBSITE_BASE_URL}\"" > conf/api.go
+      - printf "package conf\nconst TablePrefix string = \"${DB_TABLE_PREFIX}\"" > conf/db.go
+"
       # Get Go package dependencies for Lambdas
       # (this will only work after protobuf compilation)
       - go get ./...
