@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"main/db"
 	"main/lib"
 	"main/models"
 
@@ -28,11 +29,12 @@ func getTournaments() events.APIGatewayProxyResponse {
 
 func getTournamentById(id int) events.APIGatewayProxyResponse {
 
-	if id != 1 {
+	tournament := db.GetDb().FindTournamentById(id)
+	if tournament == nil {
 		return lib.NotFound()
 	}
 
-	tournaments := []*models.Tournament{getSampleTournament1()}
+	tournaments := []*models.Tournament{tournament}
 	matchDays := []*models.MatchDay{
 		getSampleMatchDay1Partial(),
 		getSampleMatchDay2Partial(),

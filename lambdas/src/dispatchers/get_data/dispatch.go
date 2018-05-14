@@ -1,12 +1,17 @@
 package main
 
 import (
+	"main/db"
 	"main/handlers"
 	"main/lib"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+func init() {
+	db.InitDatabase()
+}
 
 func main() {
 	lambda.Start(dispatch)
