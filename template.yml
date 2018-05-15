@@ -25,9 +25,6 @@ Resources:
         -
           AttributeName: "id"
           AttributeType: "N"
-        -
-          AttributeName: "updated"
-          AttributeType: "N"
       KeySchema:
         -
           AttributeName: "id"
@@ -38,45 +35,36 @@ Resources:
       TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days']]
       AttributeDefinitions:
         -
-          AttributeName: "id"
-          AttributeType: "N"
-        -
-          AttributeName: "updated"
-          AttributeType: "N"
-        -
           AttributeName: "tournament_id"
+          AttributeType: "N"
+        -
+          AttributeName: "id"
           AttributeType: "N"
       KeySchema:
         -
-          AttributeName: "id"
+          AttributeName: "tournament_id"
           KeyType: "HASH"
+        -
+          AttributeName: "id"
+          KeyType: "RANGE"
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches']]
       AttributeDefinitions:
         -
-          AttributeName: "id"
-          AttributeType: "N"
-        -
-          AttributeName: "updated"
-          AttributeType: "N"
-        -
           AttributeName: "match_day_id"
           AttributeType: "N"
         -
-          AttributeName: "home_team_id"
-          AttributeType: "N"
-        -
-          AttributeName: "away_team_id"
-          AttributeType: "N"
-        -
-          AttributeName: "stadium_id"
+          AttributeName: "id"
           AttributeType: "N"
       KeySchema:
         -
-          AttributeName: "id"
+          AttributeName: "match_day_id"
           KeyType: "HASH"
+        -
+          AttributeName: "id"
+          KeyType: "RANGE"
   # Authorizer for the API Gateway
   CognitoAuthorizer:
     Type: AWS::ApiGateway::Authorizer
