@@ -19,11 +19,8 @@ func DispatchTournamentRequest(path []string) events.APIGatewayProxyResponse {
 }
 
 func getTournaments() events.APIGatewayProxyResponse {
-
-	tournaments := []*models.Tournament{getSampleTournament1()}
-
+	tournaments := db.GetDb().GetTournaments()
 	data := &models.Update{Tournaments: tournaments}
-
 	return lib.BuildUpdate(data)
 }
 
