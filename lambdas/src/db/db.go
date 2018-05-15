@@ -11,5 +11,6 @@ func GetDb() Db {
 }
 
 type Db interface {
+	GetTournaments() []*models.Tournament
 	FindTournamentById(id int) *models.Tournament
 }

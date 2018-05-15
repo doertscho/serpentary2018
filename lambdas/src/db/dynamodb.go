@@ -38,6 +38,35 @@ func GetDynamoDb() Db {
 	return DynamoDb{}
 }
 
+func (db DynamoDb) GetTournaments() []*models.Tournament {
+
+	log.Println("trying to fetch all tournaments")
+
+	result, err := query("tournaments", "true", NO_VALUES)
+	if err != nil {
+		log.Println("error occurred querying tournaments: " + err.Error())
+		return nil
+	}
+
+	tournaments := make([]*models.Tournament, len(result.Items))
+	for idx, val := range result.Items {
+		tournament := models.Tournament{}
+		err = dynamodbattribute.UnmarshalMap(val, &tournament)
+		if err != nil {
+			log.Println("error unmarshalling item: " + err.Error())
+			return nil
+		}
+		tournaments[idx] = &tournament
+	}
+
+	tournamentsDebug, err := json.Marshal(tournaments)
+	if err == nil {
+		log.Println("found tournaments: " + string(tournamentsDebug))
+	}
+
+	return tournaments
+}
+
 func (db DynamoDb) FindTournamentById(id int) *models.Tournament {
 
 	log.Println("trying to find tournament with id " + strconv.Itoa(id))
@@ -76,4 +105,19 @@ func getItem(tableName string, id int) (*dynamodb.GetItemOutput, error) {
 		},
 	}
 	return dynDbSvc.GetItem(input)
+}
+
+var NO_VALUES map[string]*dynamodb.AttributeValue = map[string]*dynamodb.AttributeValue{}
+
+func query(
+	tableName string,
+	query string,
+	valuesToBind map[string]*dynamodb.AttributeValue,
+) (*dynamodb.QueryOutput, error) {
+	input := &dynamodb.QueryInput{
+		TableName:                 aws.String(conf.TablePrefix + tableName),
+		KeyConditionExpression:    aws.String(query),
+		ExpressionAttributeValues: valuesToBind,
+	}
+	return dynDbSvc.Query(input)
 }
