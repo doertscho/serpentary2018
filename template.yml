@@ -29,6 +29,9 @@ Resources:
         -
           AttributeName: "id"
           KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "2"
+        WriteCapacityUnits: "1"
   MatchDaysTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -47,6 +50,9 @@ Resources:
         -
           AttributeName: "id"
           KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "3"
+        WriteCapacityUnits: "1"
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -65,6 +71,9 @@ Resources:
         -
           AttributeName: "id"
           KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "2"
   # Authorizer for the API Gateway
   CognitoAuthorizer:
     Type: AWS::ApiGateway::Authorizer
