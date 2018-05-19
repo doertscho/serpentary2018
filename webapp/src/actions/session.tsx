@@ -41,8 +41,8 @@ function initUser() {
 function recoverSession() {
   return function(dispatch: Dispatch<StoreState>) {
     sessionManager.retrieveSession(
-      (userName: string) => {
-        dispatch(sessionResponse(constants.LOG_IN, userName))
+      (userId: string) => {
+        dispatch(sessionResponse(constants.LOG_IN, userId))
         dispatch(fetchAttributes())
         dispatch(getMe())
         // Attributes are not mandatory, signal initialisation completion now.
@@ -86,16 +86,16 @@ function initComplete(): InitAction {
   return { type: constants.INIT }
 }
 
-export function signUp(userName: string, password: string, email?: string) {
+export function signUp(userId: string, password: string, email?: string) {
   return function(dispatch: Dispatch<StoreState>) {
 
     const operation = constants.SIGN_UP
     dispatch(sessionRequest(operation))
 
     sessionManager.signUpUser(
-      userName, password, email,
+      userId, password, email,
       () => {
-        dispatch(sessionResponse(operation, userName))
+        dispatch(sessionResponse(operation, userId))
       },
       (errorMessage: string) => {
         dispatch(sessionError(operation, errorMessage))
@@ -104,17 +104,17 @@ export function signUp(userName: string, password: string, email?: string) {
   }
 }
 
-export function logIn(userName: string, password: string) {
+export function logIn(userId: string, password: string) {
   return function(dispatch: Dispatch<StoreState>) {
 
     const operation = constants.LOG_IN
     dispatch(sessionRequest(operation))
 
     sessionManager.logInUser(
-      userName,
+      userId,
       password,
       () => {
-        dispatch(sessionResponse(operation, userName))
+        dispatch(sessionResponse(operation, userId))
       },
       (errorMessage: string) => {
         dispatch(sessionError(operation, errorMessage))
@@ -155,17 +155,17 @@ export function sessionRequest(operation: SessionOperation): SessionRequest {
 export interface SessionResponse extends BaseSessionAction {
   event: constants.RESPONSE
   operation: SessionOperation
-  userName?: string
+  userId?: string
   preferredUserName?: string
 }
 export function sessionResponse(
-    operation: SessionOperation, userName?: string, preferredUserName?: string
+    operation: SessionOperation, userId?: string, preferredUserName?: string
 ): SessionResponse {
   return {
     type: constants.SESSION,
     event: constants.RESPONSE,
     operation: operation,
-    userName: userName,
+    userId: userId,
     preferredUserName: preferredUserName
   }
 }

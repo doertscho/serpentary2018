@@ -8,7 +8,7 @@ import {
   getUsers,
   getSquads
 } from './data'
-import { getUserName } from './session'
+import { getUserId } from './session'
 import { NumberSelector } from './util'
 
 export const makeGetTournament = (getTournamentId: NumberSelector) =>
@@ -28,11 +28,11 @@ export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
 export const makeGetUserSquadsByTournament =
     (getTournamentId: NumberSelector) =>
   createSelector(
-    [getUserName, getUsers, getSquads, getTournamentId],
-    (   userName,    users,    squads,    tournamentId) => {
-      if (!userName || !userName.length) return []
-      let user = users[userName]
+    [getUserId, getUsers, getSquads, getTournamentId],
+    (   userId,    users,    squads,    tournamentId) => {
+      if (!userId || !userId.length) return []
+      let user = users[userId]
       if (!user || !user.squads) return []
-      return user.squads.map(squadName => squads[squadName])
+      return user.squads.map(squadId => squads[squadId])
     }
   )

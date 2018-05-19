@@ -24,26 +24,26 @@ Resources:
       TableName: !Join ['', [!Ref 'DbTablePrefix', 'users']]
       AttributeDefinitions:
         -
-          AttributeName: "name"
+          AttributeName: "id"
           AttributeType: "S"
       KeySchema:
         -
-          AttributeName: "name"
+          AttributeName: "id"
           KeyType: "HASH"
       ProvisionedThroughput:
         ReadCapacityUnits: "3"
-        WriteCapacityUnits: "1"
+        WriteCapacityUnits: "3"
   SquadsTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads']]
       AttributeDefinitions:
         -
-          AttributeName: "name"
+          AttributeName: "id"
           AttributeType: "S"
       KeySchema:
         -
-          AttributeName: "name"
+          AttributeName: "id"
           KeyType: "HASH"
       ProvisionedThroughput:
         ReadCapacityUnits: "3"
@@ -111,14 +111,14 @@ Resources:
       TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
       AttributeDefinitions:
         -
-          AttributeName: "squad_name"
+          AttributeName: "squad_id"
           AttributeType: "S"
         -
           AttributeName: "match_day_id"
           AttributeType: "N"
       KeySchema:
         -
-          AttributeName: "squad_name"
+          AttributeName: "squad_id"
           KeyType: "HASH"
         -
           AttributeName: "match_day_id"

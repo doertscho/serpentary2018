@@ -53,7 +53,7 @@ func MatchInt(pathElements []string) (parsed *int, rest []string) {
 	return &parsedInt, pathElements[1:]
 }
 
-func GetUserName(request events.APIGatewayProxyRequest) *string {
+func GetUserId(request events.APIGatewayProxyRequest) *string {
 
 	claims, contained := request.RequestContext.Authorizer["claims"]
 	if !contained {
@@ -67,22 +67,22 @@ func GetUserName(request events.APIGatewayProxyRequest) *string {
 		return nil
 	}
 
-	userNameRaw, contained := claimsMap["cognito:username"]
+	userIdRaw, contained := claimsMap["cognito:username"]
 	if !contained {
 		log.Println("claims did not contain entry cognito:username")
 		return nil
 	}
 
-	userName, convertible := userNameRaw.(string)
+	userId, convertible := userIdRaw.(string)
 	if !convertible {
 		log.Println("user name could not be converted to string")
 		return nil
 	}
 
-	if len(userName) == 0 {
-		log.Println("user name was blank")
+	if len(userId) == 0 {
+		log.Println("user id was blank")
 		return nil
 	}
 
-	return &userName
+	return &userId
 }

@@ -11,13 +11,13 @@ import (
 func DispatchMatchDayRequest(path []string) events.APIGatewayProxyResponse {
 	if matchDayId, rest := lib.MatchInt(path); matchDayId != nil {
 		if len(rest) == 0 {
-			return getMatchDayById(*matchDayId)
+			return getMatchDayById(matchDayId)
 		}
 	}
 	return lib.BadRequest("Expected integer match day ID.")
 }
 
-func getMatchDayById(id int) events.APIGatewayProxyResponse {
+func getMatchDayById(id *int) events.APIGatewayProxyResponse {
 
 	matchDay := db.GetDb().GetMatchDayById(id)
 	if matchDay == nil {

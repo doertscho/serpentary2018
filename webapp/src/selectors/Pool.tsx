@@ -12,11 +12,11 @@ export const makeGetPool = (
   createSelector(
     [getMatchDay, getSquad, getPools],
     (   matchDay,    squad,    pools) =>
-      pools[joinKeys(squad.name, matchDay.tournamentId)]
+      pools[joinKeys(squad.id, matchDay.tournamentId)]
   )
 
 export const makeGetParticipants = (getPool: ModelSelector<m.Pool>) =>
   createSelector(
     [getPool, getUsers],
-    (   pool,    users) => pool.participants.map(userName => users[userName])
+    (   pool,    users) => pool.participants.map(userId => users[userId])
   )

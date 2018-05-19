@@ -68,7 +68,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
         <h2>#{matchDay.id}</h2>
-        <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squad.name) }</h3>
+        <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squad.id) }</h3>
         <div className="betMatrix">
           <UserColumn participants={participants} />
           <div className="matches">

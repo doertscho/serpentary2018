@@ -31,16 +31,16 @@ function mergeWithUpdate(
       state.tournaments, update.tournaments, m.Tournament.create, useId)
 
   let newUsers = mergeRecords(
-      state.users, update.users, m.User.create, u => u.name)
+      state.users, update.users, m.User.create, u => u.id)
 
   let newSquads = mergeRecords(
-      state.squads, update.squads, m.Squad.create, s => s.name)
+      state.squads, update.squads, m.Squad.create, s => s.id)
 
   let poolsData = mergeRecordsAndRefs(
       state.pools, update.pools, m.Pool.create,
-      c => joinKeys(c.squadName, c.tournamentId),
+      c => joinKeys(c.squadId, c.tournamentId),
       [state.poolsByTournament, state.poolsBySquad],
-      [c => '' + c.tournamentId,     c => c.squadName]
+      [c => '' + c.tournamentId,     c => c.squadId]
     )
   let newPools = poolsData.state
   let newPoolsByTournament = poolsData.refs[0]
@@ -64,7 +64,7 @@ function mergeWithUpdate(
 
   let betsData = mergeRecordsAndRefs(
       state.bets, update.bets, m.MatchDayBetBucket.create,
-      c => joinKeys(c.squadName, c.matchDayId), [], []
+      c => joinKeys(c.squadId, c.matchDayId), [], []
     )
   let newBets = betsData.state
 

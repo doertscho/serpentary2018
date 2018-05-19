@@ -13,7 +13,7 @@ func DispatchTournamentRequest(path []string) events.APIGatewayProxyResponse {
 		return getTournaments()
 	}
 	if tournamentId, _ := lib.MatchInt(path); tournamentId != nil {
-		return getTournamentById(*tournamentId)
+		return getTournamentById(tournamentId)
 	}
 	return lib.BadRequest("Expected integer tournament ID.")
 }
@@ -24,7 +24,7 @@ func getTournaments() events.APIGatewayProxyResponse {
 	return lib.BuildUpdate(data)
 }
 
-func getTournamentById(id int) events.APIGatewayProxyResponse {
+func getTournamentById(id *int) events.APIGatewayProxyResponse {
 
 	tournament := db.GetDb().GetTournamentById(id)
 	if tournament == nil {

@@ -61,11 +61,12 @@ func (db DynamoDb) GetTournaments() []*models.Tournament {
 	return tournaments
 }
 
-func (db DynamoDb) GetTournamentById(tournamentId int) *models.Tournament {
+func (db DynamoDb) GetTournamentById(tournamentId *int) *models.Tournament {
 
-	log.Println("trying to find tournament with id " + strconv.Itoa(tournamentId))
+	log.Println("trying to find tournament with id " +
+		strconv.Itoa(*tournamentId))
 
-	record, err := getItem("tournaments", tournamentId)
+	record, err := getItemByNumericId("tournaments", tournamentId)
 	if err != nil {
 		log.Println("error occurred querying item: " + err.Error())
 		return nil
@@ -83,12 +84,10 @@ func (db DynamoDb) GetTournamentById(tournamentId int) *models.Tournament {
 }
 
 func (db DynamoDb) GetMatchDaysByTournamentId(
-	tournamentId int) []*models.MatchDay {
+	tournamentId *int) []*models.MatchDay {
 
-	values := map[string]*dynamodb.AttributeValue{
-		":id": {N: aws.String(strconv.Itoa(tournamentId))},
-	}
-	result, err := query("match-days", "tournament_id = :id", values)
+	result, err :=
+		queryItemsByNumericRangeKey("match-days", "tournament_id", tournamentId)
 	if err != nil {
 		log.Println("error occurred querying match days: " + err.Error())
 		return nil
@@ -108,11 +107,11 @@ func (db DynamoDb) GetMatchDaysByTournamentId(
 	return matchDays
 }
 
-func (db DynamoDb) GetMatchDayById(matchDayId int) *models.MatchDay {
+func (db DynamoDb) GetMatchDayById(matchDayId *int) *models.MatchDay {
 
-	log.Println("trying to find match day with id " + strconv.Itoa(matchDayId))
+	log.Println("trying to find match day with id " + strconv.Itoa(*matchDayId))
 
-	record, err := getItem("match-days", matchDayId)
+	record, err := getItemByNumericId("match-days", matchDayId)
 	if err != nil {
 		log.Println("error occurred querying item: " + err.Error())
 		return nil
@@ -129,12 +128,10 @@ func (db DynamoDb) GetMatchDayById(matchDayId int) *models.MatchDay {
 	return &matchDay
 }
 
-func (db DynamoDb) GetMatchesByMatchDayId(matchDayId int) []*models.Match {
+func (db DynamoDb) GetMatchesByMatchDayId(matchDayId *int) []*models.Match {
 
-	values := map[string]*dynamodb.AttributeValue{
-		":id": {N: aws.String(strconv.Itoa(matchDayId))},
-	}
-	result, err := query("matches", "match_day_id = :id", values)
+	result, err :=
+		queryItemsByNumericRangeKey("matches", "match_day_id", matchDayId)
 	if err != nil {
 		log.Println("error occurred querying match days: " + err.Error())
 		return nil
@@ -154,23 +151,16 @@ func (db DynamoDb) GetMatchesByMatchDayId(matchDayId int) []*models.Match {
 	return matches
 }
 
-func (db DynamoDb) GetUserByName(userName string) *models.User {
+func (db DynamoDb) GetUserById(userId *string) *models.User {
 
-	values := map[string]*dynamodb.AttributeValue{
-		":name": {S: aws.String(userName)},
-	}
-	result, err := queryIndex("users", "NameIndex", "name = :name", values)
+	record, err := getItemByStringId("users", userId)
 	if err != nil {
-		log.Println("error occurred querying match days: " + err.Error())
-		return nil
-	}
-
-	if len(result.Items) != 1 {
+		log.Println("error occurred querying item: " + err.Error())
 		return nil
 	}
 
 	user := models.User{}
-	err = dynamodbattribute.UnmarshalMap(result.Items[0], &user)
+	err = dynamodbattribute.UnmarshalMap(record.Item, &user)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil
@@ -179,11 +169,15 @@ func (db DynamoDb) GetUserByName(userName string) *models.User {
 	return &user
 }
 
-func (db DynamoDb) RegisterNewUser(userName string) *models.User {
+func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
+
+	if userId == nil {
+		return nil
+	}
 
 	input := dynamodb.PutItemInput{
 		Item: map[string]*dynamodb.AttributeValue{
-			"name": {S: aws.String(userName)},
+			"id": {S: aws.String(*userId)},
 		},
 		TableName: aws.String(conf.TablePrefix + "users"),
 	}
@@ -193,10 +187,35 @@ func (db DynamoDb) RegisterNewUser(userName string) *models.User {
 		return nil
 	}
 
-	return db.GetUserByName(userName)
+	return db.GetUserById(userId)
 }
 
-func getItem(tableName string, id int) (*dynamodb.GetItemOutput, error) {
+func getItemByNumericId(tableName string, id *int) (
+	*dynamodb.GetItemOutput, error) {
+
+	if id == nil {
+		return nil, errors.New("received nil id")
+	}
+
+	return getItem(
+		tableName,
+		&dynamodb.AttributeValue{N: aws.String(strconv.Itoa(*id))})
+}
+
+func getItemByStringId(tableName string, id *string) (
+	*dynamodb.GetItemOutput, error) {
+
+	if id == nil {
+		return nil, errors.New("received nil id")
+	}
+
+	return getItem(
+		tableName,
+		&dynamodb.AttributeValue{S: aws.String(*id)})
+}
+
+func getItem(tableName string, id *dynamodb.AttributeValue) (
+	*dynamodb.GetItemOutput, error) {
 
 	if dynDbSvc == nil {
 		return nil, errors.New("connection has not been initialised")
@@ -205,22 +224,42 @@ func getItem(tableName string, id int) (*dynamodb.GetItemOutput, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(conf.TablePrefix + tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"id": {N: aws.String(strconv.Itoa(id))},
+			"id": id,
 		},
 	}
 	return dynDbSvc.GetItem(input)
+}
+
+func queryItemsByNumericRangeKey(
+	tableName string, fieldName string, value *int) (
+	*dynamodb.QueryOutput, error) {
+
+	wrappedValue := dynamodb.AttributeValue{
+		N: aws.String(strconv.Itoa(*value)),
+	}
+	return queryItemsByRangeKey(tableName, fieldName, &wrappedValue)
+}
+
+func queryItemsByRangeKey(
+	tableName string, fieldName string, value *dynamodb.AttributeValue) (
+	*dynamodb.QueryOutput, error) {
+
+	hash := ":" + fieldName
+	queryString := fieldName + " = " + hash
+	valuesToBind := map[string]*dynamodb.AttributeValue{hash: value}
+	return query(tableName, queryString, valuesToBind)
 }
 
 var NO_VALUES map[string]*dynamodb.AttributeValue = map[string]*dynamodb.AttributeValue{}
 
 func query(
 	tableName string,
-	query string,
+	queryString string,
 	valuesToBind map[string]*dynamodb.AttributeValue,
 ) (*dynamodb.QueryOutput, error) {
 	input := &dynamodb.QueryInput{
 		TableName:                 aws.String(conf.TablePrefix + tableName),
-		KeyConditionExpression:    aws.String(query),
+		KeyConditionExpression:    aws.String(queryString),
 		ExpressionAttributeValues: valuesToBind,
 	}
 	return dynDbSvc.Query(input)

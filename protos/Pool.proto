@@ -3,9 +3,9 @@ package models;
 
 message Pool {
 
-  string squad_name = 1;
+  string squad_id = 1;
   int32 tournament_id = 2;
-  
+
   int32 updated = 3;
 
   repeated string participants = 4;

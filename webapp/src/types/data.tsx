@@ -82,19 +82,19 @@ sampleMatches[2] =
     m.Match.create({ id: 2, matchDayId: 1, homeTeamId: 3, awayTeamId: 4, })
 
 const sampleUsers: Map<m.User> = {}
-sampleUsers['User1'] = m.User.create({ name: 'User1' })
-sampleUsers['User2'] = m.User.create({ name: 'User2' })
+sampleUsers['User1'] = m.User.create({ id: 'User1' })
+sampleUsers['User2'] = m.User.create({ id: 'User2' })
 
 const sampleSquads: Map<m.Squad> = {}
 sampleSquads['squad1'] = m.Squad.create({
-  name: 'squad1', members: ['User1', 'User2'] })
+  id: 'squad1', members: ['User1', 'User2'] })
 
 const samplePools: Map<m.Pool> = {}
 samplePools['squad1/1'] =m.Pool.create({
-  squadName: 'squad1', tournamentId: 1, participants: ['User1', 'User2'] })
+  squadId: 'squad1', tournamentId: 1, participants: ['User1', 'User2'] })
 
 const sampleBetBucket = m.MatchDayBetBucket.create({
-  squadName: 'squad1',
+  squadId: 'squad1',
   matchDayId: 1,
   updated: 1,
   bets: [
@@ -102,12 +102,12 @@ const sampleBetBucket = m.MatchDayBetBucket.create({
       matchId: 1,
       bets: [
         m.Bet.create({
-          userName: 'User1',
+          userId: 'User1',
           homeGoals: 3,
           awayGoals: 0,
         }),
         m.Bet.create({
-          userName: 'User2',
+          userId: 'User2',
           homeGoals: 1,
           awayGoals: 2,
         }),

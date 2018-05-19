@@ -34,10 +34,10 @@ export const makeGetMatches = (getMatchDayId: NumberSelector) =>
     }
   )
 
-export const makeGetSquad = (getSquadName: StringSelector) =>
+export const makeGetSquad = (getSquadId: StringSelector) =>
   createSelector(
-    [getSquads, getSquadName],
-    (   squads,    squadName) => squads[squadName]
+    [getSquads, getSquadId],
+    (   squads,    squadId) => squads[squadId]
   )
 
 export const makeGetTournamentId =
@@ -55,11 +55,11 @@ export const makeGetMatchDayBetBucket = (
 ) =>
   createSelector(
     [getMatchDay, getSquad, getBets],
-    (   matchDay,    squad,    bets) => bets[joinKeys(squad.name, matchDay.id)]
+    (   matchDay,    squad,    bets) => bets[joinKeys(squad.id, matchDay.id)]
   )
 
 const missingBetForUser = (user: m.User) =>
-    m.Bet.create({ userName: user.name, status: m.BetStatus.MISSING })
+    m.Bet.create({ userId: user.id, status: m.BetStatus.MISSING })
 
 export const makeGetBetsByMatch = (
   getParticipants: ModelSelector<m.User[]>,
@@ -74,12 +74,12 @@ export const makeGetBetsByMatch = (
         betsInBucket = matchDayBetBucket.bets
       let betsByMatch: m.IBet[][] = []
       betsInBucket.forEach(matchBetBucket => {
-        let matchBetsByUserName: Map<m.IBet> = {}
+        let matchBetsByUserId: Map<m.IBet> = {}
         matchBetBucket.bets.forEach(bet => {
-          matchBetsByUserName[bet.userName] = bet
+          matchBetsByUserId[bet.userId] = bet
         })
         let matchBets = participants.map(user =>
-          matchBetsByUserName[user.name] || missingBetForUser(user))
+          matchBetsByUserId[user.id] || missingBetForUser(user))
         betsByMatch[matchBetBucket.matchId] = matchBets
       })
       matches.forEach(match => {

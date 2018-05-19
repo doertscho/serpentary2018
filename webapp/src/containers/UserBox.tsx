@@ -5,20 +5,20 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logOut, setLocale } from '../actions/session'
-import { getLoginStatus, getUserName, getLocale } from '../selectors/session'
+import { getLoginStatus, getUserId, getLocale } from '../selectors/session'
 import { Localisable, withLocaliser, supportedLocales } from '../locales'
 import { LoginStatus } from '../constants'
 
 interface Props extends Localisable {
   loginStatus: LoginStatus
-  userName?: string
+  userId?: string
   logOut: () => void
   setLocale: (locale: string) => void
 }
 
-const userView = ({ userName, logOut, l }: Props) =>
+const userView = ({ userId, logOut, l }: Props) =>
   <span>
-    { l('GREETING', 'Hello, {}!', userName) }
+    { l('GREETING', 'Hello, {}!', userId) }
     {' | '}
     <Link to="/my-profile">
       { l('EDIT_PROFILE_SETTINGS', 'Edit your profile and settings') }
@@ -80,7 +80,7 @@ const view = (props: Props) => {
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
     loginStatus: getLoginStatus(state),
-    userName: getUserName(state)
+    userId: getUserId(state)
   }
 })
 
