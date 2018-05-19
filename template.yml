@@ -47,7 +47,7 @@ Resources:
           KeyType: "HASH"
       ProvisionedThroughput:
         ReadCapacityUnits: "3"
-        WriteCapacityUnits: "1"
+        WriteCapacityUnits: "3"
   TournamentsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -62,7 +62,7 @@ Resources:
           KeyType: "HASH"
       ProvisionedThroughput:
         ReadCapacityUnits: "2"
-        WriteCapacityUnits: "1"
+        WriteCapacityUnits: "2"
   MatchDaysTable:
     Type: AWS::DynamoDB::Table
     Properties:
