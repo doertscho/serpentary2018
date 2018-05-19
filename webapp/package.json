@@ -1,6 +1,6 @@
 {
   "name": "serpentary-2018-webapp",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "The serpentary 2018 web interface application",
   "main": "index.tsx",
   "scripts": {
