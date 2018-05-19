@@ -1,4 +1,7 @@
+import { createSelector, ParametricSelector } from 'reselect'
+
 import { StoreState } from '../types'
+import { mapValues } from '../types/data'
 import { getData } from './index'
 
 export const getTournaments = (state: StoreState) => getData(state).tournaments
@@ -16,3 +19,5 @@ export const getPoolsByTournament =
 export const getPoolsBySquad =
     (state: StoreState) => getData(state).poolsBySquad
 export const getBets = (state: StoreState) => getData(state).bets
+
+export const getTournamentsList = createSelector([getTournaments], mapValues)

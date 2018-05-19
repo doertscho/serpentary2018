@@ -157,7 +157,7 @@ func (db DynamoDb) GetMatchesByMatchDayId(matchDayId int) []*models.Match {
 func (db DynamoDb) GetUserByName(userName string) *models.User {
 
 	values := map[string]*dynamodb.AttributeValue{
-		":name": {N: aws.String(userName)},
+		":name": {S: aws.String(userName)},
 	}
 	result, err := queryIndex("users", "NameIndex", "name = :name", values)
 	if err != nil {

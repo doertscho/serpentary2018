@@ -11,6 +11,9 @@ export interface Callbacks {
   onError?: () => void
 }
 
+export const getMe = (callbacks?: Callbacks) =>
+  fetchData('/me', callbacks, true)
+
 export const fetchTournaments = (callbacks?: Callbacks) =>
   fetchData('/tournaments', callbacks)
 export const fetchTournament = (id: number, callbacks?: Callbacks) =>

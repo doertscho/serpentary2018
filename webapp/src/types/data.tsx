@@ -6,6 +6,14 @@ export interface Entity {
 
 export type Map<T> = { [key: string]: T }
 
+export function mapValues<T>(input: Map<T>): T[] {
+  let output: T[] = []
+  for (let key in input) {
+    if (input[key]) output.push(input[key])
+  }
+  return output
+}
+
 export type ParentChildTable = Map<string[]>
 
 export function joinKeys(

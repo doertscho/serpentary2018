@@ -3,7 +3,7 @@ import { LoginStatus } from '../constants'
 
 export interface SessionState {
   loginStatus: LoginStatus
-  userId?: string
+  userName?: string
   errorMessage?: string
   locale?: string
 }

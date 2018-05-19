@@ -11,7 +11,7 @@ import {
   SessionOperation,
   apiRequest
 } from './base'
-import { dataResponse } from './data'
+import { getMe } from './data'
 
 export function initSession() {
   return function(dispatch: Dispatch<StoreState>) {
@@ -30,6 +30,7 @@ function initUser() {
   return function(dispatch: Dispatch<StoreState>) {
     if (sessionManager.canRecoverSessionFromCache()) {
       dispatch(recoverSession())
+      dispatch(getMe())
     } else {
       console.log('Can not recover session from local storage.')
       dispatch(initComplete())
@@ -43,6 +44,7 @@ function recoverSession() {
       (userName: string) => {
         dispatch(sessionResponse(constants.LOG_IN, userName))
         dispatch(fetchAttributes())
+        dispatch(getMe())
         // Attributes are not mandatory, signal initialisation completion now.
         dispatch(initComplete())
       },
@@ -153,17 +155,17 @@ export function sessionRequest(operation: SessionOperation): SessionRequest {
 export interface SessionResponse extends BaseSessionAction {
   event: constants.RESPONSE
   operation: SessionOperation
-  userId?: string
+  userName?: string
   preferredUserName?: string
 }
 export function sessionResponse(
-    operation: SessionOperation, userId?: string, preferredUserName?: string
+    operation: SessionOperation, userName?: string, preferredUserName?: string
 ): SessionResponse {
   return {
     type: constants.SESSION,
     event: constants.RESPONSE,
     operation: operation,
-    userId: userId,
+    userName: userName,
     preferredUserName: preferredUserName
   }
 }

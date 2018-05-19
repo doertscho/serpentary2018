@@ -6,8 +6,8 @@ import { getSession } from './index'
 
 export const getLoginStatus =
     (state: StoreState) => getSession(state).loginStatus
-export const getUserId =
-    (state: StoreState) => getSession(state).userId
+export const getUserName =
+    (state: StoreState) => getSession(state).userName
 export const getSessionErrorMessage =
     (state: StoreState) => getSession(state).errorMessage
 

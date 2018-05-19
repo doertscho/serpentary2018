@@ -6,7 +6,7 @@ import { Action } from '../actions'
 import { models as m } from '../types/models'
 import { Localisable, withLocaliser } from '../locales'
 import { fetchTournaments, Callbacks } from '../actions/data'
-import { getTournaments } from '../selectors/data'
+import { getTournamentsList } from '../selectors/data'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 import TournamentLink from '../components/TournamentLink'
@@ -51,7 +51,7 @@ class dashboardPage extends LazyLoadingComponent<Props, {}> {
 
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
-    tournaments: getTournaments(state)
+    tournaments: getTournamentsList(state)
   }
 })
 

@@ -21,9 +21,7 @@ import {
 export const makeGetMatchDay = (getMatchDayId: NumberSelector) =>
   createSelector(
     [getMatchDays, getMatchDayId],
-    (   matches,      matchDayId) =>
-
-      matches[matchDayId]
+    (   matches,      matchDayId) => matches[matchDayId]
   )
 
 export const makeGetMatches = (getMatchDayId: NumberSelector) =>
@@ -39,15 +37,7 @@ export const makeGetMatches = (getMatchDayId: NumberSelector) =>
 export const makeGetSquad = (getSquadName: StringSelector) =>
   createSelector(
     [getSquads, getSquadName],
-    (   squads,    squadName) => {
-
-      for (var i in squads) {
-        if (squads[i] && squads[i].name == squadName) {
-          return squads[i]
-        }
-      }
-      return null
-    }
+    (   squads,    squadName) => squads[squadName]
   )
 
 export const makeGetTournamentId =
@@ -55,8 +45,8 @@ export const makeGetTournamentId =
   createSelector(
     [getMatchDay],
     (   matchDay) => {
-      if (matchDay) return matchDay.tournamentId
-      return null
+      if (!matchDay) return null
+      return matchDay.tournamentId
     }
   )
 

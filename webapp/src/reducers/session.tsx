@@ -29,7 +29,7 @@ const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: '',
-          userId: action.userId,
+          userName: action.userName,
           loginStatus: constants.LoginStatus.LoggedIn
         })
       }
@@ -38,7 +38,7 @@ const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: action.errorMessage,
-          userId: '',
+          userName: '',
           loginStatus: constants.LoginStatus.NotLoggedIn
         })
       }
@@ -55,7 +55,7 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: '',
-          userId: '',
+          userName: '',
           loginStatus: constants.LoginStatus.NotLoggedIn
         })
       }
@@ -68,7 +68,7 @@ function copyWith(
     state: SessionState, changed: Partial<SessionState>): SessionState {
   return {
     loginStatus: changed.loginStatus || state.loginStatus,
-    userId: changed.userId || state.userId,
+    userName: changed.userName || state.userName,
     errorMessage: changed.errorMessage || state.errorMessage,
     locale: changed.locale || state.locale,
   }
