@@ -21,7 +21,7 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'users']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'users', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
@@ -36,7 +36,7 @@ Resources:
   SquadsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
@@ -51,7 +51,7 @@ Resources:
   TournamentsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
@@ -66,7 +66,7 @@ Resources:
   MatchDaysTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days', '1']]
       AttributeDefinitions:
         -
           AttributeName: "tournament_id"
@@ -87,7 +87,7 @@ Resources:
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches', '1']]
       AttributeDefinitions:
         -
           AttributeName: "match_day_id"
@@ -108,7 +108,7 @@ Resources:
   BetsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets', '1']]
       AttributeDefinitions:
         -
           AttributeName: "squad_id"
