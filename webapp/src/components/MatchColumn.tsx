@@ -15,6 +15,7 @@ export default ({ match, bets }: Props) =>
   <div className="matchWithBets">
     <div className="match"><Match match={match} /></div>
     <div className="bets">
-      { bets.map(bet => <Bet key={joinKeys(match.id, bet.userId)} bet={bet} />)}
+      { bets.map(bet =>
+        <Bet key={joinKeys(match.id, bet.userName)} bet={bet} />)}
     </div>
   </div>

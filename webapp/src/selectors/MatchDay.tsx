@@ -2,14 +2,13 @@ import { createSelector, ParametricSelector } from 'reselect'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
-import { joinKeys } from '../types/data'
+import { Map, joinKeys } from '../types/data'
 import {
   getMatches,
   getMatchDays,
   getMatchesByMatchDay,
   getSquads,
-  getBets,
-  getBetsByMatchDayAndPool
+  getBets
 } from './data'
 import {
   makeGetUrlParameter,
@@ -62,18 +61,15 @@ export const makeGetTournamentId =
   )
 
 export const makeGetMatchDayBetBucket = (
-  getMatchDay: ModelSelector<m.MatchDay>, getPool: ModelSelector<m.Pool>
+  getMatchDay: ModelSelector<m.MatchDay>, getSquad: ModelSelector<m.Squad>
 ) =>
   createSelector(
-    [getMatchDay, getPool, getBetsByMatchDayAndPool, getBets],
-    (   matchDay,    pool,    betsByMatchDayAndPool,    bets) => {
-      let betBucketId = betsByMatchDayAndPool[joinKeys(matchDay.id, pool.id)]
-      if (!betBucketId) return null
-      return bets[betBucketId]
-  })
+    [getMatchDay, getSquad, getBets],
+    (   matchDay,    squad,    bets) => bets[joinKeys(squad.name, matchDay.id)]
+  )
 
 const missingBetForUser = (user: m.User) =>
-    m.Bet.create({ userId: user.id, status: m.BetStatus.MISSING })
+    m.Bet.create({ userName: user.name, status: m.BetStatus.MISSING })
 
 export const makeGetBetsByMatch = (
   getParticipants: ModelSelector<m.User[]>,
@@ -88,12 +84,12 @@ export const makeGetBetsByMatch = (
         betsInBucket = matchDayBetBucket.bets
       let betsByMatch: m.IBet[][] = []
       betsInBucket.forEach(matchBetBucket => {
-        let matchBetsByUserId: m.IBet[] = []
+        let matchBetsByUserName: Map<m.IBet> = {}
         matchBetBucket.bets.forEach(bet => {
-          matchBetsByUserId[bet.userId] = bet
+          matchBetsByUserName[bet.userName] = bet
         })
         let matchBets = participants.map(user =>
-          matchBetsByUserId[user.id] || missingBetForUser(user))
+          matchBetsByUserName[user.name] || missingBetForUser(user))
         betsByMatch[matchBetBucket.matchId] = matchBets
       })
       matches.forEach(match => {

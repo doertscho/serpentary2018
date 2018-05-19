@@ -2,8 +2,9 @@ import { createSelector } from 'reselect'
 
 import { StoreState } from '../types'
 import {
-  getMatchDays,
   getTournaments,
+  getMatchDays,
+  getMatchDaysByTournament,
   getPools,
   getPoolsBySquad,
   getSquads
@@ -16,9 +17,12 @@ export const makeGetTournament = (getTournamentId: NumberSelector) =>
 
 export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
   createSelector(
-    [getMatchDays, getTournamentId],
-    (   matchDays,    tournamentId) =>
-      matchDays.filter(matchDay => matchDay.tournamentId == tournamentId)
+    [getMatchDays, getMatchDaysByTournament, getTournamentId],
+    (   matchDays,    matchDaysByTournament,    tournamentId) => {
+      let matchDayIds = matchDaysByTournament[tournamentId]
+      if (!matchDayIds) return []
+      return matchDayIds.map(id => matchDays[id])
+    }
   )
 
 export const makeGetUserSquadsByTournament =

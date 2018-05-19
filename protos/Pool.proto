@@ -3,11 +3,10 @@ package models;
 
 message Pool {
 
-  int32 id = 1;
-  int32 updated = 2;
+  string squad_name = 1;
+  int32 tournament_id = 2;
+  
+  int32 updated = 3;
 
-  int32 squad_id = 3;
-  int32 tournament_id = 4;
-
-  repeated int32 participants = 5;
+  repeated string participants = 4;
 }

@@ -7,5 +7,4 @@ message MatchDay {
   int32 updated = 2;
 
   int32 tournament_id = 3;
-
 }

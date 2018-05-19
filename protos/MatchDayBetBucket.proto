@@ -3,13 +3,12 @@ package models;
 
 message MatchDayBetBucket {
 
-  int32 id = 1;
-  int32 updated = 2;
+  string squad_name = 1;
+  int32 match_day_id = 2;
 
-  int32 pool_id = 3;
-  int32 match_day_id = 4;
+  int32 updated = 3;
 
-  repeated MatchBetBucket bets = 5;
+  repeated MatchBetBucket bets = 4;
 }
 
 message MatchBetBucket {
@@ -21,7 +20,7 @@ message MatchBetBucket {
 
 message Bet {
 
-  int32 user_id = 1;
+  string user_name = 1;
 
   BetStatus status = 2;
 

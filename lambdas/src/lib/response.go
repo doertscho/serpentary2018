@@ -83,24 +83,3 @@ func BuildUpdate(data *models.Update) events.APIGatewayProxyResponse {
 		},
 	}
 }
-
-func BuildSession(data *models.Session) events.APIGatewayProxyResponse {
-
-	serialised, err := proto.Marshal(data)
-
-	if err != nil {
-		log.Fatal("Failed to serialise data")
-		return events.APIGatewayProxyResponse{StatusCode: 500}
-	}
-
-	return events.APIGatewayProxyResponse{
-
-		StatusCode: 200,
-		Body:       string(serialised),
-
-		Headers: map[string]string{
-			"Content-Type":                "application/octet-stream",
-			"Access-Control-Allow-Origin": conf.AllowOrigin,
-		},
-	}
-}

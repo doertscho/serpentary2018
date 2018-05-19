@@ -9,6 +9,6 @@ interface Props {
 export default ({ participants }: Props) =>
   <div className="users">
     { participants.map(user =>
-    <div key={user.id} className="user">{user.name}</div>
+    <div key={user.name} className="user">{user.name}</div>
     )}
   </div>

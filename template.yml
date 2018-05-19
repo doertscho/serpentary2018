@@ -16,7 +16,38 @@ Parameters:
     Description: Prefix to be used for all database tables
 
 Resources:
+
   # Database tables
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'users']]
+      AttributeDefinitions:
+        -
+          AttributeName: "name"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "name"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "3"
+        WriteCapacityUnits: "1"
+  SquadsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads']]
+      AttributeDefinitions:
+        -
+          AttributeName: "name"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "name"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "3"
+        WriteCapacityUnits: "1"
   TournamentsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -52,7 +83,7 @@ Resources:
           KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: "3"
-        WriteCapacityUnits: "1"
+        WriteCapacityUnits: "3"
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -73,7 +104,29 @@ Resources:
           KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: "5"
-        WriteCapacityUnits: "2"
+        WriteCapacityUnits: "3"
+  BetsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
+      AttributeDefinitions:
+        -
+          AttributeName: "squad_name"
+          AttributeType: "S"
+        -
+          AttributeName: "match_day_id"
+          AttributeType: "N"
+      KeySchema:
+        -
+          AttributeName: "squad_name"
+          KeyType: "HASH"
+        -
+          AttributeName: "match_day_id"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+
   # Authorizer for the API Gateway
   CognitoAuthorizer:
     Type: AWS::ApiGateway::Authorizer
@@ -83,6 +136,7 @@ Resources:
       IdentitySource: method.request.header.Authorization
       ProviderARNs: [!Ref 'CognitoUserPoolId']
       RestApiId: !Ref 'ServerlessRestApi'
+
   # Backend Lambdas
   DataProvider:
     Type: AWS::Serverless::Function
