@@ -26,16 +26,13 @@ func getTournaments() events.APIGatewayProxyResponse {
 
 func getTournamentById(id int) events.APIGatewayProxyResponse {
 
-	tournament := db.GetDb().FindTournamentById(id)
+	tournament := db.GetDb().GetTournamentById(id)
 	if tournament == nil {
 		return lib.NotFound()
 	}
-
 	tournaments := []*models.Tournament{tournament}
-	matchDays := []*models.MatchDay{
-		getSampleMatchDay1Partial(),
-		getSampleMatchDay2Partial(),
-	}
+
+	matchDays := db.GetDb().GetMatchDaysByTournamentId(id)
 
 	data := &models.Update{
 		Tournaments: tournaments,
@@ -43,39 +40,4 @@ func getTournamentById(id int) events.APIGatewayProxyResponse {
 	}
 
 	return lib.BuildUpdate(data)
-}
-
-func getSampleTournament1() *models.Tournament {
-	return &models.Tournament{
-		Id:      1,
-		Updated: 1,
-		Name: &models.LocalisableString{
-			Localisations: []*models.Localisation{
-				&models.Localisation{
-					Locale: models.Locale_EN,
-					Value:  "Tournament 1",
-				},
-				&models.Localisation{
-					Locale: models.Locale_DE,
-					Value:  "Wettbewerb 1",
-				},
-			},
-		},
-	}
-}
-
-func getSampleMatchDay1Partial() *models.MatchDay {
-	return &models.MatchDay{
-		Id:           1,
-		Updated:      1,
-		TournamentId: 1,
-	}
-}
-
-func getSampleMatchDay2Partial() *models.MatchDay {
-	return &models.MatchDay{
-		Id:           2,
-		Updated:      1,
-		TournamentId: 1,
-	}
 }

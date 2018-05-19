@@ -58,7 +58,7 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
         <h3>{ l('MATCH_DAY_SQUADS', 'Bets for this match day by squad') }</h3>
         <ul>
           { squads.map(squad =>
-            <li key={squad.id}>
+            <li key={squad.name}>
               <Link to={matchDay.id + '/bets/' + squad.name}>{squad.name}</Link>
             </li>
           ) }

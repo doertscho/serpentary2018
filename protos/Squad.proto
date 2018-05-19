@@ -3,9 +3,8 @@ package models;
 
 message Squad {
 
-  int32 id = 1;
+  string name = 1;
   int32 updated = 2;
-  string name = 3;
 
-  repeated int32 members = 4;
+  repeated string members = 3;
 }

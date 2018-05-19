@@ -1,12 +1,17 @@
 package main
 
 import (
+	"main/db"
 	"main/handlers"
 	"main/lib"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+func init() {
+	db.InitDatabase()
+}
 
 func main() {
 	lambda.Start(dispatch)
@@ -21,15 +26,15 @@ func dispatch(request events.APIGatewayProxyRequest) (
 		return lib.Options(), nil
 	}
 
-	userId := lib.GetUserId(request)
-	if userId == nil {
+	userName := lib.GetUserName(request)
+	if userName == nil {
 		return lib.Unauthorized(), nil
 	}
 
 	path := lib.ParsePath(request.Path)
 
 	if doesMatch, rest := lib.MatchPrefix(path, "me"); doesMatch {
-		return handlers.DispatchMeRequest(rest, *userId), nil
+		return handlers.DispatchMeRequest(rest, *userName), nil
 	}
 
 	return lib.NotFound(), nil

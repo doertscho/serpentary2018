@@ -39,9 +39,3 @@ func TestBuildUpdateHasCode200(t *testing.T) {
 	actual := BuildUpdate(data)
 	assert.Equal(t, 200, actual.StatusCode)
 }
-
-func TestBuildSessionHasCode200(t *testing.T) {
-	data := &models.Session{}
-	actual := BuildSession(data)
-	assert.Equal(t, 200, actual.StatusCode)
-}

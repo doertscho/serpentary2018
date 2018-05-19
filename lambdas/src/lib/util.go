@@ -53,7 +53,7 @@ func MatchInt(pathElements []string) (parsed *int, rest []string) {
 	return &parsedInt, pathElements[1:]
 }
 
-func GetUserId(request events.APIGatewayProxyRequest) *int32 {
+func GetUserName(request events.APIGatewayProxyRequest) *string {
 
 	claims, contained := request.RequestContext.Authorizer["claims"]
 	if !contained {
@@ -84,7 +84,5 @@ func GetUserId(request events.APIGatewayProxyRequest) *int32 {
 		return nil
 	}
 
-	log.Println("extracted user name " + userName)
-	var userId int32 = 1
-	return &userId
+	return &userName
 }

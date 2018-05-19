@@ -1,53 +1,50 @@
 import { models as m } from './models'
 
 export interface Entity {
-  id?: number
   updated?: number
 }
 
-export type ParentChildTable = number[][]
-export type CombinedParentChildTable = { [key: string]: number }
+export type Map<T> = { [key: string]: T }
 
-export function joinKeys(keyA: number, keyB: number): string {
+export type ParentChildTable = Map<string[]>
+
+export function joinKeys(
+    keyA: number | string, keyB: number | string): string {
   return '' + keyA + '/' + keyB
 }
 
 export interface DataState {
 
-  tournaments: m.Tournament[]
-  matchDays: m.MatchDay[]
+  tournaments: Map<m.Tournament>
+  matchDays: Map<m.MatchDay>
   matchDaysByTournament: ParentChildTable
-  matches: m.Match[]
+  matches: Map<m.Match>
   matchesByMatchDay: ParentChildTable
 
-  users: m.User[]
-  squads: m.Squad[]
-  pools: m.Pool[]
+  users: Map<m.User>
+  squads: Map<m.Squad>
+  pools: Map<m.Pool>
   poolsByTournament: ParentChildTable
   poolsBySquad: ParentChildTable
-  poolsByTournamentAndSquad: CombinedParentChildTable
 
-  bets: m.MatchDayBetBucket[]
-  betsByMatchDayAndPool: CombinedParentChildTable
+  bets: Map<m.MatchDayBetBucket>
 }
 
 export const INITIAL_DATA_STATE: DataState = {
 
-  tournaments: [],
-  matchDays: [],
-  matchDaysByTournament: [],
-  matches: [],
-  matchesByMatchDay: [],
+  tournaments: {},
+  matchDays: {},
+  matchDaysByTournament: {},
+  matches: {},
+  matchesByMatchDay: {},
 
-  users: [],
-  squads: [],
-  pools: [],
-  poolsByTournament: [],
-  poolsBySquad: [],
-  poolsByTournamentAndSquad: {},
+  users: {},
+  squads: {},
+  pools: {},
+  poolsByTournament: {},
+  poolsBySquad: {},
 
-  bets: [],
-  betsByMatchDayAndPool: {},
+  bets: {},
 }
 
 const tournamentOneNameEn =
@@ -64,45 +61,45 @@ const tournamentOneName =
     m.LocalisableString.create({
       localisations: [ tournamentOneNameEn, tournamentOneNameDe ]
     })
-const sampleTournaments = []
+const sampleTournaments: Map<m.Tournament> = {}
 sampleTournaments[1] =
     m.Tournament.create({ id: 1, name: tournamentOneName })
-const sampleMatchDays = []
+const sampleMatchDays: Map<m.MatchDay> = {}
 sampleMatchDays[1] =
     m.MatchDay.create({ id: 1, tournamentId: 1 })
-const sampleMatches = []
+const sampleMatches: Map<m.Match> = {}
 sampleMatches[1] =
     m.Match.create({ id: 1, matchDayId: 1, homeTeamId: 1, awayTeamId: 1, })
 sampleMatches[2] =
     m.Match.create({ id: 2, matchDayId: 1, homeTeamId: 3, awayTeamId: 4, })
 
-const sampleUsers = []
-sampleUsers[1] = m.User.create({ id: 1, name: 'User1' })
-sampleUsers[2] = m.User.create({ id: 2, name: 'User2' })
+const sampleUsers: Map<m.User> = {}
+sampleUsers['User1'] = m.User.create({ name: 'User1' })
+sampleUsers['User2'] = m.User.create({ name: 'User2' })
 
-const sampleSquads = []
-sampleSquads[1] = m.Squad.create({ id: 1, name: 'squad1', members: [1, 2] })
+const sampleSquads: Map<m.Squad> = {}
+sampleSquads['squad1'] = m.Squad.create({
+  name: 'squad1', members: ['User1', 'User2'] })
 
-const samplePools = []
-samplePools[1] =
-    m.Pool.create({ id: 1, squadId: 1, tournamentId: 1, participants: [1, 2] })
+const samplePools: Map<m.Pool> = {}
+samplePools['squad1/1'] =m.Pool.create({
+  squadName: 'squad1', tournamentId: 1, participants: ['User1', 'User2'] })
 
 const sampleBetBucket = m.MatchDayBetBucket.create({
-  id: 1,
-  updated: 1,
-  poolId: 1,
+  squadName: 'squad1',
   matchDayId: 1,
+  updated: 1,
   bets: [
     m.MatchBetBucket.create({
       matchId: 1,
       bets: [
         m.Bet.create({
-          userId: 1,
+          userName: 'User1',
           homeGoals: 3,
           awayGoals: 0,
         }),
         m.Bet.create({
-          userId: 2,
+          userName: 'User2',
           homeGoals: 1,
           awayGoals: 2,
         }),
@@ -110,23 +107,21 @@ const sampleBetBucket = m.MatchDayBetBucket.create({
     }),
   ],
 })
-const sampleBets = []
-sampleBets[1] = sampleBetBucket
+const sampleBets: Map<m.MatchDayBetBucket> = {}
+sampleBets['squad1/1'] = sampleBetBucket
 
 export const SAMPLE_DATA_STATE: DataState = {
   tournaments: sampleTournaments,
   matchDays: sampleMatchDays,
-  matchDaysByTournament: [ [], [1] ],
+  matchDaysByTournament: { '1': ['1'] },
   matches: sampleMatches,
-  matchesByMatchDay: [ [], [1, 2] ],
+  matchesByMatchDay: { '1': ['1', '2'] },
 
   users: sampleUsers,
   squads: sampleSquads,
   pools: samplePools,
-  poolsByTournament: [ [], [1] ],
-  poolsBySquad: [ [], [1] ],
-  poolsByTournamentAndSquad: { '1/1': 1 },
+  poolsByTournament: { '1': ['1'] },
+  poolsBySquad: { '1': ['1'] },
 
   bets: sampleBets,
-  betsByMatchDayAndPool: { '1/1': 1 },
 }

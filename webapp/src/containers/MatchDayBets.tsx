@@ -93,7 +93,7 @@ const makeMapStateToProps = () => {
   let getSquad = makeGetSquad(getSquadNameFromUrl)
   let getPool = makeGetPool(getMatchDay, getSquad)
   let getParticipants = makeGetParticipants(getPool)
-  let getMatchDayBetBucket = makeGetMatchDayBetBucket(getMatchDay, getPool)
+  let getMatchDayBetBucket = makeGetMatchDayBetBucket(getMatchDay, getSquad)
   let getBetsByMatch =
       makeGetBetsByMatch(getParticipants, getMatches, getMatchDayBetBucket)
   return withLocaliser((state: StoreState, props: any) => {

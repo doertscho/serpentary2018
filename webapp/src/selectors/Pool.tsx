@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { joinKeys } from '../types/data'
 import { getUsers, getPools, getPoolsBySquad } from './data'
 import { ModelSelector } from './util'
 
@@ -9,21 +10,13 @@ export const makeGetPool = (
     getMatchDay: ModelSelector<m.MatchDay>, getSquad: ModelSelector<m.Squad>
 ) =>
   createSelector(
-    [getMatchDay, getSquad, getPools, getPoolsBySquad],
-    (   matchDay,    squad,    pools,    poolsBySquad) => {
-      let squadPoolIds = poolsBySquad[squad.id]
-      if (!squadPoolIds) return null
-      let squadPools = squadPoolIds.map(poolId => pools[poolId])
-      for (var i in squadPools) {
-        if (squadPools[i].tournamentId == matchDay.tournamentId)
-          return squadPools[i]
-      }
-      return null
-    }
+    [getMatchDay, getSquad, getPools],
+    (   matchDay,    squad,    pools) =>
+      pools[joinKeys(squad.name, matchDay.tournamentId)]
   )
 
 export const makeGetParticipants = (getPool: ModelSelector<m.Pool>) =>
   createSelector(
     [getPool, getUsers],
-    (   pool,    users) => pool.participants.map(userId => users[userId])
+    (   pool,    users) => pool.participants.map(userName => users[userName])
   )
