@@ -8,6 +8,6 @@ interface Props {
 }
 
 export default ({ matchDay }: Props) =>
-  <Link to={'/match-days/' + matchDay.id}>
+  <Link to={matchDay.tournamentId + '/match-days/' + matchDay.id}>
     #{matchDay.id}
   </Link>

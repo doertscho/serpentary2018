@@ -54,7 +54,7 @@ class tournamentPage extends LazyLoadingComponent<Props, {}> {
   }
 }
 
-const getTournamentIdFromUrl = makeGetUrlParameter('id')
+const getTournamentIdFromUrl = makeGetUrlParameter('tournament_id')
 
 const makeMapStateToProps = () => {
   let getTournament = makeGetTournament(getTournamentIdFromUrl)
