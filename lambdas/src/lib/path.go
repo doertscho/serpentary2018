@@ -11,8 +11,7 @@ func MakePathMatcher(path string) func(...string) bool {
 		if len(parsedPath) != len(matchers) {
 			return false
 		}
-		for i := range parsedPath {
-			pathElement := parsedPath[i]
+		for i, pathElement := range parsedPath {
 			matcher := matchers[i]
 			if matcher == "_" {
 				if !isValidStringId(pathElement) {
@@ -31,8 +30,8 @@ func ParsePath(path string) []string {
 }
 
 func TrimAndFilterEmpty(in []string) (filtered []string) {
-	for i := range in {
-		trimmed := strings.TrimSpace(in[i])
+	for _, value := range in {
+		trimmed := strings.TrimSpace(value)
 		if len(trimmed) > 0 {
 			filtered = append(filtered, trimmed)
 		}

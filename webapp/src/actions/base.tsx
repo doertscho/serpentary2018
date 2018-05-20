@@ -34,7 +34,7 @@ export interface BaseSessionAction extends BaseAction<SessionState> {
   operation: SessionOperation
 }
 
-export const apiRequest = (path: string, withIdentity?: boolean) => {
+export const apiGet = (path: string, withIdentity?: boolean) => {
   let options = {
     url: API_BASE_URL + path,
     method: 'get',
@@ -43,6 +43,17 @@ export const apiRequest = (path: string, withIdentity?: boolean) => {
   }
   if (withIdentity) {
     options.headers = sessionManager.getHeadersForAuthorisedRequest()
+  }
+  return axios.request(options)
+}
+
+export const apiPost = (path: string, data?: string) => {
+  let options = {
+    url: API_BASE_URL + path,
+    method: 'post',
+    responseType: 'arraybuffer',
+    data: data,
+    headers: sessionManager.getHeadersForAuthorisedRequest()
   }
   return axios.request(options)
 }

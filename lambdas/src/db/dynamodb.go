@@ -141,6 +141,82 @@ func (db DynamoDb) GetMatchesByMatchDayId(
 	return matches
 }
 
+func (db DynamoDb) GetSquadById(squadId *string) *models.Squad {
+
+	record, err := getItemById("squads", squadId)
+	if err != nil {
+		log.Println("error occurred querying item: " + err.Error())
+		return nil
+	}
+
+	squad := models.Squad{}
+	err = dynamodbattribute.UnmarshalMap(record.Item, &squad)
+	if err != nil {
+		log.Println("error unmarshalling item: " + err.Error())
+		return nil
+	}
+
+	return &squad
+}
+
+func (db DynamoDb) AddUserToSquad(
+	squadId *string,
+	userId *string,
+) (*models.Squad, *models.User) {
+
+	updateSquadInput := &dynamodb.UpdateItemInput{
+		ExpressionAttributeNames: map[string]*string{
+			"#M": aws.String("members"),
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":u": {L: []*dynamodb.AttributeValue{{S: aws.String(*userId)}}},
+		},
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {S: aws.String(*squadId)},
+		},
+		ReturnValues:     aws.String("ALL_NEW"),
+		TableName:        aws.String(conf.TablePrefix + "squads"),
+		UpdateExpression: aws.String("SET #M = list_append(#M, :u)"),
+	}
+	squadRecord, err := dynDbSvc.UpdateItem(updateSquadInput)
+	if err != nil {
+		return nil, nil
+	}
+	squad := models.Squad{}
+	err = dynamodbattribute.UnmarshalMap(squadRecord.Attributes, &squad)
+	if err != nil {
+		log.Println("error unmarshalling item: " + err.Error())
+		return nil, nil
+	}
+
+	updateUserInput := &dynamodb.UpdateItemInput{
+		ExpressionAttributeNames: map[string]*string{
+			"#S": aws.String("squads"),
+		},
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":s": {L: []*dynamodb.AttributeValue{{S: aws.String(*squadId)}}},
+		},
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {S: aws.String(*userId)},
+		},
+		ReturnValues:     aws.String("ALL_NEW"),
+		TableName:        aws.String(conf.TablePrefix + "users"),
+		UpdateExpression: aws.String("SET #S = list_append(#S, :s)"),
+	}
+	userRecord, err := dynDbSvc.UpdateItem(updateUserInput)
+	if err != nil {
+		return nil, nil
+	}
+	user := models.User{}
+	err = dynamodbattribute.UnmarshalMap(userRecord.Attributes, &user)
+	if err != nil {
+		log.Println("error unmarshalling item: " + err.Error())
+		return nil, nil
+	}
+
+	return &squad, &user
+}
+
 func (db DynamoDb) GetUserById(userId *string) *models.User {
 
 	record, err := getItemById("users", userId)

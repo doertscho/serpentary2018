@@ -7,18 +7,19 @@ export const sessionReducer: Reducer<SessionState, SessionAction> =
     (state, action) => {
   switch(action.operation) {
     case constants.SIGN_UP:
-      return handleSignUpOrLogInEvent(state, action)
+      return handleSignUpEvent(state, action)
     case constants.LOG_IN:
-      return handleSignUpOrLogInEvent(state, action)
+      return handleLogInEvent(state, action)
     case constants.LOG_OUT:
       return handleLogOutEvent(state, action)
+    case constants.SET_LOCALE:
+      return { session: copyWith(state, { locale: (action as any).locale }) }
+    default:
+      return { }
   }
-  if (action.operation == constants.SET_LOCALE)
-    return { session: copyWith(state, { locale: (action as any).locale }) }
-  return { }
 }
 
-const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
+const handleSignUpEvent: Reducer<SessionState, SessionAction> =
     (state, action) => {
   switch (action.event) {
     case constants.REQUEST:
@@ -29,8 +30,8 @@ const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: '',
-          userId: action.userId,
-          loginStatus: constants.LoginStatus.LoggedIn
+          userId: '',
+          unconfirmedUserId: action.userId
         })
       }
     case constants.ERROR:
@@ -38,8 +39,35 @@ const handleSignUpOrLogInEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: action.errorMessage,
-          userId: '',
-          loginStatus: constants.LoginStatus.NotLoggedIn
+          userId: ''
+        })
+      }
+    default:
+      return { }
+  }
+}
+
+const handleLogInEvent: Reducer<SessionState, SessionAction> =
+    (state, action) => {
+  switch (action.event) {
+    case constants.REQUEST:
+      console.log("received notice of log in request", action)
+      return { session: copyWith(state, { errorMessage: '' }) }
+    case constants.RESPONSE:
+      console.log("received log in response", action)
+      return {
+        session: copyWith(state, {
+          errorMessage: '',
+          userId: action.userId,
+          unconfirmedUserId: ''
+        })
+      }
+    case constants.ERROR:
+      console.log("received log in error", action)
+      return {
+        session: copyWith(state, {
+          errorMessage: action.errorMessage,
+          userId: ''
         })
       }
     default:
@@ -55,8 +83,7 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: '',
-          userId: '',
-          loginStatus: constants.LoginStatus.NotLoggedIn
+          userId: ''
         })
       }
     default:
@@ -67,7 +94,6 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
 function copyWith(
     state: SessionState, changed: Partial<SessionState>): SessionState {
   return {
-    loginStatus: changed.loginStatus || state.loginStatus,
     userId: changed.userId || state.userId,
     errorMessage: changed.errorMessage || state.errorMessage,
     locale: changed.locale || state.locale,

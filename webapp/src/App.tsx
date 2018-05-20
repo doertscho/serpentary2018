@@ -17,12 +17,15 @@ import Tournament from './containers/Tournament'
 import MatchDay from './containers/MatchDay'
 import MatchDayBets from './containers/MatchDayBets'
 import Ranking from './containers/Ranking'
+import Squad from './containers/Squad'
 import NotFound from './components/NotFound'
 
 interface Props {
   isInitialised: boolean
   initApp: () => void
 }
+
+const ID = '([0-9a-z-]+)'
 
 class App extends React.Component<Props, any> {
 
@@ -47,27 +50,30 @@ class App extends React.Component<Props, any> {
               <Route path='/log-in' component={ LogIn } />
 
               <Route path={
-                    '/tournaments/:tournament_id([0-9a-z-]+)' +
-                    '/match-days/:match_day_id([0-9a-z-]+)' +
-                    '/bets/:squad_id([0-9a-z-]+)'
+                    '/tournaments/:tournament_id' + ID +
+                    '/match-days/:match_day_id' + ID +
+                    '/bets/:squad_id' + ID
                   }
                   component={ MatchDayBets } />
 
               <Route path={
-                    '/tournaments/:tournament_id([0-9a-z-]+)' +
-                    '/match-days/:match_day_id([0-9a-z-]+)' +
-                    '/ranking/:squad_id([0-9a-z-]+)'
+                    '/tournaments/:tournament_id' + ID +
+                    '/match-days/:match_day_id' + ID +
+                    '/ranking/:squad_id' + ID
                   }
                   component={ Ranking } />
 
               <Route path={
-                    '/tournaments/:tournament_id([0-9a-z-]+)' +
-                    '/match-days/:match_day_id([0-9a-z-]+)'
+                    '/tournaments/:tournament_id' + ID +
+                    '/match-days/:match_day_id' + ID
                   }
                   component={ MatchDay } />
 
-              <Route path='/tournaments/:tournament_id([0-9a-z-]+)'
+              <Route path={'/tournaments/:tournament_id' + ID}
                   component={ Tournament } />
+
+              <Route path={'/squads/:squad_id' + ID}
+                  component={ Squad } />
 
               <Route component={ NotFound } />
 

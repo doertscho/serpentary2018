@@ -2,15 +2,14 @@ import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
 import { Redirect, withRouter } from 'react-router-dom'
 
-import { LoginStatus } from '../constants'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logIn } from '../actions/session'
 import { Localiser, Localisable, withLocaliser } from '../locales'
-import { getLoginStatus } from '../selectors/session'
+import { getUserId } from '../selectors/session'
 
 interface Props extends Localisable {
-  loginStatus: LoginStatus
+  userId: string
   referrer: string
   logIn: (username: string, password: string) => void
 }
@@ -23,7 +22,7 @@ interface State {
 class view extends React.Component<Props, State> {
 
   render() {
-    if (this.props.loginStatus == LoginStatus.LoggedIn)
+    if (this.props.userId && this.props.userId.length)
       return <Redirect to={ this.props.referrer || '/' } />
 
     let l = this.localiser
@@ -82,7 +81,7 @@ class view extends React.Component<Props, State> {
 
 const mapStateToProps = withLocaliser((state: StoreState, props: any) => {
   return {
-    loginStatus: getLoginStatus(state),
+    userId: getUserId(state),
     referrer: props.referrer || '/'
   }
 })

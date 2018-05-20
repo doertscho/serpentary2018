@@ -8,8 +8,7 @@ import { sessionManager } from '../session'
 import {
   InitAction,
   BaseSessionAction,
-  SessionOperation,
-  apiRequest
+  SessionOperation
 } from './base'
 import { getMe } from './data'
 
