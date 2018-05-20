@@ -12,12 +12,13 @@ func GetDb() Db {
 
 type Db interface {
 	GetTournaments() []*models.Tournament
-	GetTournamentById(tournamentId *int) *models.Tournament
+	GetTournamentById(tournamentId *string) *models.Tournament
 
-	GetMatchDaysByTournamentId(tournamentId *int) []*models.MatchDay
-	GetMatchDayById(matchDayId *int) *models.MatchDay
+	GetMatchDaysByTournamentId(tournamentId *string) []*models.MatchDay
+	GetMatchDayById(tournamentId *string, matchDayId *string) *models.MatchDay
 
-	GetMatchesByMatchDayId(matchDayid *int) []*models.Match
+	GetMatchesByMatchDayId(
+		tournamentId *string, matchDayId *string) []*models.Match
 
 	GetUserById(userId *string) *models.User
 	RegisterNewUser(userId *string) *models.User

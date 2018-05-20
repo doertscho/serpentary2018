@@ -23,17 +23,19 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	lib.LogRequest(request)
 
 	if request.HTTPMethod == "OPTIONS" {
-		return lib.Options(), nil
+		return *lib.Options(), nil
 	}
 
-	path := lib.ParsePath(request.Path)
+	matchPath := lib.MakePathMatcher(request.Path)
 
-	if doesMatch, rest := lib.MatchPrefix(path, "tournaments"); doesMatch {
-		return handlers.DispatchTournamentRequest(rest), nil
-	}
-	if doesMatch, rest := lib.MatchPrefix(path, "match-days"); doesMatch {
-		return handlers.DispatchMatchDayRequest(rest), nil
+	if matchPath("tournaments") {
+		return *handlers.GetTournaments(), nil
 	}
 
-	return lib.NotFound(), nil
+	if matchPath("tournaments", "_") {
+		tournamentId := request.PathParameters["tournamentId"]
+		return *handlers.GetTournamentById(&tournamentId), nil
+	}
+
+	return *lib.NotFound(), nil
 }

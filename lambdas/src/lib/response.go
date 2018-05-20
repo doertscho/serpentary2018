@@ -10,8 +10,8 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
-func Options() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
+func Options() *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type":                 "text/plain",
@@ -22,8 +22,8 @@ func Options() events.APIGatewayProxyResponse {
 	}
 }
 
-func BadRequest(message string) events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
+func BadRequest(message string) *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
 		StatusCode: 400,
 		Body:       message,
 		Headers: map[string]string{
@@ -33,8 +33,8 @@ func BadRequest(message string) events.APIGatewayProxyResponse {
 	}
 }
 
-func Unauthorized() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
+func Unauthorized() *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
 		StatusCode: 401,
 		Headers: map[string]string{
 			"Content-Type":                "text/plain",
@@ -43,8 +43,8 @@ func Unauthorized() events.APIGatewayProxyResponse {
 	}
 }
 
-func NotFound() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
+func NotFound() *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
 		StatusCode: 404,
 		Headers: map[string]string{
 			"Content-Type":                "text/plain",
@@ -53,8 +53,8 @@ func NotFound() events.APIGatewayProxyResponse {
 	}
 }
 
-func InternalError() events.APIGatewayProxyResponse {
-	return events.APIGatewayProxyResponse{
+func InternalError() *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
 		StatusCode: 500,
 		Headers: map[string]string{
 			"Content-Type":                "text/plain",
@@ -63,16 +63,16 @@ func InternalError() events.APIGatewayProxyResponse {
 	}
 }
 
-func BuildUpdate(data *models.Update) events.APIGatewayProxyResponse {
+func BuildUpdate(data *models.Update) *events.APIGatewayProxyResponse {
 
 	serialised, err := proto.Marshal(data)
 
 	if err != nil {
 		log.Fatal("Failed to serialise data")
-		return events.APIGatewayProxyResponse{StatusCode: 500}
+		return &events.APIGatewayProxyResponse{StatusCode: 500}
 	}
 
-	return events.APIGatewayProxyResponse{
+	return &events.APIGatewayProxyResponse{
 
 		StatusCode: 200,
 		Body:       string(serialised),

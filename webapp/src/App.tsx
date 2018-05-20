@@ -46,13 +46,28 @@ class App extends React.Component<Props, any> {
               <Route path='/sign-up' component={ SignUp } />
               <Route path='/log-in' component={ LogIn } />
 
-              <Route path='/tournaments/:id(\d+)' component={ Tournament } />
-
-              <Route path='/match-days/:id(\d+)/bets/:squad'
+              <Route path={
+                    '/tournaments/:tournament_id([0-9a-z-]+)' +
+                    '/match-days/:match_day_id([0-9a-z-]+)' +
+                    '/bets/:squad_id([0-9a-z-]+)'
+                  }
                   component={ MatchDayBets } />
-              <Route path='/match-days/:id(\d+)' component={ MatchDay } />
 
-              <Route path='/ranking' component={ Ranking } />
+              <Route path={
+                    '/tournaments/:tournament_id([0-9a-z-]+)' +
+                    '/match-days/:match_day_id([0-9a-z-]+)' +
+                    '/ranking/:squad_id([0-9a-z-]+)'
+                  }
+                  component={ Ranking } />
+
+              <Route path={
+                    '/tournaments/:tournament_id([0-9a-z-]+)' +
+                    '/match-days/:match_day_id([0-9a-z-]+)'
+                  }
+                  component={ MatchDay } />
+
+              <Route path='/tournaments/:tournament_id([0-9a-z-]+)'
+                  component={ Tournament } />
 
               <Route component={ NotFound } />
 

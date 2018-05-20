@@ -24,16 +24,24 @@ import UserColumn from '../components/UserColumn'
 import MatchColumn from '../components/MatchColumn'
 
 interface Props extends Localisable {
-  matchDayId: number,
-  squadName: string,
+
+  squadId: string,
+  tournamentId: string,
+  matchDayId: string,
+
   matchDay: m.MatchDay
   squad: m.Squad
   participants: m.User[]
   matches: m.Match[]
   pool: m.Pool
   betsByMatch: m.Bet[][]
-  fetchBets:
-    (matchDayId: number, squadName: string, callbacks?: Callbacks) => void
+
+  fetchBets: (
+      squadId: string,
+      tournamentId: string,
+      matchDayId: string,
+      callbacks?: Callbacks
+    ) => void
 }
 
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
@@ -53,7 +61,11 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   requestData() {
     this.props.fetchBets(
-        this.props.matchDayId, this.props.squadName, this.requestDataCallbacks)
+        this.props.squadId,
+        this.props.tournamentId,
+        this.props.matchDayId,
+        this.requestDataCallbacks
+    )
   }
 
   renderWithData() {
@@ -67,7 +79,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     return (
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
-        <h2>#{matchDay.id}</h2>
+        <h2>{ l(matchDay.name) }</h2>
         <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squad.id) }</h3>
         <div className="betMatrix">
           <UserColumn participants={participants} />
@@ -84,22 +96,25 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
   }
 }
 
-const getMatchDayIdFromUrl = makeGetNumberUrlParameter('id')
-const getSquadNameFromUrl = makeGetUrlParameter('squad')
+const getTournamentIdFromUrl = makeGetUrlParameter('tournament_id')
+const getMatchDayIdFromUrl = makeGetUrlParameter('match_day_id')
+const getSquadIdFromUrl = makeGetUrlParameter('squad_id')
 
 const makeMapStateToProps = () => {
-  let getMatchDay = makeGetMatchDay(getMatchDayIdFromUrl)
-  let getMatches = makeGetMatches(getMatchDayIdFromUrl)
-  let getSquad = makeGetSquad(getSquadNameFromUrl)
+  let getMatchDay =
+      makeGetMatchDay(getTournamentIdFromUrl, getMatchDayIdFromUrl)
+  let getMatches = makeGetMatches(getMatchDay)
+  let getSquad = makeGetSquad(getSquadIdFromUrl)
   let getPool = makeGetPool(getMatchDay, getSquad)
   let getParticipants = makeGetParticipants(getPool)
-  let getMatchDayBetBucket = makeGetMatchDayBetBucket(getMatchDay, getSquad)
+  let getMatchDayBetBucket = makeGetMatchDayBetBucket(getSquad, getMatchDay)
   let getBetsByMatch =
       makeGetBetsByMatch(getParticipants, getMatches, getMatchDayBetBucket)
   return withLocaliser((state: StoreState, props: any) => {
     return {
+      squadId: getSquadIdFromUrl(state, props),
+      tournamentId: getTournamentIdFromUrl(state, props),
       matchDayId: getMatchDayIdFromUrl(state, props),
-      squadName: getSquadNameFromUrl(state, props),
       matchDay: getMatchDay(state, props),
       squad: getSquad(state, props),
       matches: getMatches(state, props),
@@ -113,11 +128,12 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     fetchBets: (
-        matchDayId: number,
-        squadName: string,
+        squadId: string,
+        tournamentId: string,
+        matchDayId: string,
         callbacks?: Callbacks
       ) => {
-        dispatch(fetchBets(matchDayId, squadName, callbacks))
+        dispatch(fetchBets(squadId, tournamentId, matchDayId, callbacks))
       }
   }
 }

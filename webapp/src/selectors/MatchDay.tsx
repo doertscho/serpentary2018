@@ -18,55 +18,56 @@ import {
   ModelSelector
 } from './util'
 
-export const makeGetMatchDay = (getMatchDayId: NumberSelector) =>
-  createSelector(
-    [getMatchDays, getMatchDayId],
-    (   matches,      matchDayId) => matches[matchDayId]
+export function makeGetMatchDay(
+  getTournamentId: StringSelector,
+  getMatchDayId: StringSelector
+): ModelSelector<m.MatchDay> {
+  return createSelector(
+    [getMatchDays, getTournamentId, getMatchDayId],
+    (   matches,      tournamentId,    matchDayId) =>
+      matches[joinKeys(tournamentId, matchDayId)]
   )
+}
 
-export const makeGetMatches = (getMatchDayId: NumberSelector) =>
-  createSelector(
-    [getMatches, getMatchesByMatchDay, getMatchDayId],
-    (   matches,    matchesByMatchDay,    matchDayId) => {
-      let matchIds = matchesByMatchDay[matchDayId]
+export function makeGetMatches(
+  getMatchDay: ModelSelector<m.MatchDay>
+): ModelSelector<m.Match[]> {
+  return createSelector(
+    [getMatches, getMatchesByMatchDay, getMatchDay],
+    (   matches,    matchesByMatchDay,    matchDay) => {
+      let combinedKey = joinKeys(matchDay.tournamentId, matchDay.id)
+      let matchIds = matchesByMatchDay[combinedKey]
       if (!matchIds) return null
       return matchIds.map(matchId => matches[matchId])
     }
   )
+}
 
-export const makeGetSquad = (getSquadId: StringSelector) =>
-  createSelector(
+export function makeGetSquad(
+  getSquadId: StringSelector
+): ModelSelector<m.Squad> {
+  return createSelector(
     [getSquads, getSquadId],
     (   squads,    squadId) => squads[squadId]
   )
+}
 
-export const makeGetTournamentId =
-    (getMatchDay: ModelSelector<m.MatchDay>) =>
-  createSelector(
-    [getMatchDay],
-    (   matchDay) => {
-      if (!matchDay) return null
-      return matchDay.tournamentId
-    }
+export function makeGetMatchDayBetBucket(
+  getSquad: ModelSelector<m.Squad>,
+  getMatchDay: ModelSelector<m.MatchDay>
+): ModelSelector<m.MatchDayBetBucket> {
+  return createSelector(
+    [getSquad, getMatchDay, getBets],
+    (   squad,    matchDay,    bets) => bets[joinKeys(squad.id, matchDay.id)]
   )
+}
 
-export const makeGetMatchDayBetBucket = (
-  getMatchDay: ModelSelector<m.MatchDay>, getSquad: ModelSelector<m.Squad>
-) =>
-  createSelector(
-    [getMatchDay, getSquad, getBets],
-    (   matchDay,    squad,    bets) => bets[joinKeys(squad.id, matchDay.id)]
-  )
-
-const missingBetForUser = (user: m.User) =>
-    m.Bet.create({ userId: user.id, status: m.BetStatus.MISSING })
-
-export const makeGetBetsByMatch = (
+export function makeGetBetsByMatch(
   getParticipants: ModelSelector<m.User[]>,
   getMatches: ModelSelector<m.Match[]>,
   getMatchDayBetBucket: ModelSelector<m.MatchDayBetBucket>
-) =>
-  createSelector(
+): ModelSelector<m.IBet[][]> {
+  return createSelector(
     [getParticipants, getMatches, getMatchDayBetBucket],
     (   participants,    matches,    matchDayBetBucket) => {
       var betsInBucket: m.IMatchBetBucket[] = []
@@ -89,3 +90,7 @@ export const makeGetBetsByMatch = (
       return betsByMatch
     }
   )
+}
+
+const missingBetForUser = (user: m.User) =>
+    m.Bet.create({ userId: user.id, status: m.BetStatus.MISSING })

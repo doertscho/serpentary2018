@@ -17,8 +17,13 @@ export function mapValues<T>(input: Map<T>): T[] {
 export type ParentChildTable = Map<string[]>
 
 export function joinKeys(
-    keyA: number | string, keyB: number | string): string {
-  return '' + keyA + '/' + keyB
+    keyA: number | string,
+    keyB: number | string,
+    keyC?: number | string
+): string {
+  let result = '' + keyA + '/' + keyB
+  if (keyC) result = result + '/' + keyC
+  return result
 }
 
 export interface DataState {
@@ -70,16 +75,28 @@ const tournamentOneName =
       localisations: [ tournamentOneNameEn, tournamentOneNameDe ]
     })
 const sampleTournaments: Map<m.Tournament> = {}
-sampleTournaments[1] =
-    m.Tournament.create({ id: 1, name: tournamentOneName })
+sampleTournaments['world-cup-2018'] =
+    m.Tournament.create({ id: 'world-cup-2018', name: tournamentOneName })
 const sampleMatchDays: Map<m.MatchDay> = {}
-sampleMatchDays[1] =
-    m.MatchDay.create({ id: 1, tournamentId: 1 })
+sampleMatchDays['world-cup-2018/group-stage-1'] =
+    m.MatchDay.create({ tournamentId: 'world-cup-2018', id: 'group-stage-1' })
 const sampleMatches: Map<m.Match> = {}
-sampleMatches[1] =
-    m.Match.create({ id: 1, matchDayId: 1, homeTeamId: 1, awayTeamId: 1, })
-sampleMatches[2] =
-    m.Match.create({ id: 2, matchDayId: 1, homeTeamId: 3, awayTeamId: 4, })
+sampleMatches['world-cup-2018/group-stage-1/1'] =
+    m.Match.create({
+      tournamentId: 'world-cup-2018',
+      matchDayId: 'group-stage-1',
+      id: 1,
+      homeTeamId: 1,
+      awayTeamId: 2,
+    })
+sampleMatches['world-cup-2018/group-stage-1/2'] =
+    m.Match.create({
+      tournamentId: 'world-cup-2018',
+      matchDayId: 'group-stage-1',
+      id: 2,
+      homeTeamId: 3,
+      awayTeamId: 4,
+    })
 
 const sampleUsers: Map<m.User> = {}
 sampleUsers['User1'] = m.User.create({ id: 'User1' })
@@ -90,13 +107,16 @@ sampleSquads['squad1'] = m.Squad.create({
   id: 'squad1', members: ['User1', 'User2'] })
 
 const samplePools: Map<m.Pool> = {}
-samplePools['squad1/1'] =m.Pool.create({
-  squadId: 'squad1', tournamentId: 1, participants: ['User1', 'User2'] })
+samplePools['squad1/world-cup-2018'] = m.Pool.create({
+  squadId: 'squad1',
+  tournamentId: 'world-cup-2018',
+  participants: ['User1', 'User2']
+})
 
 const sampleBetBucket = m.MatchDayBetBucket.create({
   squadId: 'squad1',
-  matchDayId: 1,
-  updated: 1,
+  tournamentId: 'world-cup-2018',
+  matchDayId: 'group-stage-1',
   bets: [
     m.MatchBetBucket.create({
       matchId: 1,
@@ -116,20 +136,25 @@ const sampleBetBucket = m.MatchDayBetBucket.create({
   ],
 })
 const sampleBets: Map<m.MatchDayBetBucket> = {}
-sampleBets['squad1/1'] = sampleBetBucket
+sampleBets['squad1/world-cup-2018/group-stage-1'] = sampleBetBucket
 
 export const SAMPLE_DATA_STATE: DataState = {
   tournaments: sampleTournaments,
   matchDays: sampleMatchDays,
-  matchDaysByTournament: { '1': ['1'] },
+  matchDaysByTournament: { 'world-cup-2018': ['world-cup-2018/group-stage-1'] },
   matches: sampleMatches,
-  matchesByMatchDay: { '1': ['1', '2'] },
+  matchesByMatchDay: {
+    'world-cup-2018/group-stage-1': [
+      'world-cup-2018/group-stage-1/1',
+      'world-cup-2018/group-stage-1/2'
+    ]
+  },
 
   users: sampleUsers,
   squads: sampleSquads,
   pools: samplePools,
-  poolsByTournament: { '1': ['1'] },
-  poolsBySquad: { '1': ['1'] },
+  poolsByTournament: { 'world-cup-2018': ['squad1/world-cup-2018'] },
+  poolsBySquad: { 'squad1': ['squad1/world-cup-2018'] },
 
   bets: sampleBets,
 }
