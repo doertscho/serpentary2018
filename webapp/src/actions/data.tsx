@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import * as constants from '../constants'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
-import { BaseDataAction, apiRequest } from './base'
+import { BaseDataAction, apiGet, apiPost } from './base'
 import { sessionManager } from '../session'
 
 export interface Callbacks {
@@ -11,8 +11,16 @@ export interface Callbacks {
   onError?: () => void
 }
 
+/*
+ * SESSION SYNC
+ */
+
 export const getMe = (callbacks?: Callbacks) =>
   fetchData('/me', callbacks, true)
+
+/*
+ * DATA FETCHERS
+ */
 
 export const fetchTournaments = (callbacks?: Callbacks) =>
   fetchData('/tournaments', callbacks)
@@ -39,9 +47,22 @@ export const fetchBets = (
   fetchData(
       '/tournaments/' + tournamentId +
         '/match-days/' + matchDayId +
-        '/bets/' + squadId, 
+        '/bets/' + squadId,
       callbacks
   )
+
+export const fetchSquad = (squadId: string, callbacks?: Callbacks) =>
+  fetchData('/squads/' + squadId, callbacks)
+
+/*
+ * POSTING DATA
+ */
+
+export const joinSquad = (squadId: string) => postData('/squads/' + squadId)
+
+/*
+ * ACTION CREATORS
+ */
 
 export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST
@@ -84,31 +105,68 @@ export function dataError(path: string, error: any): DataError {
   }
 }
 
-const fetch = (
-  path: string,
-  dispatch: Dispatch<StoreState>,
-  callbacks?: Callbacks,
-  withIdentity?: boolean
-) => {
-  apiRequest(path, withIdentity)
-    .then(response => {
-      const update = m.Update.decode(new Uint8Array(response.data))
-      dispatch(dataResponse(path, update))
-      if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
-    })
-    .catch(error => {
-      dispatch(dataError(path, error))
-      if (callbacks && callbacks.onError) callbacks.onError()
-    })
-}
+/*
+ * REQUEST HELPERS
+ */
 
 function fetchData(
   path: string,
   callbacks?: Callbacks,
   withIdentity?: boolean
 ) {
+   return function(dispatch: Dispatch<StoreState>) {
+     dispatch(dataRequest(path))
+     return fetch(path, dispatch, callbacks, withIdentity)
+  }
+}
+
+function postData(
+  path: string,
+  callbacks?: Callbacks,
+  data?: string
+) {
   return function(dispatch: Dispatch<StoreState>) {
     dispatch(dataRequest(path))
-    return fetch(path, dispatch, callbacks, withIdentity)
+    return post(path, dispatch, callbacks, data)
   }
+}
+
+const fetch = (
+  path: string,
+  dispatch: Dispatch<StoreState>,
+  callbacks?: Callbacks,
+  withIdentity?: boolean
+) => {
+  apiGet(path, withIdentity)
+    .then(response => handleResponse(response, path, dispatch, callbacks))
+    .catch(error => handleError(error, path, dispatch, callbacks))
+}
+
+const post = (
+ path: string,
+ dispatch: Dispatch<StoreState>,
+ callbacks?: Callbacks,
+ data?: string
+) => {
+ apiPost(path, data)
+   .then(response => handleResponse(response, path, dispatch, callbacks))
+   .catch(error => handleError(error, path, dispatch, callbacks))
+}
+
+function handleResponse(
+    response: any, path: string,
+    dispatch: Dispatch<StoreState>, callbacks?: Callbacks
+) {
+  let data = response.data || ''
+  let update = m.Update.decode(new Uint8Array(data))
+  dispatch(dataResponse(path, update))
+  if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
+}
+
+function handleError(
+    error: any, path: string,
+    dispatch: Dispatch<StoreState>, callbacks?: Callbacks
+) {
+  dispatch(dataError(path, error))
+  if (callbacks && callbacks.onError) callbacks.onError()
 }

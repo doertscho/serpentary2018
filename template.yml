@@ -167,6 +167,16 @@ Resources:
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadName}
             Method: get
+        GetSquadById:
+          Type: Api
+          Properties:
+            Path: /squads/{squadId}
+            Method: get
+        JoinSquadById:
+          Type: Api
+          Properties:
+            Path: /squads/{squadId}
+            Method: post
   SessionManager:
     Type: AWS::Serverless::Function
     Properties:

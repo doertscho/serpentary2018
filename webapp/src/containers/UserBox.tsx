@@ -5,12 +5,10 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logOut, setLocale } from '../actions/session'
-import { getLoginStatus, getUserId, getLocale } from '../selectors/session'
+import { getUserId, getLocale } from '../selectors/session'
 import { Localisable, withLocaliser, supportedLocales } from '../locales'
-import { LoginStatus } from '../constants'
 
 interface Props extends Localisable {
-  loginStatus: LoginStatus
   userId?: string
   logOut: () => void
   setLocale: (locale: string) => void
@@ -59,7 +57,7 @@ const view = (props: Props) => {
 
   console.log("UserBox re-rendering")
 
-  if (props.loginStatus == LoginStatus.LoggedIn)
+  if (props.userId && props.userId.length)
     return (
       <div>
         { userView(props) }
@@ -79,7 +77,6 @@ const view = (props: Props) => {
 
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
-    loginStatus: getLoginStatus(state),
     userId: getUserId(state)
   }
 })

@@ -16,6 +16,15 @@ func LogRequest(request events.APIGatewayProxyRequest) {
 	log.Println("received request: " + string(requestDebug))
 }
 
+func SliceContains(haystack []string, needle string) bool {
+	for _, val := range haystack {
+		if val == needle {
+			return true
+		}
+	}
+	return false
+}
+
 func GetUserId(request events.APIGatewayProxyRequest) *string {
 
 	claims, contained := request.RequestContext.Authorizer["claims"]

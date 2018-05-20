@@ -20,6 +20,9 @@ type Db interface {
 	GetMatchesByMatchDayId(
 		tournamentId *string, matchDayId *string) []*models.Match
 
+	GetSquadById(squadId *string) *models.Squad
+	AddUserToSquad(squadId *string, userId *string) (*models.Squad, *models.User)
+
 	GetUserById(userId *string) *models.User
 	RegisterNewUser(userId *string) *models.User
 }
