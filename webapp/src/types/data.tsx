@@ -60,26 +60,43 @@ export const INITIAL_DATA_STATE: DataState = {
   bets: {},
 }
 
-const tournamentOneNameEn =
-    m.Localisation.create({
-      locale: m.Locale.EN,
-      value: 'World Cup 2018'
-    })
-const tournamentOneNameDe =
-    m.Localisation.create({
-      locale: m.Locale.DE,
-      value: 'Weltmeisterschaft 2018'
-    })
 const tournamentOneName =
     m.LocalisableString.create({
-      localisations: [ tournamentOneNameEn, tournamentOneNameDe ]
+      localisations: [
+        m.Localisation.create({
+          locale: m.Locale.EN,
+          value: 'World Cup 2018'
+        }),
+        m.Localisation.create({
+          locale: m.Locale.DE,
+          value: 'Weltmeisterschaft 2018'
+        })
+      ]
     })
 const sampleTournaments: Map<m.Tournament> = {}
 sampleTournaments['world-cup-2018'] =
     m.Tournament.create({ id: 'world-cup-2018', name: tournamentOneName })
+
+const matchDayOneName =
+    m.LocalisableString.create({
+      localisations: [
+        m.Localisation.create({
+          locale: m.Locale.EN,
+          value: 'Group stage, round 1'
+        }),
+        m.Localisation.create({
+          locale: m.Locale.DE,
+          value: 'Gruppenphase, 1. Spieltag'
+        })
+      ]
+    })
 const sampleMatchDays: Map<m.MatchDay> = {}
 sampleMatchDays['world-cup-2018/group-stage-1'] =
-    m.MatchDay.create({ tournamentId: 'world-cup-2018', id: 'group-stage-1' })
+    m.MatchDay.create({
+      tournamentId: 'world-cup-2018',
+      id: 'group-stage-1',
+      name: matchDayOneName
+    })
 const sampleMatches: Map<m.Match> = {}
 sampleMatches['world-cup-2018/group-stage-1/1'] =
     m.Match.create({

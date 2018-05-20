@@ -63,6 +63,11 @@ function localiseWithTranslation(
     localeId: number, translation: Translation): Localiser {
 
   return (ref, fallback, args) => {
+    if (!ref) {
+      if (fallback)
+        return integrateArgs(fallback, args)
+      return '???'
+    }
     if (typeof ref == 'string') {
       let key = ref
       if (translation[key])
