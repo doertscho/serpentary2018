@@ -8,12 +8,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func DispatchMeRequest(
-	path []string, userId *string) events.APIGatewayProxyResponse {
-
-	if len(path) != 0 {
-		return lib.NotFound()
-	}
+func GetMe(userId *string) *events.APIGatewayProxyResponse {
 
 	user := db.GetDb().GetUserById(userId)
 	if user == nil {

@@ -8,23 +8,15 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func DispatchMatchDayRequest(path []string) events.APIGatewayProxyResponse {
-	if matchDayId, rest := lib.MatchInt(path); matchDayId != nil {
-		if len(rest) == 0 {
-			return getMatchDayById(matchDayId)
-		}
-	}
-	return lib.BadRequest("Expected integer match day ID.")
-}
+func GetMatchDayById(
+	tournamentId *string, matchDayId *string) *events.APIGatewayProxyResponse {
 
-func getMatchDayById(id *int) events.APIGatewayProxyResponse {
-
-	matchDay := db.GetDb().GetMatchDayById(id)
+	matchDay := db.GetDb().GetMatchDayById(tournamentId, matchDayId)
 	if matchDay == nil {
 		return lib.NotFound()
 	}
 	matchDays := []*models.MatchDay{matchDay}
-	matches := db.GetDb().GetMatchesByMatchDayId(id)
+	matches := db.GetDb().GetMatchesByMatchDayId(tournamentId, matchDayId)
 
 	data := &models.Update{
 		MatchDays: matchDays,

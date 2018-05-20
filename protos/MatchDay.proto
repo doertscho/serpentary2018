@@ -1,10 +1,17 @@
 syntax = "proto3";
 package models;
 
+import "LocalisableString.proto";
+
 message MatchDay {
 
-  int32 id = 1;
-  int32 updated = 2;
+  int32 updated = 1;
 
-  int32 tournament_id = 3;
+  string tournament_id = 2;
+  string id = 3;
+
+  LocalisableString name = 4;
+
+  string previous_id = 5;
+  string next_id = 6;
 }

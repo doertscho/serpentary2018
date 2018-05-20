@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"main/db"
 	"main/lib"
 	"main/models"
@@ -8,26 +9,17 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func DispatchTournamentRequest(path []string) events.APIGatewayProxyResponse {
-	if len(path) == 0 {
-		return getTournaments()
-	}
-	if tournamentId, _ := lib.MatchInt(path); tournamentId != nil {
-		return getTournamentById(tournamentId)
-	}
-	return lib.BadRequest("Expected integer tournament ID.")
-}
-
-func getTournaments() events.APIGatewayProxyResponse {
+func GetTournaments() *events.APIGatewayProxyResponse {
 	tournaments := db.GetDb().GetTournaments()
 	data := &models.Update{Tournaments: tournaments}
 	return lib.BuildUpdate(data)
 }
 
-func getTournamentById(id *int) events.APIGatewayProxyResponse {
+func GetTournamentById(id *string) *events.APIGatewayProxyResponse {
 
 	tournament := db.GetDb().GetTournamentById(id)
 	if tournament == nil {
+		log.Println("tournament " + *id + " not found in database")
 		return lib.NotFound()
 	}
 	tournaments := []*models.Tournament{tournament}

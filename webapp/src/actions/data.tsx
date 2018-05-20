@@ -16,13 +16,32 @@ export const getMe = (callbacks?: Callbacks) =>
 
 export const fetchTournaments = (callbacks?: Callbacks) =>
   fetchData('/tournaments', callbacks)
-export const fetchTournament = (id: number, callbacks?: Callbacks) =>
-  fetchData('/tournaments/' + id, callbacks)
-export const fetchMatchDay = (id: number, callbacks?: Callbacks) =>
-  fetchData('/match-days/' + id, callbacks)
-export const fetchBets =
-    (matchDayId: number, squadName: string, callbacks?: Callbacks) =>
-        fetchData('/match-days/' + matchDayId + '/bets/' + squadName, callbacks)
+
+export const fetchTournament = (tournamentId: string, callbacks?: Callbacks) =>
+  fetchData('/tournaments/' + tournamentId, callbacks)
+
+export const fetchMatchDay = (
+  tournamentId: string,
+  matchDayId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId + '/match-days/' + matchDayId,
+      callbacks
+  )
+
+export const fetchBets = (
+  squadId: string,
+  tournamentId: string,
+  matchDayId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId +
+        '/match-days/' + matchDayId +
+        '/bets/' + squadId, 
+      callbacks
+  )
 
 export interface DataRequest extends BaseDataAction {
   event: constants.REQUEST

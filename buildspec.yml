@@ -46,6 +46,8 @@ phases:
       # Check for common Go application problems with 'go tool vet'
       - go tool vet .
       # Run all tests included with our application
+      - go test main/lib
+      - go test main/db
       - go test main/handlers
 
       # == Web App source code checks ==

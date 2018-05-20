@@ -51,11 +51,11 @@ Resources:
   TournamentsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
-          AttributeType: "N"
+          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "id"
@@ -66,14 +66,14 @@ Resources:
   MatchDaysTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days', '1']]
       AttributeDefinitions:
         -
           AttributeName: "tournament_id"
-          AttributeType: "N"
+          AttributeType: "S"
         -
           AttributeName: "id"
-          AttributeType: "N"
+          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "tournament_id"
@@ -87,11 +87,11 @@ Resources:
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches', '1']]
       AttributeDefinitions:
         -
           AttributeName: "match_day_id"
-          AttributeType: "N"
+          AttributeType: "S"
         -
           AttributeName: "id"
           AttributeType: "N"
@@ -108,14 +108,14 @@ Resources:
   BetsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets', '1']]
       AttributeDefinitions:
         -
           AttributeName: "squad_id"
           AttributeType: "S"
         -
           AttributeName: "match_day_id"
-          AttributeType: "N"
+          AttributeType: "S"
       KeySchema:
         -
           AttributeName: "squad_id"
@@ -160,12 +160,12 @@ Resources:
         GetMatchDayById:
           Type: Api
           Properties:
-            Path: /match-days/{matchDayId}
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}
             Method: get
         GetBetsByMatchDayIdAndSquad:
           Type: Api
           Properties:
-            Path: /match-days/{matchDayId}/bets/{squadName}
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadName}
             Method: get
   SessionManager:
     Type: AWS::Serverless::Function

@@ -7,23 +7,24 @@ import { StoreState } from '../types'
 import { Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
 import { Callbacks, fetchMatchDay } from '../actions/data'
-import {
-  makeGetMatchDay,
-  makeGetMatches,
-  makeGetTournamentId
-} from '../selectors/MatchDay'
+import { makeGetMatchDay, makeGetMatches } from '../selectors/MatchDay'
 import { makeGetUserSquadsByTournament } from '../selectors/Tournament'
-import { makeGetNumberUrlParameter } from '../selectors/util'
+import { makeGetUrlParameter } from '../selectors/util'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 import Match from '../components/Match'
 
 interface Props extends Localisable {
-  matchDayId: number,
+  tournamentId: string
+  matchDayId: string
   matchDay: m.MatchDay
   matches: m.Match[]
   squads: m.Squad[]
-  fetchMatchDay: (id: number, callbacks?: Callbacks) => void
+  fetchMatchDay: (
+      tournamentId: string,
+      matchDayId: string,
+      callbacks?: Callbacks
+    ) => void
 }
 
 class matchDayPage extends LazyLoadingComponent<Props, {}> {
@@ -38,7 +39,11 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
   }
 
   requestData() {
-    this.props.fetchMatchDay(this.props.matchDayId, this.requestDataCallbacks)
+    this.props.fetchMatchDay(
+      this.props.tournamentId,
+      this.props.matchDayId,
+      this.requestDataCallbacks
+    )
   }
 
   renderWithData() {
@@ -69,16 +74,18 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
   }
 }
 
-const getIdFromUrl = makeGetNumberUrlParameter('id')
+const getTournamentIdFromUrl = makeGetUrlParameter('tournament_id')
+const getMatchDayIdFromUrl = makeGetUrlParameter('match_day_id')
 
 const makeMapStateToProps = () => {
-  let getMatchDay = makeGetMatchDay(getIdFromUrl)
-  let getMatches = makeGetMatches(getIdFromUrl)
-  let getTournamentId = makeGetTournamentId(getMatchDay)
-  let getUserSquads = makeGetUserSquadsByTournament(getTournamentId)
+  let getMatchDay =
+      makeGetMatchDay(getTournamentIdFromUrl, getMatchDayIdFromUrl)
+  let getMatches = makeGetMatches(getMatchDay)
+  let getUserSquads = makeGetUserSquadsByTournament(getTournamentIdFromUrl)
   return withLocaliser((state: StoreState, props: any) => {
     return {
-      matchDayId: getIdFromUrl(state, props),
+      tournamentId: getTournamentIdFromUrl(state, props),
+      matchDayId: getMatchDayIdFromUrl(state, props),
       matchDay: getMatchDay(state, props),
       matches: getMatches(state, props),
       squads: getUserSquads(state, props),
@@ -88,9 +95,13 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    fetchMatchDay: (id: number, callbacks?: Callbacks) => {
-      dispatch(fetchMatchDay(id, callbacks))
-    }
+    fetchMatchDay: (
+        tournamentId: string,
+        matchDayId: string,
+        callbacks?: Callbacks
+      ) => {
+        dispatch(fetchMatchDay(tournamentId, matchDayId, callbacks))
+      }
   }
 }
 
