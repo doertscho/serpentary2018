@@ -40,7 +40,7 @@ phases:
       - printf "package conf\nconst TablePrefix string = \"${DB_TABLE_PREFIX}\"" > conf/db.go
       # Get Go package dependencies for Lambdas
       # (this will only work after protobuf compilation)
-      - go get ./...
+      - go get -t ./...
       # Ensure code passes all lint tests
       - golint -set_exit_status
       # Check for common Go application problems with 'go tool vet'
