@@ -177,6 +177,11 @@ Resources:
           Properties:
             Path: /squads/{squadId}
             Method: post
+        JoinSquadOptions:
+          Type: Api
+          Properties:
+            Path: /squads/{squadId}
+            Method: options
   SessionManager:
     Type: AWS::Serverless::Function
     Properties:
