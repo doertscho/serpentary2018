@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"main/conf"
+	"main/lib"
 	"main/models"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -167,19 +168,22 @@ func (db DynamoDb) AddUserToSquad(
 	updateSquadInput := &dynamodb.UpdateItemInput{
 		ExpressionAttributeNames: map[string]*string{
 			"#M": aws.String("members"),
+			"#U": aws.String("updated"),
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":u": {L: []*dynamodb.AttributeValue{{S: aws.String(*userId)}}},
+			":userId": {L: []*dynamodb.AttributeValue{{S: aws.String(*userId)}}},
+			":ts":     lib.AwsTimestamp(),
 		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {S: aws.String(*squadId)},
 		},
 		ReturnValues:     aws.String("ALL_NEW"),
 		TableName:        aws.String(conf.TablePrefix + "squads"),
-		UpdateExpression: aws.String("SET #M = list_append(#M, :u)"),
+		UpdateExpression: aws.String("SET #M = list_append(#M, :userId), #U = :ts"),
 	}
 	squadRecord, err := dynDbSvc.UpdateItem(updateSquadInput)
 	if err != nil {
+		log.Println("Failed to update squad: " + err.Error())
 		return nil, nil
 	}
 	squad := models.Squad{}
@@ -192,19 +196,22 @@ func (db DynamoDb) AddUserToSquad(
 	updateUserInput := &dynamodb.UpdateItemInput{
 		ExpressionAttributeNames: map[string]*string{
 			"#S": aws.String("squads"),
+			"#U": aws.String("updated"),
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":s": {L: []*dynamodb.AttributeValue{{S: aws.String(*squadId)}}},
+			":squadId": {L: []*dynamodb.AttributeValue{{S: aws.String(*squadId)}}},
+			":ts":      lib.AwsTimestamp(),
 		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {S: aws.String(*userId)},
 		},
 		ReturnValues:     aws.String("ALL_NEW"),
 		TableName:        aws.String(conf.TablePrefix + "users"),
-		UpdateExpression: aws.String("SET #S = list_append(#S, :s)"),
+		UpdateExpression: aws.String("SET #S = list_append(#S, :squadId), #U = :ts"),
 	}
 	userRecord, err := dynDbSvc.UpdateItem(updateUserInput)
 	if err != nil {
+		log.Println("Failed to update squad: " + err.Error())
 		return nil, nil
 	}
 	user := models.User{}
@@ -241,13 +248,24 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 		return nil
 	}
 
+	user := models.User{
+		Id:      *userId,
+		Updated: lib.Timestamp(),
+		Squads:  []string{},
+		Pools:   []int32{},
+	}
+
+	record, err := dynamodbattribute.MarshalMap(user)
+	if err != nil {
+		log.Println("Failed to marshal record: " + err.Error())
+		return nil
+	}
+
 	input := dynamodb.PutItemInput{
-		Item: map[string]*dynamodb.AttributeValue{
-			"id": {S: aws.String(*userId)},
-		},
+		Item:      record,
 		TableName: aws.String(conf.TablePrefix + "users"),
 	}
-	_, err := dynDbSvc.PutItem(&input)
+	_, err = dynDbSvc.PutItem(&input)
 	if err != nil {
 		log.Println("Failed to create user entry: " + err.Error())
 		return nil
