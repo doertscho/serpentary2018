@@ -3,9 +3,22 @@ package lib
 import (
 	"encoding/json"
 	"log"
+	"strconv"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
+
+func AwsTimestamp() *dynamodb.AttributeValue {
+	attr := dynamodb.AttributeValue{N: aws.String(strconv.Itoa(int(Timestamp())))}
+	return &attr
+}
+
+func Timestamp() int32 {
+	return int32(time.Now().Unix())
+}
 
 func LogRequest(request events.APIGatewayProxyRequest) {
 	requestDebug, err := json.Marshal(request)
