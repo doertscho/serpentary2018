@@ -280,7 +280,7 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 	if err == nil {
 		log.Println("record about to be written: " + string(jsonDebug))
 	}
-
+  
 	input := dynamodb.PutItemInput{
 		Item:      record,
 		TableName: aws.String(conf.TablePrefix + "users"),
