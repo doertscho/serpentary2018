@@ -1,6 +1,7 @@
 package db
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"main/conf"
@@ -193,6 +194,13 @@ func (db DynamoDb) AddUserToSquad(
 		return nil, nil
 	}
 
+	if squadRecordJsonDebug, err := json.Marshal(squadRecord); err == nil {
+		log.Println("Received from squad update: " + string(squadRecordJsonDebug))
+	}
+	if squadJsonDebug, err := json.Marshal(squad); err == nil {
+		log.Println("Mapped into squad message: " + string(squadJsonDebug))
+	}
+
 	updateUserInput := &dynamodb.UpdateItemInput{
 		ExpressionAttributeNames: map[string]*string{
 			"#S": aws.String("squads"),
@@ -219,6 +227,13 @@ func (db DynamoDb) AddUserToSquad(
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil, nil
+	}
+
+	if userRecordJsonDebug, err := json.Marshal(userRecord); err == nil {
+		log.Println("Received from user update: " + string(userRecordJsonDebug))
+	}
+	if userJsonDebug, err := json.Marshal(user); err == nil {
+		log.Println("Mapped into user message: " + string(userJsonDebug))
 	}
 
 	return &squad, &user
@@ -261,6 +276,11 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 		return nil
 	}
 
+	jsonDebug, err := json.Marshal(record)
+	if err == nil {
+		log.Println("record about to be written: " + string(jsonDebug))
+	}
+  
 	input := dynamodb.PutItemInput{
 		Item:      record,
 		TableName: aws.String(conf.TablePrefix + "users"),
@@ -271,7 +291,7 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 		return nil
 	}
 
-	return db.GetUserById(userId)
+	return &user
 }
 
 func getItemById(tableName string, id *string) (
