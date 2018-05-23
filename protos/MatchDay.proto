@@ -5,7 +5,7 @@ import "LocalisableString.proto";
 
 message MatchDay {
 
-  int32 updated = 1;
+  fixed32 updated = 1;
 
   string tournament_id = 2;
   string id = 3;

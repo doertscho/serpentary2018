@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"main/db"
 	"main/lib"
 	"main/models"
@@ -12,6 +13,7 @@ func GetMe(userId *string) *events.APIGatewayProxyResponse {
 
 	user := db.GetDb().GetUserById(userId)
 	if user == nil {
+		log.Println("User not yet in database: " + *userId)
 		user = db.GetDb().RegisterNewUser(userId)
 	}
 

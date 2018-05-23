@@ -172,14 +172,14 @@ func (db DynamoDb) AddUserToSquad(
 			"#U": aws.String("updated"),
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":userId": {L: []*dynamodb.AttributeValue{{S: aws.String(*userId)}}},
+			":userId": stringListAttr(userId),
 			":ts":     lib.AwsTimestamp(),
 		},
 		Key: map[string]*dynamodb.AttributeValue{
-			"id": {S: aws.String(*squadId)},
+			"id": stringAttr(squadId),
 		},
 		ReturnValues:     aws.String("ALL_NEW"),
-		TableName:        aws.String(conf.TablePrefix + "squads"),
+		TableName:        table("squads"),
 		UpdateExpression: aws.String("SET #M = list_append(#M, :userId), #U = :ts"),
 	}
 	squadRecord, err := dynDbSvc.UpdateItem(updateSquadInput)
@@ -207,14 +207,14 @@ func (db DynamoDb) AddUserToSquad(
 			"#U": aws.String("updated"),
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			":squadId": {L: []*dynamodb.AttributeValue{{S: aws.String(*squadId)}}},
+			":squadId": stringListAttr(squadId),
 			":ts":      lib.AwsTimestamp(),
 		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {S: aws.String(*userId)},
 		},
 		ReturnValues:     aws.String("ALL_NEW"),
-		TableName:        aws.String(conf.TablePrefix + "users"),
+		TableName:        table("users"),
 		UpdateExpression: aws.String("SET #S = list_append(#S, :squadId), #U = :ts"),
 	}
 	userRecord, err := dynDbSvc.UpdateItem(updateUserInput)
@@ -241,6 +241,7 @@ func (db DynamoDb) AddUserToSquad(
 
 func (db DynamoDb) GetUserById(userId *string) *models.User {
 
+	log.Println("Getting user data for " + *userId)
 	record, err := getItemById("users", userId)
 	if err != nil {
 		log.Println("error occurred querying item: " + err.Error())
@@ -280,10 +281,10 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 	if err == nil {
 		log.Println("record about to be written: " + string(jsonDebug))
 	}
-  
+
 	input := dynamodb.PutItemInput{
 		Item:      record,
-		TableName: aws.String(conf.TablePrefix + "users"),
+		TableName: table("users"),
 	}
 	_, err = dynDbSvc.PutItem(&input)
 	if err != nil {
@@ -302,9 +303,9 @@ func getItemById(tableName string, id *string) (
 	}
 
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(conf.TablePrefix + tableName),
+		TableName: table(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			"id": &dynamodb.AttributeValue{S: aws.String(*id)},
+			"id": stringAttr(id),
 		},
 	}
 	return dynDbSvc.GetItem(input)
@@ -322,15 +323,11 @@ func getItemByCompoundKey(
 		return nil, errors.New("connection has not been initialised")
 	}
 
-	partitionKeyAttributeValue :=
-		dynamodb.AttributeValue{S: aws.String(*partitionKeyValue)}
-	sortKeyAttributeValue :=
-		dynamodb.AttributeValue{S: aws.String(*sortKeyValue)}
 	input := &dynamodb.GetItemInput{
-		TableName: aws.String(conf.TablePrefix + tableName),
+		TableName: table(tableName),
 		Key: map[string]*dynamodb.AttributeValue{
-			partitionKeyName: &partitionKeyAttributeValue,
-			sortKeyName:      &sortKeyAttributeValue,
+			partitionKeyName: stringAttr(partitionKeyValue),
+			sortKeyName:      stringAttr(sortKeyValue),
 		},
 	}
 	return dynDbSvc.GetItem(input)
@@ -343,7 +340,7 @@ func queryItemsByKey(
 	hash := ":" + fieldName
 	queryString := fieldName + " = " + hash
 	valuesToBind := map[string]*dynamodb.AttributeValue{
-		hash: {S: aws.String(*value)},
+		hash: stringAttr(value),
 	}
 	return query(tableName, queryString, valuesToBind)
 }
@@ -356,7 +353,7 @@ func query(
 	valuesToBind map[string]*dynamodb.AttributeValue,
 ) (*dynamodb.QueryOutput, error) {
 	input := &dynamodb.QueryInput{
-		TableName:                 aws.String(conf.TablePrefix + tableName),
+		TableName:                 table(tableName),
 		KeyConditionExpression:    aws.String(queryString),
 		ExpressionAttributeValues: valuesToBind,
 	}
@@ -370,12 +367,26 @@ func queryIndex(
 	valuesToBind map[string]*dynamodb.AttributeValue,
 ) (*dynamodb.QueryOutput, error) {
 	input := &dynamodb.QueryInput{
-		TableName:                 aws.String(conf.TablePrefix + tableName),
+		TableName:                 table(tableName),
 		IndexName:                 aws.String(indexName),
 		KeyConditionExpression:    aws.String(query),
 		ExpressionAttributeValues: valuesToBind,
 	}
 	return dynDbSvc.Query(input)
+}
+
+func table(name string) *string {
+	return aws.String(conf.TablePrefix + name)
+}
+
+func stringAttr(value *string) *dynamodb.AttributeValue {
+	return &dynamodb.AttributeValue{S: aws.String(*value)}
+}
+
+func stringListAttr(value *string) *dynamodb.AttributeValue {
+	return &dynamodb.AttributeValue{
+		L: []*dynamodb.AttributeValue{stringAttr(value)},
+	}
 }
 
 func joinKeys(keyA *string, keyB *string) *string {

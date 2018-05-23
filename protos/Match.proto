@@ -3,7 +3,7 @@ package models;
 
 message Match {
 
-  int32 updated = 1;
+  fixed32 updated = 1;
 
   string tournament_id = 2;
   string match_day_id = 3;

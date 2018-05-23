@@ -3,7 +3,7 @@ package models;
 
 message Pool {
 
-  int32 updated = 1;
+  fixed32 updated = 1;
 
   string squad_id = 2;
   string tournament_id = 3;

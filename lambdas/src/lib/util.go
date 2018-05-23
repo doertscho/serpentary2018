@@ -16,8 +16,8 @@ func AwsTimestamp() *dynamodb.AttributeValue {
 	return &attr
 }
 
-func Timestamp() int32 {
-	return int32(time.Now().Unix())
+func Timestamp() uint32 {
+	return uint32(time.Now().Unix())
 }
 
 func LogRequest(request events.APIGatewayProxyRequest) {
