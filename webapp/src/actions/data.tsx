@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux'
+import { decode as base64decode } from 'base64-arraybuffer'
 
 import * as constants from '../constants'
 import { models as m } from '../types/models'
@@ -158,7 +159,8 @@ function handleResponse(
     dispatch: Dispatch<StoreState>, callbacks?: Callbacks
 ) {
   let data = response.data || ''
-  let update = m.Update.decode(new Uint8Array(data))
+  let dataByteArray = new Uint8Array(base64decode(data))
+  let update = m.Update.decode(dataByteArray)
   dispatch(dataResponse(path, update))
   if (callbacks && callbacks.onSuccess) callbacks.onSuccess()
 }
