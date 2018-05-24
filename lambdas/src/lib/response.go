@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"encoding/base64"
 	"main/conf"
 	"main/models"
 
@@ -70,19 +71,17 @@ func BuildUpdate(data *models.Update) *events.APIGatewayProxyResponse {
 	if err != nil {
 		log.Fatal("Failed to serialise data")
 		return &events.APIGatewayProxyResponse{StatusCode: 500}
-	} else {
-		log.Println("Serialised to protobuf format, size: ")
-		log.Println(len(serialised))
-		log.Println(string(serialised))
 	}
+
+	encoded := base64.StdEncoding.EncodeToString(serialised)
 
 	return &events.APIGatewayProxyResponse{
 
 		StatusCode: 200,
-		Body:       string(serialised),
+		Body:       encoded,
 
 		Headers: map[string]string{
-			"Content-Type":                "application/octet-stream",
+			"Content-Type":                "application/protobuf",
 			"Access-Control-Allow-Origin": conf.AllowOrigin,
 		},
 	}

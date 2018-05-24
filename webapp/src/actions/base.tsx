@@ -38,7 +38,7 @@ export const apiGet = (path: string, withIdentity?: boolean) => {
   let options = {
     url: API_BASE_URL + path,
     method: 'get',
-    responseType: 'arraybuffer',
+    responseType: 'text',
     headers: { }
   }
   if (withIdentity) {
@@ -51,7 +51,7 @@ export const apiPost = (path: string, data?: string) => {
   let options = {
     url: API_BASE_URL + path,
     method: 'post',
-    responseType: 'arraybuffer',
+    responseType: 'text',
     data: data,
     headers: sessionManager.getHeadersForAuthorisedRequest()
   }
