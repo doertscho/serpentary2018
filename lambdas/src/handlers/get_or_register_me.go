@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"main/db"
 	"main/lib"
@@ -13,8 +14,13 @@ func GetMe(userId *string) *events.APIGatewayProxyResponse {
 
 	user := db.GetDb().GetUserById(userId)
 	if user == nil {
-		log.Println("User not yet in database: " + *userId)
+		log.Println("User does not exist in database: " + *userId)
 		user = db.GetDb().RegisterNewUser(userId)
+	}
+
+	jsonDebug, err := json.Marshal(user)
+	if err == nil {
+		log.Println("Got user from database: " + string(jsonDebug))
 	}
 
 	data := &models.Update{Users: []*models.User{user}}
