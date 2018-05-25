@@ -105,7 +105,7 @@ const makeMapStateToProps = () => {
       makeGetMatchDay(getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getMatches = makeGetMatches(getMatchDay)
   let getSquad = makeGetSquad(getSquadIdFromUrl)
-  let getPool = makeGetPool(getMatchDay, getSquad)
+  let getPool = makeGetPool(getSquadIdFromUrl, getTournamentIdFromUrl)
   let getParticipants = makeGetParticipants(getPool)
   let getMatchDayBetBucket = makeGetMatchDayBetBucket(getSquad, getMatchDay)
   let getBetsByMatch =

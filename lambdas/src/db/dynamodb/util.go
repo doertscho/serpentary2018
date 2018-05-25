@@ -23,6 +23,18 @@ func stringId(value *string) *map[string]*sdk.AttributeValue {
 	}
 }
 
+func compoundKey(
+	partitionKeyName string,
+	partitionKeyValue *string,
+	sortKeyName string,
+	sortKeyValue *string,
+) *map[string]*sdk.AttributeValue {
+	return &map[string]*sdk.AttributeValue{
+		partitionKeyName: stringAttr(partitionKeyValue),
+		sortKeyName:      stringAttr(sortKeyValue),
+	}
+}
+
 func stringListAttr(value *string) *sdk.AttributeValue {
 	return &sdk.AttributeValue{
 		L: []*sdk.AttributeValue{stringAttr(value)},

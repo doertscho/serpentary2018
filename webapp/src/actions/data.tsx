@@ -55,11 +55,24 @@ export const fetchBets = (
 export const fetchSquad = (squadId: string, callbacks?: Callbacks) =>
   fetchData('/squads/' + squadId, callbacks)
 
+export const fetchPool = (
+  squadId: string,
+  tournamentId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId +
+        '/pools/' + squadId,
+      callbacks
+  )
+
 /*
  * POSTING DATA
  */
 
 export const joinSquad = (squadId: string) => postData('/squads/' + squadId)
+export const joinPool = (squadId: string, tournamentId: string) =>
+    postData('/tournaments/' + tournamentId + '/pools/' + squadId)
 
 /*
  * ACTION CREATORS

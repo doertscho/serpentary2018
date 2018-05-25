@@ -41,6 +41,25 @@ const translation_de: Translation = {
   // match day bets page
   MATCH_DAY_BETS_PAGE_TITLE: 'Spieltag: Tipps',
   MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
+
+  // squad page
+  SQUAD_PAGE_TITLE: 'Tipprunde',
+  SQUAD_POOLS: 'Angebotene Wettbewerbe dieser Tipprunde',
+  LOG_IN_TO_JOIN:
+    'Du musst dich anmelden, um einer Tipprunde beitreten zu können',
+  CLICK_TO_JOIN: 'Klicke hier, um dieser Tipprunde beizutreten',
+  ALREADY_MEMBER: 'Du bist Mitglied dieser Tipprunde',
+
+  // pool page
+  POOL_PAGE_TITLE: 'Tipprunde',
+  POOL_PARTICIPANTS: 'Angebotene Wettbewerbe dieser Tipprunde',
+  LOG_IN_TO_JOIN_POOL:
+    'Du musst dich anmelden, um dich für ein Tippsiel registrieren zu können',
+  CLICK_TO_JOIN_POOL:
+    'Klicke hier, um dich für dieses Tippspiel zu registrieren',
+  ALREADY_PARTICIPANT_POOL: 'Du nimmst an diesem Tippspiel teil',
+
+
 }
 
 export default translation_de

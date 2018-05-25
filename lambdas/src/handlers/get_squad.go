@@ -16,8 +16,11 @@ func GetSquadById(squadId *string) *events.APIGatewayProxyResponse {
 	}
 	squads := []*models.Squad{squad}
 
+	pools := db.GetDb().GetPoolsBySquadId(squadId)
+
 	data := &models.Update{
 		Squads: squads,
+		Pools:  pools,
 	}
 
 	return lib.BuildUpdate(data)

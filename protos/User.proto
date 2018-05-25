@@ -8,5 +8,5 @@ message User {
   string id = 2;
 
   repeated string squads = 3;
-  repeated int32 pools = 4;
+  repeated string pools = 4;
 }
