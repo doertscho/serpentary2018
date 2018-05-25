@@ -1,13 +1,21 @@
 package db
 
-import "main/models"
+import (
+	"main/db/dynamodb"
+	"main/models"
+)
+
+var instance Db = nil
 
 func InitDatabase() {
-	InitDynamoDB()
+	instance = dynamodb.GetDynamoDb()
 }
 
 func GetDb() Db {
-	return GetDynamoDb()
+	if instance == nil {
+		InitDatabase()
+	}
+	return instance
 }
 
 type Db interface {
