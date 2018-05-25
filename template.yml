@@ -126,6 +126,27 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
+  PoolsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'pools']]
+      AttributeDefinitions:
+        -
+          AttributeName: "squad_id"
+          AttributeType: "S"
+        -
+          AttributeName: "tournament_id"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "squad_id"
+          KeyType: "HASH"
+        -
+          AttributeName: "tournament_id"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "2"
+        WriteCapacityUnits: "2"
 
   # Authorizer for the API Gateway
   CognitoAuthorizer:
@@ -167,6 +188,21 @@ Resources:
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadName}
             Method: get
+        GetPoolById:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}
+            Method: get
+        JoinPoolById:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}
+            Method: post
+        JoinPoolOptions:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}
+            Method: options
         GetSquadById:
           Type: Api
           Properties:

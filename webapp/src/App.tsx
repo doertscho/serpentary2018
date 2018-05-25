@@ -18,6 +18,7 @@ import MatchDay from './containers/MatchDay'
 import MatchDayBets from './containers/MatchDayBets'
 import Ranking from './containers/Ranking'
 import Squad from './containers/Squad'
+import Pool from './containers/Pool'
 import NotFound from './components/NotFound'
 
 interface Props {
@@ -62,6 +63,12 @@ class App extends React.Component<Props, any> {
                     '/ranking/:squad_id' + ID
                   }
                   component={ Ranking } />
+
+              <Route path={
+                    '/tournaments/:tournament_id' + ID +
+                    '/pools/:squad_id' + ID
+                  }
+                  component={ Pool } />
 
               <Route path={
                     '/tournaments/:tournament_id' + ID +

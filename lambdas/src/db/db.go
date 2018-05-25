@@ -33,4 +33,10 @@ type Db interface {
 
 	GetUserById(userId *string) *models.User
 	RegisterNewUser(userId *string) *models.User
+
+	GetPoolById(squadId *string, tournamentId *string) *models.Pool
+	GetPoolsBySquadId(squadId *string) []*models.Pool
+	AddUserToPool(
+		squadId *string, tournamentId *string, userId *string,
+	) (*models.Pool, *models.User)
 }

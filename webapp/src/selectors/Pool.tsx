@@ -4,15 +4,15 @@ import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { joinKeys } from '../types/data'
 import { getUsers, getPools, getPoolsBySquad } from './data'
-import { ModelSelector } from './util'
+import { ModelSelector, StringSelector } from './util'
 
 export const makeGetPool = (
-    getMatchDay: ModelSelector<m.MatchDay>, getSquad: ModelSelector<m.Squad>
+    getSquadId: StringSelector, getTournamentId: StringSelector
 ) =>
   createSelector(
-    [getMatchDay, getSquad, getPools],
-    (   matchDay,    squad,    pools) =>
-      pools[joinKeys(squad.id, matchDay.tournamentId)]
+    [getSquadId, getTournamentId, getPools],
+    (   squadId,    tournamentId,    pools) =>
+      pools[joinKeys(squadId, tournamentId)]
   )
 
 export const makeGetParticipants = (getPool: ModelSelector<m.Pool>) =>
