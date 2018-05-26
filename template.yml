@@ -87,17 +87,17 @@ Resources:
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches', '1']]
       AttributeDefinitions:
         -
-          AttributeName: "match_day_id"
+          AttributeName: "tournament_and_match_day_id"
           AttributeType: "S"
         -
           AttributeName: "id"
           AttributeType: "N"
       KeySchema:
         -
-          AttributeName: "match_day_id"
+          AttributeName: "tournament_and_match_day_id"
           KeyType: "HASH"
         -
           AttributeName: "id"
@@ -108,20 +108,20 @@ Resources:
   BetsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets', '1']]
       AttributeDefinitions:
         -
           AttributeName: "squad_id"
           AttributeType: "S"
         -
-          AttributeName: "match_day_id"
+          AttributeName: "tournament_and_match_day_id"
           AttributeType: "S"
       KeySchema:
         -
           AttributeName: "squad_id"
           KeyType: "HASH"
         -
-          AttributeName: "match_day_id"
+          AttributeName: "tournament_and_match_day_id"
           KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: "5"
@@ -186,7 +186,7 @@ Resources:
         GetBetsByMatchDayIdAndSquad:
           Type: Api
           Properties:
-            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadName}
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
             Method: get
         GetPoolById:
           Type: Api

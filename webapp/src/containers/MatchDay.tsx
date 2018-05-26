@@ -19,7 +19,7 @@ interface Props extends Localisable {
   matchDayId: string
   matchDay: m.MatchDay
   matches: m.Match[]
-  squads: m.Squad[]
+  squads: string[]
   fetchMatchDay: (
       tournamentId: string,
       matchDayId: string,
@@ -62,9 +62,9 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
         </ul>
         <h3>{ l('MATCH_DAY_SQUADS', 'Bets for this match day by squad') }</h3>
         <ul>
-          { squads.map(squad =>
-            <li key={squad.id}>
-              <Link to={matchDay.id + '/bets/' + squad.id}>{squad.id}</Link>
+          { squads.map(squadId =>
+            <li key={squadId}>
+              <Link to={matchDay.id + '/bets/' + squadId}>#{squadId}</Link>
             </li>
           ) }
         </ul>

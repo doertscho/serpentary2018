@@ -31,7 +31,7 @@ func (db DynamoDb) updateItem(
 	tableName string,
 	key *map[string]*sdk.AttributeValue,
 	query *query,
-) (*sdk.UpdateItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	updateSquadInput := &sdk.UpdateItemInput{
 		TableName:                 table(tableName),
@@ -40,5 +40,9 @@ func (db DynamoDb) updateItem(
 		ExpressionAttributeValues: query.values,
 		ReturnValues:              aws.String("ALL_NEW"),
 	}
-	return db.Svc.UpdateItem(updateSquadInput)
+	result, err := db.Svc.UpdateItem(updateSquadInput)
+	if err != nil {
+		return nil, err
+	}
+	return &result.Attributes, nil
 }

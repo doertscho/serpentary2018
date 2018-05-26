@@ -14,7 +14,7 @@ message MatchDayBetBucket {
 
 message MatchBetBucket {
 
-  int32 match_id = 1;
+  uint32 match_id = 1;
 
   repeated Bet bets = 2;
 }
@@ -30,7 +30,7 @@ message Bet {
 }
 
 enum BetStatus {
-  HIDDEN = 0;
-  MISSING = 1;
-  VISIBLE = 2;
+  VISIBLE = 0;
+  HIDDEN = 1;
+  MISSING = 2;
 }

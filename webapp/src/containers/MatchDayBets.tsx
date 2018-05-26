@@ -30,7 +30,6 @@ interface Props extends Localisable {
   matchDayId: string,
 
   matchDay: m.MatchDay
-  squad: m.Squad
   participants: m.User[]
   matches: m.Match[]
   pool: m.Pool
@@ -47,7 +46,7 @@ interface Props extends Localisable {
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   getRequiredProps() {
-    return ['matchDay', 'squad', 'pool', 'betsByMatch']
+    return ['matchDay', 'pool', 'betsByMatch']
   }
 
   shouldRefreshOnMount() {
@@ -69,8 +68,8 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
   }
 
   renderWithData() {
+    let squadId = this.props.squadId
     let matchDay = this.props.matchDay
-    let squad = this.props.squad
     let pool = this.props.pool
     let betsByMatch = this.props.betsByMatch
     let participants = this.props.participants || []
@@ -80,7 +79,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
         <h2>{ l(matchDay.name) }</h2>
-        <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squad.id) }</h3>
+        <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squadId) }</h3>
         <div className="betMatrix">
           <UserColumn participants={participants} />
           <div className="matches">
@@ -104,10 +103,10 @@ const makeMapStateToProps = () => {
   let getMatchDay =
       makeGetMatchDay(getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getMatches = makeGetMatches(getMatchDay)
-  let getSquad = makeGetSquad(getSquadIdFromUrl)
   let getPool = makeGetPool(getSquadIdFromUrl, getTournamentIdFromUrl)
   let getParticipants = makeGetParticipants(getPool)
-  let getMatchDayBetBucket = makeGetMatchDayBetBucket(getSquad, getMatchDay)
+  let getMatchDayBetBucket = makeGetMatchDayBetBucket(
+      getSquadIdFromUrl, getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getBetsByMatch =
       makeGetBetsByMatch(getParticipants, getMatches, getMatchDayBetBucket)
   return withLocaliser((state: StoreState, props: any) => {
@@ -116,7 +115,6 @@ const makeMapStateToProps = () => {
       tournamentId: getTournamentIdFromUrl(state, props),
       matchDayId: getMatchDayIdFromUrl(state, props),
       matchDay: getMatchDay(state, props),
-      squad: getSquad(state, props),
       matches: getMatches(state, props),
       pool: getPool(state, props),
       participants: getParticipants(state, props),

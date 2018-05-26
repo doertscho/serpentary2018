@@ -18,7 +18,7 @@ func (db DynamoDb) GetPoolById(
 	}
 
 	pool := models.Pool{}
-	err = attr.UnmarshalMap(record.Item, &pool)
+	err = attr.UnmarshalMap(*record, &pool)
 	if err != nil {
 		log.Println("Error unmarshalling pool record: " + err.Error())
 		return nil
@@ -36,8 +36,8 @@ func (db DynamoDb) GetPoolsBySquadId(
 		return nil
 	}
 
-	pools := make([]*models.Pool, len(result.Items))
-	for idx, val := range result.Items {
+	pools := make([]*models.Pool, len(*result))
+	for idx, val := range *result {
 		pool := models.Pool{}
 		err = attr.UnmarshalMap(val, &pool)
 		if err != nil {
@@ -67,7 +67,7 @@ func (db DynamoDb) AddUserToPool(
 		return nil, nil
 	}
 	pool := models.Pool{}
-	err = attr.UnmarshalMap(poolRecord.Attributes, &pool)
+	err = attr.UnmarshalMap(*poolRecord, &pool)
 	if err != nil {
 		log.Println("Error unmarshalling pool record: " + err.Error())
 		return nil, nil
@@ -84,7 +84,7 @@ func (db DynamoDb) AddUserToPool(
 		return nil, nil
 	}
 	user := models.User{}
-	err = attr.UnmarshalMap(userRecord.Attributes, &user)
+	err = attr.UnmarshalMap(*userRecord, &user)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil, nil

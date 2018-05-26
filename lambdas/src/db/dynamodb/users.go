@@ -18,7 +18,7 @@ func (db DynamoDb) GetUserById(userId *string) *models.User {
 	}
 
 	user := models.User{}
-	err = attr.UnmarshalMap(record.Item, &user)
+	err = attr.UnmarshalMap(*record, &user)
 	if err != nil {
 		log.Println("Error unmarshalling item: " + err.Error())
 		return nil
@@ -52,4 +52,26 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 	}
 
 	return &user
+}
+
+func (db DynamoDb) GetBatchOfUsersByIds(userIds *[]string) []*models.User {
+
+	records, err := db.getItemBatchByIds("users", userIds)
+	if err != nil {
+		log.Println("Error occurred querying item: " + err.Error())
+		return nil
+	}
+
+	users := make([]*models.User, len(*records))
+	for idx, record := range *records {
+		user := models.User{}
+		err = attr.UnmarshalMap(record, &user)
+		if err != nil {
+			log.Println("Error unmarshalling user record: " + err.Error())
+			return nil
+		}
+		users[idx] = &user
+	}
+
+	return users
 }

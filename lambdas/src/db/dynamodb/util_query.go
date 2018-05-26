@@ -7,7 +7,7 @@ import (
 
 func (db DynamoDb) queryItemsByKey(
 	tableName string, fieldName string, value *string,
-) (*sdk.QueryOutput, error) {
+) (*[]map[string]*sdk.AttributeValue, error) {
 
 	hash := ":" + fieldName
 	queryString := fieldName + " = " + hash
@@ -17,20 +17,22 @@ func (db DynamoDb) queryItemsByKey(
 	return db.query(tableName, queryString, valuesToBind)
 }
 
-var NO_VALUES map[string]*sdk.AttributeValue = map[string]*sdk.AttributeValue{}
-
 func (db DynamoDb) query(
 	tableName string,
 	queryString string,
 	valuesToBind map[string]*sdk.AttributeValue,
-) (*sdk.QueryOutput, error) {
+) (*[]map[string]*sdk.AttributeValue, error) {
 
 	input := &sdk.QueryInput{
 		TableName:                 table(tableName),
 		KeyConditionExpression:    aws.String(queryString),
 		ExpressionAttributeValues: valuesToBind,
 	}
-	return db.Svc.Query(input)
+	result, err := db.Svc.Query(input)
+	if err != nil {
+		return nil, err
+	}
+	return &result.Items, nil
 }
 
 func (db DynamoDb) queryIndex(
@@ -38,7 +40,7 @@ func (db DynamoDb) queryIndex(
 	indexName string,
 	query string,
 	valuesToBind map[string]*sdk.AttributeValue,
-) (*sdk.QueryOutput, error) {
+) (*[]map[string]*sdk.AttributeValue, error) {
 
 	input := &sdk.QueryInput{
 		TableName:                 table(tableName),
@@ -46,5 +48,9 @@ func (db DynamoDb) queryIndex(
 		KeyConditionExpression:    aws.String(query),
 		ExpressionAttributeValues: valuesToBind,
 	}
-	return db.Svc.Query(input)
+	result, err := db.Svc.Query(input)
+	if err != nil {
+		return nil, err
+	}
+	return &result.Items, nil
 }

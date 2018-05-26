@@ -10,19 +10,23 @@ import (
 func (db DynamoDb) putRecord(
 	tableName string,
 	record *map[string]*sdk.AttributeValue,
-) (*sdk.PutItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	input := sdk.PutItemInput{
 		Item:      *record,
 		TableName: table(tableName),
 	}
-	return db.Svc.PutItem(&input)
+	result, err := db.Svc.PutItem(&input)
+	if err != nil {
+		return nil, err
+	}
+	return &result.Attributes, nil
 }
 
 func (db DynamoDb) putStruct(
 	tableName string,
 	structValue *interface{},
-) (*sdk.PutItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	record, err := attr.MarshalMap(structValue)
 	if err != nil {

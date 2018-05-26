@@ -9,7 +9,7 @@ import (
 func (db DynamoDb) getItemById(
 	tableName string,
 	id *string,
-) (*sdk.GetItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	key := map[string]*sdk.AttributeValue{
 		"id": stringAttr(id),
@@ -23,7 +23,7 @@ func (db DynamoDb) getItemByCompoundKey(
 	partitionKeyValue *string,
 	sortKeyName string,
 	sortKeyValue *string,
-) (*sdk.GetItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	key := map[string]*sdk.AttributeValue{
 		partitionKeyName: stringAttr(partitionKeyValue),
@@ -35,7 +35,7 @@ func (db DynamoDb) getItemByCompoundKey(
 func (db DynamoDb) getItem(
 	tableName string,
 	key map[string]*sdk.AttributeValue,
-) (*sdk.GetItemOutput, error) {
+) (*map[string]*sdk.AttributeValue, error) {
 
 	if db.Svc == nil {
 		return nil, errors.New("connection has not been initialised")
@@ -49,8 +49,5 @@ func (db DynamoDb) getItem(
 	if err != nil {
 		return nil, err
 	}
-	if result.Item == nil {
-		return nil, errors.New("Item does not exist in database " + tableName)
-	}
-	return result, nil
+	return &result.Item, nil
 }

@@ -9,13 +9,13 @@ import {
   getSquads
 } from './data'
 import { getUserId } from './session'
-import { NumberSelector } from './util'
+import { StringSelector } from './util'
 
-export const makeGetTournament = (getTournamentId: NumberSelector) =>
+export const makeGetTournament = (getTournamentId: StringSelector) =>
   (state: StoreState, props?: any) =>
     getTournaments(state)[getTournamentId(state, props)]
 
-export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
+export const makeGetMatchDays = (getTournamentId: StringSelector) =>
   createSelector(
     [getMatchDays, getMatchDaysByTournament, getTournamentId],
     (   matchDays,    matchDaysByTournament,    tournamentId) => {
@@ -26,13 +26,25 @@ export const makeGetMatchDays = (getTournamentId: NumberSelector) =>
   )
 
 export const makeGetUserSquadsByTournament =
-    (getTournamentId: NumberSelector) =>
+    (getTournamentId: StringSelector) =>
   createSelector(
-    [getUserId, getUsers, getSquads, getTournamentId],
-    (   userId,    users,    squads,    tournamentId) => {
+    [getUserId, getUsers, getTournamentId],
+    (   userId,    users,    tournamentId) => {
+      console.log("extracting pools", userId, tournamentId, users)
       if (!userId || !userId.length) return []
       let user = users[userId]
-      if (!user || !user.squads) return []
-      return user.squads.map(squadId => squads[squadId])
+      if (!user || !user.pools) return []
+      console.log("checking user pools: " + user.pools)
+      let squadIds = []
+      for (let i = 0; i < user.pools.length; i++) {
+        let poolId = user.pools[i]
+        let pos = poolId.indexOf('/' + tournamentId)
+        console.log("pos in ", poolId, pos)
+        if (pos !== -1) {
+          let squadId = poolId.substring(0, pos)
+          squadIds.push(squadId)
+        }
+      }
+      return squadIds
     }
   )
