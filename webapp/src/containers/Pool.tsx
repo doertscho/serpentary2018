@@ -84,14 +84,12 @@ class poolPage extends LazyLoadingComponent<Props, {}> {
     return (
       <div>
         <h1>{ l('POOL_PAGE_TITLE', 'Pool details') }</h1>
-        <h2>#{ l(tournamentName) } / #{squadId}</h2>
+        <h2>{ l(tournamentName) }, by #{squadId}</h2>
         { poolUserBox(pool, userId, joinPool, l) }
         <h3>{ l('POOL_PARTICIPANTS', 'Users participating in this pool') }</h3>
         <ul>
           { participants.map(userId =>
-            <li key={userId}>
-              #{userId}
-            </li>
+            <li key={userId}>{userId}</li>
           )}
         </ul>
         { this.refreshComponent }
