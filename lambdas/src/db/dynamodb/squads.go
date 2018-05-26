@@ -16,7 +16,7 @@ func (db DynamoDb) GetSquadById(squadId *string) *models.Squad {
 	}
 
 	squad := models.Squad{}
-	err = attr.UnmarshalMap(record.Item, &squad)
+	err = attr.UnmarshalMap(*record, &squad)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil
@@ -41,7 +41,7 @@ func (db DynamoDb) AddUserToSquad(
 		return nil, nil
 	}
 	squad := models.Squad{}
-	err = attr.UnmarshalMap(squadRecord.Attributes, &squad)
+	err = attr.UnmarshalMap(*squadRecord, &squad)
 	if err != nil {
 		log.Println("Error unmarshalling item: " + err.Error())
 		return nil, nil
@@ -58,7 +58,7 @@ func (db DynamoDb) AddUserToSquad(
 		return nil, nil
 	}
 	user := models.User{}
-	err = attr.UnmarshalMap(userRecord.Attributes, &user)
+	err = attr.UnmarshalMap(*userRecord, &user)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil, nil

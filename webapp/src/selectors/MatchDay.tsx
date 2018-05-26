@@ -53,12 +53,15 @@ export function makeGetSquad(
 }
 
 export function makeGetMatchDayBetBucket(
-  getSquad: ModelSelector<m.Squad>,
-  getMatchDay: ModelSelector<m.MatchDay>
+  getSquadId: StringSelector,
+  getTournamentId: StringSelector,
+  getMatchDayId: StringSelector
 ): ModelSelector<m.MatchDayBetBucket> {
   return createSelector(
-    [getSquad, getMatchDay, getBets],
-    (   squad,    matchDay,    bets) => bets[joinKeys(squad.id, matchDay.id)]
+    [getSquadId, getTournamentId, getMatchDayId, getBets],
+    (   squadId,    tournamentId,    matchDayId,    bets) => {
+      return bets[joinKeys(squadId, tournamentId, matchDayId)]
+    }
   )
 }
 

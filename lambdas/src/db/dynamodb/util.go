@@ -1,9 +1,11 @@
 package dynamodb
 
 import (
+	"errors"
 	"main/conf"
 	"main/lib"
 	"strconv"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	sdk "github.com/aws/aws-sdk-go/service/dynamodb"
@@ -44,6 +46,20 @@ func stringListAttr(value *string) *sdk.AttributeValue {
 func joinKeys(keyA *string, keyB *string) *string {
 	joined := *keyA + "/" + *keyB
 	return &joined
+}
+
+func splitKey(joinedKey *sdk.AttributeValue) (*string, *string, error) {
+	val := joinedKey.S
+	if val == nil {
+		return nil, nil, errors.New("Did not receive a string value")
+	}
+	parts := strings.Split(*val, "/")
+	if len(parts) != 2 {
+		return nil, nil, errors.New("Invalid compound key")
+	}
+	keyA := parts[0]
+	keyB := parts[1]
+	return &keyA, &keyB, nil
 }
 
 func initialiseEmptyList(

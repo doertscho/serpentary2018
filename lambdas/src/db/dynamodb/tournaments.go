@@ -9,7 +9,7 @@ import (
 
 func (db DynamoDb) GetTournaments() []*models.Tournament {
 
-	result, err := db.query("tournaments", "true", NO_VALUES)
+	result, err := db.scanTable("tournaments")
 	if err != nil {
 		log.Println("error occurred querying tournaments: " + err.Error())
 		return nil
@@ -38,7 +38,7 @@ func (db DynamoDb) GetTournamentById(tournamentId *string) *models.Tournament {
 	}
 
 	tournament := models.Tournament{}
-	err = attr.UnmarshalMap(record.Item, &tournament)
+	err = attr.UnmarshalMap(*record, &tournament)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil

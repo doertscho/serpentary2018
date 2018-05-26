@@ -12,12 +12,12 @@ func (db DynamoDb) GetMatchDaysByTournamentId(
 
 	result, err := db.queryItemsByKey("match-days", "tournament_id", tournamentId)
 	if err != nil {
-		log.Println("error occurred querying match days: " + err.Error())
+		log.Println("Error occurred querying match days: " + err.Error())
 		return nil
 	}
 
-	matchDays := make([]*models.MatchDay, len(result.Items))
-	for idx, val := range result.Items {
+	matchDays := make([]*models.MatchDay, len(*result))
+	for idx, val := range *result {
 		matchDay := models.MatchDay{}
 		err = attr.UnmarshalMap(val, &matchDay)
 		if err != nil {
@@ -41,7 +41,7 @@ func (db DynamoDb) GetMatchDayById(
 	}
 
 	matchDay := models.MatchDay{}
-	err = attr.UnmarshalMap(record.Item, &matchDay)
+	err = attr.UnmarshalMap(*record, &matchDay)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
 		return nil
