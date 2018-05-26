@@ -89,5 +89,11 @@ func postRequest(
 		return handlers.AddUserToSquad(&squadId, userId)
 	}
 
+	if matchPath("tournaments", "_", "pools", "_") {
+		tournamentId := params["tournamentId"]
+		squadId := params["squadId"]
+		return handlers.AddUserToPool(&squadId, &tournamentId, userId)
+	}
+
 	return nil
 }
