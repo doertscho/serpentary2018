@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
@@ -9,13 +10,14 @@ import { Localisable, withLocaliser, Localiser } from '../locales'
 import { makeGetUrlParameter } from '../selectors/util'
 import { getUserId } from '../selectors/session'
 import { makeGetSquad } from '../selectors/Squad'
+import { makeGetPoolsBySquad } from '../selectors/Pool'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 
 interface Props extends Localisable {
   squadId: string
   squad: m.Squad
-  tournaments: m.Tournament[]
+  pools: m.Pool[]
   userId: string
   fetchSquad: (squadId: string, callbacks?: Callbacks) => void
   joinSquad: (squadId: string) => void
@@ -58,8 +60,8 @@ class squadPage extends LazyLoadingComponent<Props, {}> {
   }
 
   shouldRefreshOnMount() {
-    let tournaments = this.props.tournaments
-    return (!tournaments || !tournaments.length)
+    let pools = this.props.pools
+    return (!pools || !pools.length)
   }
 
   requestData() {
@@ -67,21 +69,27 @@ class squadPage extends LazyLoadingComponent<Props, {}> {
   }
 
   renderWithData() {
+    let squadId = this.props.squadId
     let squad = this.props.squad
     let userId = this.props.userId
     let joinSquad = this.props.joinSquad
-    let tournaments = this.props.tournaments || []
+    let pools = this.props.pools || []
     let l = this.props.l
     return (
       <div>
         <h1>{ l('SQUAD_PAGE_TITLE', 'Squad details') }</h1>
-        <h2>#{squad.id}</h2>
+        <h2>#{squadId}</h2>
         { squadUserBox(squad, userId, joinSquad, l) }
         <h3>{ l('SQUAD_POOLS', 'Pools by this squad') }</h3>
         <ul>
-          { tournaments.map(tournament =>
-            <li key={tournament.id}>
-              #{tournament.id}
+          { pools.map(pool =>
+            <li key={pool.tournamentId}>
+              <Link to={
+                    '/tournaments/' + pool.tournamentId +
+                    '/pools/' + squadId
+              }>
+                #{pool.tournamentId}
+              </Link>
             </li>
           )}
         </ul>
@@ -95,11 +103,12 @@ const getSquadIdFromUrl = makeGetUrlParameter('squad_id')
 
 const makeMapStateToProps = () => {
   let getSquad = makeGetSquad(getSquadIdFromUrl)
+  let getPoolsBySquad = makeGetPoolsBySquad(getSquadIdFromUrl)
   return withLocaliser((state: StoreState, props: any) => {
     return {
       squadId: getSquadIdFromUrl(state, props),
       squad: getSquad(state, props),
-      tournaments: [],
+      pools: getPoolsBySquad(state, props),
       userId: getUserId(state)
     }
   })
