@@ -86,7 +86,8 @@ export function makeGetBetsByMatch(
           matchBetsByUserId[user.id] || missingBetForUser(user))
         betsByMatch[matchBetBucket.matchId] = matchBets
       })
-      matches.forEach(match => {
+      let checkedMatches = matches || []
+      checkedMatches.forEach(match => {
         if (!betsByMatch[match.id])
           betsByMatch[match.id] = participants.map(missingBetForUser)
       })
