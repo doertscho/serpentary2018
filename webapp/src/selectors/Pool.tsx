@@ -21,7 +21,11 @@ export const makeGetParticipants = (getPool: ModelSelector<m.Pool>) =>
     [getPool, getUsers],
     (   pool,    users) => {
       if (!pool || !pool.participants) return []
-      return pool.participants.map(userId => users[userId])
+      return pool.participants.map(userId => {
+        let user = users[userId]
+        if (!user) user = m.User.create({ id: userId })
+        return user
+      })
     }
   )
 

@@ -27,9 +27,12 @@ func GetPoolById(
 	}
 	tournaments := []*models.Tournament{tournament}
 
+	matchDays := db.GetDb().GetMatchDaysByTournamentId(tournamentId)
+
 	data := &models.Update{
 		Pools:       pools,
 		Tournaments: tournaments,
+		MatchDays:   matchDays,
 	}
 
 	return lib.BuildUpdate(data)

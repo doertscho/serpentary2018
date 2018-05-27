@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
@@ -9,7 +10,7 @@ import { Localisable, withLocaliser, Localiser } from '../locales'
 import { makeGetUrlParameter } from '../selectors/util'
 import { getUserId } from '../selectors/session'
 import { makeGetPool } from '../selectors/Pool'
-import { makeGetTournament } from '../selectors/Tournament'
+import { makeGetTournament, makeGetMatchDays } from '../selectors/Tournament'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 
@@ -18,6 +19,7 @@ interface Props extends Localisable {
   tournamentId: string
   pool: m.Pool
   tournament: m.Tournament
+  matchDays: m.MatchDay[]
   userId: string
   fetchPool: (
     squadId: string, tournamentId: string, callbacks?: Callbacks) => void
@@ -75,17 +77,31 @@ class poolPage extends LazyLoadingComponent<Props, {}> {
     let userId = this.props.userId
     let joinPool = this.props.joinPool
     let squadId = this.props.squadId
-    let tournamentName: string | m.ILocalisableString = this.props.tournamentId
+    let tournamentId = this.props.tournamentId
+    let tournamentName: string | m.ILocalisableString = tournamentId
     if (this.props.tournament && this.props.tournament.name) {
       tournamentName = this.props.tournament.name
     }
     let participants = pool.participants || []
+    let matchDays = this.props.matchDays || []
     let l = this.props.l
     return (
       <div>
         <h1>{ l('POOL_PAGE_TITLE', 'Pool details') }</h1>
         <h2>{ l(tournamentName) }, by #{squadId}</h2>
         { poolUserBox(pool, userId, joinPool, l) }
+        <h3>{ l('POOL_MATCH_DAYS', 'Jump to the bets by match day') }</h3>
+        <ul>
+          { matchDays.map(matchDay =>
+            <li key={matchDay.id}>
+              <Link to={
+                    '/tournaments/' + tournamentId +
+                    '/match-days/' + matchDay.id +
+                    '/bets/' + squadId
+                  }>{ l(matchDay.name) }</Link>
+            </li>
+          )}
+        </ul>
         <h3>{ l('POOL_PARTICIPANTS', 'Users participating in this pool') }</h3>
         <ul>
           { participants.map(userId =>
@@ -104,12 +120,14 @@ const getTournamentIdFromUrl = makeGetUrlParameter('tournament_id')
 const makeMapStateToProps = () => {
   let getPool = makeGetPool(getSquadIdFromUrl, getTournamentIdFromUrl)
   let getTournament = makeGetTournament(getTournamentIdFromUrl)
+  let getMatchDays = makeGetMatchDays(getTournamentIdFromUrl)
   return withLocaliser((state: StoreState, props: any) => {
     return {
       squadId: getSquadIdFromUrl(state, props),
       tournamentId: getTournamentIdFromUrl(state, props),
       pool: getPool(state, props),
       tournament: getTournament(state, props),
+      matchDays: getMatchDays(state, props),
       userId: getUserId(state)
     }
   })
