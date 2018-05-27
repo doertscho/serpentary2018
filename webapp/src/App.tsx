@@ -19,6 +19,7 @@ import MatchDayBets from './containers/MatchDayBets'
 import Ranking from './containers/Ranking'
 import Squad from './containers/Squad'
 import Pool from './containers/Pool'
+import PopoverContainer from './containers/PopoverContainer'
 import NotFound from './components/NotFound'
 
 interface Props {
@@ -86,6 +87,7 @@ class App extends React.Component<Props, any> {
 
             </Switch>
           </main>
+          <PopoverContainer />
         </div>
       </BrowserRouter>
     )

@@ -9,7 +9,10 @@ interface Props {
 export default ({ match }: Props) =>
   <span>
     { match.id }:
+    { ' ' }
     { match.homeTeamId }
+    { ' ' }
     vs.
+    { ' ' }
     { match.awayTeamId }
   </span>

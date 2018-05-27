@@ -12,6 +12,7 @@ message MatchDay {
 
   LocalisableString name = 4;
 
-  string previous_id = 5;
-  string next_id = 6;
+  uint32 seq = 5;
+  string previous_id = 6;
+  string next_id = 7;
 }

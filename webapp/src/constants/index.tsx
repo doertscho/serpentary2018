@@ -13,6 +13,8 @@ export const DATA = 'DATA'
 export type DATA = typeof DATA
 export const SESSION = 'SESSION'
 export type SESSION = typeof SESSION
+export const UI = 'UI'
+export type UI = typeof UI
 
 // secondary session action types / operations
 export const SIGN_UP = 'SIGN_UP'
@@ -23,3 +25,9 @@ export const LOG_OUT = 'LOG_OUT'
 export type LOG_OUT = typeof LOG_OUT
 export const SET_LOCALE = 'SET_LOCALE'
 export type SET_LOCALE = typeof SET_LOCALE
+
+// secondary ui action types
+export const SHOW_POPOVER = 'SHOW_POPOVER'
+export type SHOW_POPOVER = typeof SHOW_POPOVER
+export const HIDE_POPOVER = 'HIDE_POPOVER'
+export type HIDE_POPOVER = typeof HIDE_POPOVER

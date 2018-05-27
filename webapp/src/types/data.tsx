@@ -103,16 +103,16 @@ sampleMatches['world-cup-2018/group-stage-1/1'] =
       tournamentId: 'world-cup-2018',
       matchDayId: 'group-stage-1',
       id: 1,
-      homeTeamId: 1,
-      awayTeamId: 2,
+      homeTeamId: "russia",
+      awayTeamId: "saudi-arabia",
     })
 sampleMatches['world-cup-2018/group-stage-1/2'] =
     m.Match.create({
       tournamentId: 'world-cup-2018',
       matchDayId: 'group-stage-1',
       id: 2,
-      homeTeamId: 3,
-      awayTeamId: 4,
+      homeTeamId: "egypt",
+      awayTeamId: "uruguay",
     })
 
 const sampleUsers: Map<m.User> = {}

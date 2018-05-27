@@ -1,6 +1,7 @@
 import * as constants from '../constants'
 import * as data from './data'
 import * as session from './session'
+import * as ui from './ui'
 import { InitAction } from './base'
 
 export type DataAction =
@@ -10,8 +11,12 @@ export type SessionAction =
   session.SessionRequest | session.SessionResponse | session.SessionError |
   session.SetLocale
 
+export type UiAction =
+  ui.UiRequest
+
 export type Action =
   InitAction |
   data.DataRequest | data.DataResponse | data.DataError |
   session.SessionRequest | session.SessionResponse | session.SessionError |
-  session.SetLocale
+  session.SetLocale |
+  ui.UiRequest

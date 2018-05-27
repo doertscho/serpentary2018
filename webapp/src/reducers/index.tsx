@@ -4,6 +4,7 @@ import { Action } from '../actions'
 
 import { dataReducer } from './data'
 import { sessionReducer } from './session'
+import { uiReducer } from './ui'
 
 export function rootReducer(state: StoreState, action: Action): StoreState {
   console.log("got action:", action)
@@ -12,6 +13,8 @@ export function rootReducer(state: StoreState, action: Action): StoreState {
       return copyWith(state, dataReducer(state.data, action))
     case constants.SESSION:
       return copyWith(state, sessionReducer(state.session, action))
+    case constants.UI:
+      return copyWith(state, uiReducer(state.ui, action))
     case constants.INIT:
       console.log("Initialisation finished.")
       return copyWith(state, { isInitialised: true })
@@ -25,6 +28,7 @@ function copyWith(state: StoreState, changed: Partial<StoreState>): StoreState {
   return {
     isInitialised: changed.isInitialised || state.isInitialised,
     data: changed.data || state.data,
-    session: changed.session || state.session
+    session: changed.session || state.session,
+    ui: changed.ui || state.ui
   }
 }

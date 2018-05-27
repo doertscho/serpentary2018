@@ -5,13 +5,14 @@ import * as constants from '../constants'
 import { StoreState } from '../types'
 import { DataState } from '../types/data'
 import { SessionState } from '../types/session'
+import { UiState } from '../types/ui'
 import { sessionManager } from '../session'
 
 export interface InitAction {
   type: constants.INIT
 }
 
-export type ActionType = constants.DATA | constants.SESSION
+export type ActionType = constants.DATA | constants.SESSION | constants.UI
 
 export type ActionEvent =
   constants.REQUEST | constants.RESPONSE | constants.ERROR
@@ -32,6 +33,14 @@ export type SessionOperation =
 export interface BaseSessionAction extends BaseAction<SessionState> {
   type: constants.SESSION
   operation: SessionOperation
+}
+
+export type UiOperation =
+  constants.SHOW_POPOVER | constants.HIDE_POPOVER
+
+export interface BaseUiAction extends BaseAction<UiState> {
+  type: constants.UI
+  operation: UiOperation
 }
 
 export const apiGet = (path: string, withIdentity?: boolean) => {

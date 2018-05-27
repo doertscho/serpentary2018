@@ -12,6 +12,7 @@ import {
   makeGetBetsByMatch
 } from '../selectors/MatchDay'
 import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
+import { getUserId } from '../selectors/session'
 import {
   makeGetUrlParameter,
   makeGetNumberUrlParameter
@@ -20,8 +21,8 @@ import { Action } from '../actions'
 import { Callbacks, fetchBets } from '../actions/data'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
+import MatchColumn from './MatchColumn'
 import UserColumn from '../components/UserColumn'
-import MatchColumn from '../components/MatchColumn'
 
 interface Props extends Localisable {
 
@@ -34,6 +35,7 @@ interface Props extends Localisable {
   matches: m.Match[]
   pool: m.Pool
   betsByMatch: m.Bet[][]
+  userId: string
 
   fetchBets: (
       squadId: string,
@@ -74,6 +76,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let betsByMatch = this.props.betsByMatch
     let participants = this.props.participants || []
     let matches = this.props.matches || []
+    let userId = this.props.userId
     let l = this.props.l
     return (
       <div>
@@ -119,6 +122,7 @@ const makeMapStateToProps = () => {
       pool: getPool(state, props),
       participants: getParticipants(state, props),
       betsByMatch: getBetsByMatch(state, props),
+      userId: getUserId(state)
     }
   })
 }
