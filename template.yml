@@ -188,6 +188,16 @@ Resources:
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
             Method: get
+        SubmitBet:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
+            Method: post
+        SubmitBetOptions:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
+            Method: options
         GetPoolById:
           Type: Api
           Properties:

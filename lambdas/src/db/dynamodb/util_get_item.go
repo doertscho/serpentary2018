@@ -45,7 +45,9 @@ func (db DynamoDb) getItem(
 		TableName: table(tableName),
 		Key:       key,
 	}
+	s := newStopWatch("GetItem on " + tableName)
 	result, err := db.Svc.GetItem(input)
+	s.stopAndLog()
 	if err != nil {
 		return nil, err
 	}

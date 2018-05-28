@@ -7,15 +7,21 @@ import { Action } from '../actions'
 import { showPopover } from '../actions/ui'
 import { joinKeys } from '../types/data'
 import { getUserId } from '../selectors/session'
+import { secondsToTimeout } from '../rules'
 
-import BetInputPopover from './BetInputPopover'
 import Match from '../components/Match'
+import MatchCountdown from '../components/MatchCountdown'
 
 interface Props {
   match: m.Match
   bets: m.Bet[]
   userId: string
-  showBetInputPopover: (match: m.Match) => void
+  showBetForm: (bet: m.Bet) => void
+}
+
+interface State {
+  canEnterBets: boolean
+  showCountdown: boolean
 }
 
 const readOnlyBet = (bet: m.Bet) => {
@@ -34,46 +40,72 @@ const readOnlyBet = (bet: m.Bet) => {
 }
 
 const usersBet = (
-    bet: m.Bet, match: m.Match, showForm: (match: m.Match) => void) => {
+  bet: m.Bet,
+  showForm: (bet: m.Bet) => void,
+  canEnterBets: boolean
+) => {
 
-  switch (bet.status) {
-    case m.BetStatus.MISSING:
+  if (canEnterBets) {
+    if (bet.status == m.BetStatus.MISSING) {
       return (
         <div key={bet.userId} className="bet my-bet missing"
-            onClick={() => showForm(match)}>
+            onClick={() => showForm(bet)}>
           -
         </div>
       )
-    case m.BetStatus.HIDDEN:
+    } else {
       return (
         <div key={bet.userId} className="bet my-bet hidden"
-            onClick={() => showForm(match)}>
+            onClick={() => showForm(bet)}>
           ?
         </div>
       )
-    default:
+    }
+  } else {
+    if (bet.status == m.BetStatus.MISSING) {
+      return <div key={bet.userId} className="bet my-bet missing">-</div>
+    } else {
       return (
         <div key={bet.userId} className="bet my-bet">
           {bet.homeGoals}:{bet.awayGoals}
         </div>
       )
+    }
   }
 }
 
-class matchColumnView extends React.Component<Props, {}> {
+function buildCountdownComponent(showCountdown: boolean, match: m.Match) {
+  if (showCountdown) {
+    console.log("Will show countdown!")
+    return <MatchCountdown match={match} />
+  } else {
+    return <div className="matchCountdown"></div>
+  }
+}
+
+class matchColumnView extends React.Component<Props, State> {
 
   render() {
     let match = this.props.match
     let bets = this.props.bets
     let userId = this.props.userId
-    let showBetInputPopover = this.props.showBetInputPopover
+    let showBetForm = this.props.showBetForm
+    let canEnterBets = this.state.canEnterBets
+    let showCountdown = this.state.showCountdown
     return (
       <div className="matchWithBets">
-        <div className="match"><Match match={match} /></div>
+        <div className="match">
+          { match.homeTeamId }
+          <br />
+          vs.
+          <br />
+          { match.awayTeamId }
+        </div>
+        { buildCountdownComponent(showCountdown, match) }
         <div className="bets">
           { bets.map(bet => {
             if (userId == bet.userId) {
-              return usersBet(bet, match, showBetInputPopover)
+              return usersBet(bet, showBetForm, canEnterBets)
             } else {
               return readOnlyBet(bet)
             }
@@ -81,6 +113,39 @@ class matchColumnView extends React.Component<Props, {}> {
         </div>
       </div>
     )
+  }
+
+  constructor(props: Props) {
+    super(props)
+
+    this.showCountdown = this.showCountdown.bind(this)
+    this.closeBetCounter = this.closeBetCounter.bind(this)
+
+    let timeToClosure = secondsToTimeout(props.match)
+    let open = timeToClosure > 0
+    let showCountdown = open && timeToClosure < 3600
+    this.state = { canEnterBets: open, showCountdown: showCountdown }
+
+    if (open) {
+      let self = this
+      setTimeout(self.closeBetCounter, timeToClosure * 1000)
+
+      if (!showCountdown) {
+        let timeToShowCountdown = timeToClosure - 3600
+        console.log("Will start showing countdown in ", timeToShowCountdown)
+        setTimeout(self.showCountdown, timeToShowCountdown * 1000)
+      }
+    }
+  }
+
+  showCountdown() {
+    console.log("Less than one hour to go, showing countdown")
+    this.setState({ showCountdown: true })
+  }
+
+  closeBetCounter() {
+    console.log("Closing the counter for match", this.props.match)
+    this.setState({ canEnterBets: false })
   }
 }
 
@@ -90,15 +155,4 @@ const mapStateToProps = (state: StoreState) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
-  return {
-    showBetInputPopover: (
-        match: m.Match,
-        userId: string
-      ) => {
-        dispatch(showPopover(<BetInputPopover match={match} />))
-      }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(matchColumnView)
+export default connect(mapStateToProps)(matchColumnView)

@@ -9,24 +9,28 @@ message MatchDayBetBucket {
   string tournament_id = 3;
   string match_day_id = 4;
 
-  repeated MatchBetBucket bets = 5;
+  repeated UserBetBucket bets = 5;
 }
 
-message MatchBetBucket {
+message UserBetBucket {
 
-  uint32 match_id = 1;
+  string user_id = 1;
 
   repeated Bet bets = 2;
 }
 
 message Bet {
 
-  string user_id = 1;
+  uint32 match_id = 1;
+  string user_id = 2;
+  // user id should not be populated for transfer and persistence, as it should
+  // be clear from the parent UserBetBucket, but in some places where Bet
+  // objects are used in isolation it may be useful to populate this
 
-  BetStatus status = 2;
+  BetStatus status = 3;
 
-  int32 home_goals = 3;
-  int32 away_goals = 4;
+  int32 home_goals = 4;
+  int32 away_goals = 5;
 }
 
 enum BetStatus {

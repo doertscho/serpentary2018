@@ -18,9 +18,11 @@ import {
   makeGetNumberUrlParameter
 } from '../selectors/util'
 import { Action } from '../actions'
-import { Callbacks, fetchBets } from '../actions/data'
+import { Callbacks, fetchBets, postBet } from '../actions/data'
+import { showPopover, hidePopover } from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
+import BetInputPopover from './BetInputPopover'
 import MatchColumn from './MatchColumn'
 import UserColumn from '../components/UserColumn'
 
@@ -43,6 +45,15 @@ interface Props extends Localisable {
       matchDayId: string,
       callbacks?: Callbacks
     ) => void
+  postBet: (
+      squadId: string,
+      tournamentId: string,
+      matchDayId: string,
+      bet: m.Bet,
+      callbacks?: Callbacks
+    ) => void
+  showPopover: (element: React.ReactElement<any>) => void
+  hidePopover: () => void
 }
 
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
@@ -69,6 +80,26 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     )
   }
 
+  showBetForm(match: m.Match, bet: m.Bet) {
+    let submitBet = this.submitBet
+    let postBet = (updatedBet: m.Bet) => { submitBet(match, updatedBet) }
+    this.props.showPopover(
+      <BetInputPopover postBet={postBet} bet={bet} match={match} />
+    )
+  }
+
+  submitBet(match: m.Match, bet: m.Bet) {
+    bet.matchId = match.id
+    let hidePopover = this.props.hidePopover
+    this.props.postBet(
+      this.props.squadId,
+      this.props.tournamentId,
+      this.props.matchDayId,
+      bet,
+      { onSuccess: hidePopover }
+    )
+  }
+
   renderWithData() {
     let squadId = this.props.squadId
     let matchDay = this.props.matchDay
@@ -78,6 +109,8 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let matches = this.props.matches || []
     let userId = this.props.userId
     let l = this.props.l
+    let makeShowBetForm = (match: m.Match) =>
+        (bet: m.Bet) => this.showBetForm(match, bet)
     return (
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
@@ -88,13 +121,21 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
           <div className="matches">
             { matches.map(match =>
               <MatchColumn key={match.id}
-                  match={match} bets={betsByMatch[match.id]} />
+                  match={match} bets={betsByMatch[match.id]}
+                  showBetForm={makeShowBetForm(match)} />
             ) }
           </div>
         </div>
         { this.refreshComponent }
       </div>
     )
+  }
+
+  constructor(props: Props) {
+    super(props)
+
+    this.showBetForm = this.showBetForm.bind(this)
+    this.submitBet = this.submitBet.bind(this)
   }
 }
 
@@ -111,7 +152,7 @@ const makeMapStateToProps = () => {
   let getMatchDayBetBucket = makeGetMatchDayBetBucket(
       getSquadIdFromUrl, getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getBetsByMatch =
-      makeGetBetsByMatch(getParticipants, getMatches, getMatchDayBetBucket)
+      makeGetBetsByMatch(getPool, getMatches, getMatchDayBetBucket)
   return withLocaliser((state: StoreState, props: any) => {
     return {
       squadId: getSquadIdFromUrl(state, props),
@@ -136,7 +177,20 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
         callbacks?: Callbacks
       ) => {
         dispatch(fetchBets(squadId, tournamentId, matchDayId, callbacks))
-      }
+      },
+    showPopover: (element: React.ReactElement<any>) => {
+        dispatch(showPopover(element))
+      },
+    hidePopover: () => { dispatch(hidePopover()) },
+    postBet: (
+        squadId: string,
+        tournamentId: string,
+        matchDayId: string,
+        bet: m.Bet,
+        callbacks?: Callbacks
+      ) => {
+        dispatch(postBet(squadId, tournamentId, matchDayId, bet, callbacks))
+      },
   }
 }
 

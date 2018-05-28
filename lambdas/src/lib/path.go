@@ -40,6 +40,6 @@ func TrimAndFilterEmpty(in []string) (filtered []string) {
 }
 
 func isValidStringId(input string) bool {
-	matched, err := regexp.MatchString("^[0-9a-z-]+$", input)
-	return err == nil && matched
+	matched, _ := regexp.MatchString("^[0-9a-z-]{1,24}$", input)
+	return matched
 }

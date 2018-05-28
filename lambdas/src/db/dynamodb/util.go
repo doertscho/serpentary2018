@@ -2,10 +2,12 @@ package dynamodb
 
 import (
 	"errors"
+	"log"
 	"main/conf"
 	"main/lib"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	sdk "github.com/aws/aws-sdk-go/service/dynamodb"
@@ -74,4 +76,18 @@ func timestamp() *sdk.AttributeValue {
 	return &sdk.AttributeValue{
 		N: aws.String(strconv.Itoa(int(lib.Timestamp()))),
 	}
+}
+
+type stopWatch struct {
+	start     time.Time
+	operation string
+}
+
+func newStopWatch(operation string) *stopWatch {
+	return &stopWatch{start: time.Now(), operation: operation}
+}
+
+func (s stopWatch) stopAndLog() {
+	duration := time.Since(s.start)
+	log.Println(s.operation + ": operation took " + duration.String())
 }
