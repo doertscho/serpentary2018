@@ -56,8 +56,8 @@ func GetUserId(request events.APIGatewayProxyRequest) *string {
 		return nil
 	}
 
-	if len(userId) == 0 {
-		log.Println("user id was blank")
+	if isValidStringId(userId) {
+		log.Println("user id has invalid characters")
 		return nil
 	}
 

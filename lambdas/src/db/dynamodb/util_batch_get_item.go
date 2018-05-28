@@ -38,7 +38,9 @@ func (db DynamoDb) getItemBatch(
 			},
 		},
 	}
+	s := newStopWatch("BatchGetItem on " + tableName)
 	result, err := db.Svc.BatchGetItem(input)
+	s.stopAndLog()
 	if err != nil {
 		return nil, err
 	}

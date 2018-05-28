@@ -8,6 +8,7 @@ $betCellHeight: 40px
 $matchCellMargin: $betCellMargin
 $matchCellPadding: $betCellPadding
 $matchCellHeight: 80px
+$countdownHeight: 30px
 
 .betMatrix
   border: $betCellBorderWidth solid $primary
@@ -21,7 +22,8 @@ $matchCellHeight: 80px
 
   .users .user,
   .matches .match,
-  .matches .bet
+  .matches .bet,
+  .matchCountdown
     margin: $betCellMargin
     padding: $betCellPadding
     width: $betCellWidth
@@ -30,9 +32,19 @@ $matchCellHeight: 80px
   .matches .bet
     display: flex
     justify-content: center
+    text-align: center
 
   .matches .match
     height: $matchCellHeight
+
+  .matchCountdown
+    text-align: center
+    height: $countdownHeight
+    &.urgent
+      color: $highlight
+      font-weight: bold
+    &.closed
+      font-weight: bold
 
   .users .user,
   .matches .bet
@@ -46,3 +58,6 @@ $matchCellHeight: 80px
       background-color: #c99
     &.hidden
       background-color: #ccc
+
+  .matches .bet.my-bet
+    border-color: $highlight

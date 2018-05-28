@@ -1,5 +1,8 @@
 import { Dispatch } from 'redux'
-import { decode as base64decode } from 'base64-arraybuffer'
+import {
+  decode as base64decode,
+  encode as base64encode
+} from 'base64-arraybuffer'
 
 import * as constants from '../constants'
 import { models as m } from '../types/models'
@@ -73,6 +76,17 @@ export const fetchPool = (
 export const joinSquad = (squadId: string) => postData('/squads/' + squadId)
 export const joinPool = (squadId: string, tournamentId: string) =>
     postData('/tournaments/' + tournamentId + '/pools/' + squadId)
+
+export const postBet = (
+    squadId: string, tournamentId: string, matchDayId: string,
+    bet: m.Bet,
+    callbacks?: Callbacks
+  ) => postData(
+    '/tournaments/' + tournamentId + '/match-days/' + matchDayId +
+      '/bets/' + squadId,
+    callbacks,
+    base64encode(m.Bet.encode(bet).finish())
+  )
 
 /*
  * ACTION CREATORS

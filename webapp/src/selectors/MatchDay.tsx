@@ -66,35 +66,57 @@ export function makeGetMatchDayBetBucket(
 }
 
 export function makeGetBetsByMatch(
-  getParticipants: ModelSelector<m.User[]>,
+  getPool: ModelSelector<m.Pool>,
   getMatches: ModelSelector<m.Match[]>,
   getMatchDayBetBucket: ModelSelector<m.MatchDayBetBucket>
-): ModelSelector<m.IBet[][]> {
+): ModelSelector<m.Bet[][]> {
   return createSelector(
-    [getParticipants, getMatches, getMatchDayBetBucket],
-    (   participants,    matches,    matchDayBetBucket) => {
-      var betsInBucket: m.IMatchBetBucket[] = []
+    [getPool, getMatches, getMatchDayBetBucket],
+    (   pool,    matches,    matchDayBetBucket) => {
+      if (!pool || !matches || !matchDayBetBucket) return []
+      matches = matches || []
+      let participantIds: string[] = pool.participants || []
+      let userBetBuckets: m.IUserBetBucket[] = []
       if (matchDayBetBucket && matchDayBetBucket.bets)
-        betsInBucket = matchDayBetBucket.bets
-      let betsByMatch: m.IBet[][] = []
-      betsInBucket.forEach(matchBetBucket => {
-        let matchBetsByUserId: Map<m.IBet> = {}
-        matchBetBucket.bets.forEach(bet => {
-          matchBetsByUserId[bet.userId] = bet
-        })
-        let matchBets = participants.map(user =>
-          matchBetsByUserId[user.id] || missingBetForUser(user))
-        betsByMatch[matchBetBucket.matchId] = matchBets
-      })
-      let checkedMatches = matches || []
-      checkedMatches.forEach(match => {
-        if (!betsByMatch[match.id])
-          betsByMatch[match.id] = participants.map(missingBetForUser)
-      })
-      return betsByMatch
+        userBetBuckets = matchDayBetBucket.bets
+      let betsByUser = buildBetsByUserMap(userBetBuckets)
+      return buildBetsByMatchMap(betsByUser, matches, participantIds)
     }
   )
 }
 
-const missingBetForUser = (user: m.User) =>
-    m.Bet.create({ userId: user.id, status: m.BetStatus.MISSING })
+function buildBetsByUserMap(userBetBuckets: m.IUserBetBucket[]) {
+  let betsByUser: Map<m.Bet[]> = {}
+  userBetBuckets.forEach(userBetBucket => {
+    let userId = userBetBucket.userId
+    betsByUser[userId] = []
+    let betsSeq: m.IBet[] = userBetBucket.bets || []
+    betsSeq.forEach(bet => {
+      let betCopy = m.Bet.create(bet)
+      betCopy.userId = userId
+      betsByUser[userId][bet.matchId] = betCopy
+    })
+  })
+  return betsByUser
+}
+
+function buildBetsByMatchMap(
+    betsByUser: Map<m.Bet[]>, matches: m.Match[], participantIds: string[]) {
+
+  let betsByMatch: m.Bet[][] = []
+  matches.forEach(match => {
+    betsByMatch[match.id] = []
+    participantIds.forEach(userId => {
+      if (betsByUser[userId] && betsByUser[userId][match.id])
+        betsByMatch[match.id].push(betsByUser[userId][match.id])
+      else
+        betsByMatch[match.id].push(createMissingBetForUser(match.id, userId))
+    })
+  })
+  return betsByMatch
+}
+
+function createMissingBetForUser(matchId: number, userId: string) {
+  return m.Bet.create({
+      matchId: matchId, userId: userId, status: m.BetStatus.MISSING })
+}

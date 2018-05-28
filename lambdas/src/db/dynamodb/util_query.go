@@ -28,7 +28,9 @@ func (db DynamoDb) query(
 		KeyConditionExpression:    aws.String(queryString),
 		ExpressionAttributeValues: valuesToBind,
 	}
+	s := newStopWatch("Query on " + tableName)
 	result, err := db.Svc.Query(input)
+	s.stopAndLog()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +50,9 @@ func (db DynamoDb) queryIndex(
 		KeyConditionExpression:    aws.String(query),
 		ExpressionAttributeValues: valuesToBind,
 	}
+	s := newStopWatch("Query on " + tableName + ", index " + indexName)
 	result, err := db.Svc.Query(input)
+	s.stopAndLog()
 	if err != nil {
 		return nil, err
 	}

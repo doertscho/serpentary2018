@@ -16,7 +16,9 @@ func (db DynamoDb) putRecord(
 		Item:      *record,
 		TableName: table(tableName),
 	}
+	s := newStopWatch("PutItem on " + tableName)
 	result, err := db.Svc.PutItem(&input)
+	s.stopAndLog()
 	if err != nil {
 		return nil, err
 	}

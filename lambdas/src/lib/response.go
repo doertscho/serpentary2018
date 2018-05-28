@@ -44,9 +44,31 @@ func Unauthorized() *events.APIGatewayProxyResponse {
 	}
 }
 
+func Forbidden(message string) *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
+		StatusCode: 403,
+		Body:       message,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
 func NotFound() *events.APIGatewayProxyResponse {
 	return &events.APIGatewayProxyResponse{
 		StatusCode: 404,
+		Headers: map[string]string{
+			"Content-Type":                "text/plain",
+			"Access-Control-Allow-Origin": conf.AllowOrigin,
+		},
+	}
+}
+
+func Gone(message string) *events.APIGatewayProxyResponse {
+	return &events.APIGatewayProxyResponse{
+		StatusCode: 410,
+		Body:       message,
 		Headers: map[string]string{
 			"Content-Type":                "text/plain",
 			"Access-Control-Allow-Origin": conf.AllowOrigin,

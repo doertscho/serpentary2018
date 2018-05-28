@@ -9,8 +9,8 @@ message Match {
   string match_day_id = 3;
   uint32 id = 4;
 
-  int32 home_team_id = 5;
-  int32 away_team_id = 6;
-  int32 stadium_id = 7;
+  string home_team_id = 5;
+  string away_team_id = 6;
+  string stadium_id = 7;
   fixed32 kick_off = 8;
 }

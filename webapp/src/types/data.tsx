@@ -103,16 +103,16 @@ sampleMatches['world-cup-2018/group-stage-1/1'] =
       tournamentId: 'world-cup-2018',
       matchDayId: 'group-stage-1',
       id: 1,
-      homeTeamId: 1,
-      awayTeamId: 2,
+      homeTeamId: "russia",
+      awayTeamId: "saudi-arabia",
     })
 sampleMatches['world-cup-2018/group-stage-1/2'] =
     m.Match.create({
       tournamentId: 'world-cup-2018',
       matchDayId: 'group-stage-1',
       id: 2,
-      homeTeamId: 3,
-      awayTeamId: 4,
+      homeTeamId: "egypt",
+      awayTeamId: "uruguay",
     })
 
 const sampleUsers: Map<m.User> = {}
@@ -135,18 +135,33 @@ const sampleBetBucket = m.MatchDayBetBucket.create({
   tournamentId: 'world-cup-2018',
   matchDayId: 'group-stage-1',
   bets: [
-    m.MatchBetBucket.create({
-      matchId: 1,
+    m.UserBetBucket.create({
+      userId: 'User1',
       bets: [
         m.Bet.create({
-          userId: 'User1',
+          matchId: 1,
           homeGoals: 3,
           awayGoals: 0,
         }),
         m.Bet.create({
-          userId: 'User2',
+          matchId: 2,
           homeGoals: 1,
           awayGoals: 2,
+        }),
+      ],
+    }),
+    m.UserBetBucket.create({
+      userId: 'User2',
+      bets: [
+        m.Bet.create({
+          matchId: 1,
+          homeGoals: 1,
+          awayGoals: 1,
+        }),
+        m.Bet.create({
+          matchId: 2,
+          homeGoals: 2,
+          awayGoals: 0,
         }),
       ],
     }),

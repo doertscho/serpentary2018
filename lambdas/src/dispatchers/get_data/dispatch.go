@@ -31,7 +31,7 @@ func dispatch(
 	matchPath := lib.MakePathMatcher(request.Path)
 
 	if request.HTTPMethod == "GET" {
-		response := getRequest(matchPath, request.PathParameters, userId)
+		response := getRequest(matchPath, &request.PathParameters, userId)
 		if response != nil {
 			return *response, nil
 		}
@@ -41,7 +41,8 @@ func dispatch(
 		if userId == nil {
 			return *lib.Unauthorized(), nil
 		}
-		response := postRequest(matchPath, request.PathParameters, userId)
+		response := postRequest(
+			matchPath, &request.PathParameters, userId, &request.Body)
 		if response != nil {
 			return *response, nil
 		}
@@ -52,7 +53,7 @@ func dispatch(
 
 func getRequest(
 	matchPath func(...string) bool,
-	params map[string]string,
+	params *map[string]string,
 	userId *string,
 ) *events.APIGatewayProxyResponse {
 
@@ -61,32 +62,32 @@ func getRequest(
 	}
 
 	if matchPath("tournaments", "_") {
-		tournamentId := params["tournamentId"]
+		tournamentId := (*params)["tournamentId"]
 		return handlers.GetTournamentById(&tournamentId)
 	}
 
 	if matchPath("tournaments", "_", "match-days", "_") {
-		tournamentId := params["tournamentId"]
-		matchDayId := params["matchDayId"]
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
 		return handlers.GetMatchDayById(&tournamentId, &matchDayId)
 	}
 
 	if matchPath("tournaments", "_", "match-days", "_", "bets", "_") {
-		tournamentId := params["tournamentId"]
-		matchDayId := params["matchDayId"]
-		squadId := params["squadId"]
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
+		squadId := (*params)["squadId"]
 		return handlers.GetBetsByMatchDayAndSquadId(
 			&tournamentId, &matchDayId, &squadId, userId)
 	}
 
 	if matchPath("tournaments", "_", "pools", "_") {
-		tournamentId := params["tournamentId"]
-		squadId := params["squadId"]
+		tournamentId := (*params)["tournamentId"]
+		squadId := (*params)["squadId"]
 		return handlers.GetPoolById(&squadId, &tournamentId)
 	}
 
 	if matchPath("squads", "_") {
-		squadId := params["squadId"]
+		squadId := (*params)["squadId"]
 		return handlers.GetSquadById(&squadId)
 	}
 
@@ -95,19 +96,28 @@ func getRequest(
 
 func postRequest(
 	matchPath func(...string) bool,
-	params map[string]string,
+	params *map[string]string,
 	userId *string,
+	data *string,
 ) *events.APIGatewayProxyResponse {
 
 	if matchPath("squads", "_") {
-		squadId := params["squadId"]
+		squadId := (*params)["squadId"]
 		return handlers.AddUserToSquad(&squadId, userId)
 	}
 
 	if matchPath("tournaments", "_", "pools", "_") {
-		tournamentId := params["tournamentId"]
-		squadId := params["squadId"]
+		tournamentId := (*params)["tournamentId"]
+		squadId := (*params)["squadId"]
 		return handlers.AddUserToPool(&squadId, &tournamentId, userId)
+	}
+
+	if matchPath("tournaments", "_", "match-days", "_", "bets", "_") {
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
+		squadId := (*params)["squadId"]
+		return handlers.SubmitBet(
+			&tournamentId, &matchDayId, &squadId, userId, data)
 	}
 
 	return nil

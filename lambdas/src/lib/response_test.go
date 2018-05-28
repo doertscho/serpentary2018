@@ -24,9 +24,23 @@ func TestUnauthorizedHasCode401(t *testing.T) {
 	assert.Equal(t, 401, actual.StatusCode)
 }
 
+func TestForbiddenHasCode403(t *testing.T) {
+	message := "Not you."
+	actual := Forbidden(message)
+	assert.Equal(t, 403, actual.StatusCode)
+	assert.Equal(t, message, actual.Body)
+}
+
 func TestNotFoundHasCode404(t *testing.T) {
 	actual := NotFound()
 	assert.Equal(t, 404, actual.StatusCode)
+}
+
+func TestGoneHasCode410(t *testing.T) {
+	message := "Not anymore."
+	actual := Gone(message)
+	assert.Equal(t, 410, actual.StatusCode)
+	assert.Equal(t, message, actual.Body)
 }
 
 func TestInternalErrorHasCode500(t *testing.T) {
