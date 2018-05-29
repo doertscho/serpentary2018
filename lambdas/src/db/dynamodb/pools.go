@@ -4,27 +4,33 @@ import (
 	"log"
 	"main/models"
 
+	sdk "github.com/aws/aws-sdk-go/service/dynamodb"
 	attr "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 func (db DynamoDb) GetPoolById(
-	squadId *string, tournamentId *string) *models.Pool {
+	squadId *string, tournamentId *string) (*models.Pool, *[]*models.User) {
 
 	record, err := db.getItemByCompoundKey(
 		"pools", "squad_id", squadId, "tournament_id", tournamentId)
 	if err != nil {
 		log.Println("Error fetching pool record: " + err.Error())
-		return nil
+		return nil, nil
 	}
 
 	pool := models.Pool{}
 	err = attr.UnmarshalMap(*record, &pool)
 	if err != nil {
 		log.Println("Error unmarshalling pool record: " + err.Error())
-		return nil
+		return nil, nil
 	}
 
-	return &pool
+	users := buildUsersFromPreferredNames(record)
+	if users == nil {
+		users = &[]*models.User{}
+	}
+
+	return &pool, users
 }
 
 func (db DynamoDb) GetPoolsBySquadId(
@@ -91,4 +97,33 @@ func (db DynamoDb) AddUserToPool(
 	}
 
 	return &pool, &user
+}
+
+func buildUsersFromPreferredNames(
+	record *map[string]*sdk.AttributeValue) *[]*models.User {
+
+	if record == nil {
+		return nil
+	}
+	preferredNamesAttribute := (*record)["participants_preferred_names"]
+	if preferredNamesAttribute == nil {
+		return nil
+	}
+	idToNameMap := preferredNamesAttribute.M
+	if idToNameMap == nil {
+		log.Println("Field 'participants_preferred_names' exists but is not a map")
+		return nil
+	}
+	users := make([]*models.User, len(idToNameMap))
+	i := 0
+	for id, value := range idToNameMap {
+		preferred := value.S
+		if preferred == nil {
+			preferred = &id
+		}
+		user := models.User{Id: id, PreferredName: *preferred}
+		users[i] = &user
+		i = i + 1
+	}
+	return &users
 }

@@ -25,7 +25,7 @@ func SubmitBet(
 		return lib.BadRequest(err.Error())
 	}
 
-	pool := db.GetDb().GetPoolById(squadId, tournamentId)
+	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
 	if !userRegisteredForPool(userId, pool) {
 		log.Println("User is not registered for this pool")
 		return lib.Forbidden(
@@ -58,6 +58,7 @@ func SubmitBet(
 		Matches: matches,
 		Bets:    bets,
 		Pools:   pools,
+		Users:   *users,
 	}
 
 	return lib.BuildUpdate(update)
@@ -76,15 +77,13 @@ func GetBetsByMatchDayAndSquadId(
 	}
 	matchDays := []*models.MatchDay{matchDay}
 
-	pool := db.GetDb().GetPoolById(squadId, tournamentId)
+	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
 	if pool == nil {
 		return lib.NotFound()
 	}
 	pools := []*models.Pool{pool}
 
 	matches := db.GetDb().GetMatchesByMatchDayId(tournamentId, matchDayId)
-
-	users := db.GetDb().GetBatchOfUsersByIds(&pool.Participants)
 
 	betBucket := db.GetDb().GetBetsByMatchDayAndSquadId(
 		tournamentId, matchDayId, squadId)
@@ -99,7 +98,7 @@ func GetBetsByMatchDayAndSquadId(
 		Matches:   matches,
 		Bets:      bets,
 		Pools:     pools,
-		Users:     users,
+		Users:     *users,
 	}
 
 	return lib.BuildUpdate(data)

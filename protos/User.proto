@@ -9,4 +9,6 @@ message User {
 
   repeated string squads = 3;
   repeated string pools = 4;
+
+  string preferred_name = 5;
 }

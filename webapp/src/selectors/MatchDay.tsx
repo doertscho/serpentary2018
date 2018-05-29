@@ -35,6 +35,7 @@ export function makeGetMatches(
   return createSelector(
     [getMatches, getMatchesByMatchDay, getMatchDay],
     (   matches,    matchesByMatchDay,    matchDay) => {
+      if (!matchDay) return null
       let combinedKey = joinKeys(matchDay.tournamentId, matchDay.id)
       let matchIds = matchesByMatchDay[combinedKey]
       if (!matchIds) return null
