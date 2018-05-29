@@ -114,6 +114,7 @@ export function logIn(userId: string, password: string) {
       password,
       () => {
         dispatch(sessionResponse(operation, userId))
+        dispatch(getMe())
       },
       (errorMessage: string) => {
         dispatch(sessionError(operation, errorMessage))

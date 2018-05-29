@@ -52,7 +52,8 @@ export const fetchBets = (
       '/tournaments/' + tournamentId +
         '/match-days/' + matchDayId +
         '/bets/' + squadId,
-      callbacks
+      callbacks,
+      true
   )
 
 export const fetchSquad = (squadId: string, callbacks?: Callbacks) =>
