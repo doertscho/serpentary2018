@@ -115,10 +115,12 @@ func censorBets(
 		matchHasBegun[val.Id] = lib.MatchHasBegun(val)
 	}
 	if userId == nil {
+		log.Println("No user id given - censoring all pending bets")
 		for _, val := range betBucket.Bets {
 			censorUserBetBucket(val, &matchHasBegun)
 		}
 	} else {
+		log.Println("Censoring all pending bets except for user " + *userId)
 		for _, val := range betBucket.Bets {
 			if *userId != val.UserId {
 				censorUserBetBucket(val, &matchHasBegun)
