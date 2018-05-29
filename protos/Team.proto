@@ -1,0 +1,22 @@
+syntax = "proto3";
+package models;
+
+import "LocalisableString.proto";
+
+message Team {
+
+  fixed32 updated = 1;
+
+  string tournament_id = 2;
+  string id = 3;
+
+  LocalisableString name = 4;
+
+  repeated Player players = 5;
+}
+
+message Player {
+
+  uint32 id = 1;
+  string name = 2;
+}

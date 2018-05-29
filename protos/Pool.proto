@@ -1,6 +1,8 @@
 syntax = "proto3";
 package models;
 
+import "LocalisableString.proto";
+
 message Pool {
 
   fixed32 updated = 1;
@@ -9,4 +11,39 @@ message Pool {
   string tournament_id = 3;
 
   repeated string participants = 4;
+
+  repeated ExtraQuestion extra_questions = 5;
+  repeated ExtraQuestionUserBetBucket extra_question_bets = 6;
+}
+
+message ExtraQuestion {
+
+  uint32 id = 1;
+
+  ExtraQuestionType type = 2;
+
+  LocalisableString question_text = 3;
+  int32 awarded_points = 4;
+}
+
+enum ExtraQuestionType {
+  TEXT = 0;
+  TEAM = 1;
+  PLAYER = 2;
+}
+
+message ExtraQuestionUserBetBucket {
+
+  string user_id = 1;
+
+  repeated ExtraQuestionBet bets = 2;
+}
+
+message ExtraQuestionBet {
+
+  uint32 question_id = 1;
+
+  string text = 2;
+  string team_id = 3;
+  uint32 player_id = 4;
 }
