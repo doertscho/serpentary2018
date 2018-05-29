@@ -109,8 +109,11 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let matches = this.props.matches || []
     let userId = this.props.userId
     let l = this.props.l
+
+    let getBets = (match: m.Match) => betsByMatch[match.id] || []
     let makeShowBetForm = (match: m.Match) =>
         (bet: m.Bet) => this.showBetForm(match, bet)
+        
     return (
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
@@ -121,7 +124,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
           <div className="matches">
             { matches.map(match =>
               <MatchColumn key={match.id}
-                  match={match} bets={betsByMatch[match.id]}
+                  match={match} bets={getBets(match)}
                   showBetForm={makeShowBetForm(match)} />
             ) }
           </div>
