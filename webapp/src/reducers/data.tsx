@@ -22,8 +22,6 @@ export const dataReducer: Reducer<DataState, DataAction> = (state, action) => {
   }
 }
 
-const useId: (u: { id: number }) => string = (u) => '' + u.id
-
 function mergeWithUpdate(
     state: DataState, update: m.Update): DataState {
 

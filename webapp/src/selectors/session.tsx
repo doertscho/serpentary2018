@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect'
 
 import { StoreState } from '../types'
-import { getLocaliser as localesGetLocaliser } from '../locales'
 import { getSession } from './index'
 
 export const getUserId =

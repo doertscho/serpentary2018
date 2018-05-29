@@ -52,14 +52,14 @@ const handleLogInEvent: Reducer<SessionState, SessionAction> =
   switch (action.event) {
     case constants.REQUEST:
       console.log("received notice of log in request", action)
-      return { session: copyWith(state, { errorMessage: '' }) }
+      return { session: copyWith(state, { errorMessage: null }) }
     case constants.RESPONSE:
       console.log("received log in response", action)
       return {
         session: copyWith(state, {
-          errorMessage: '',
+          errorMessage: null,
           userId: action.userId,
-          unconfirmedUserId: ''
+          unconfirmedUserId: null,
         })
       }
     case constants.ERROR:
@@ -67,7 +67,7 @@ const handleLogInEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: action.errorMessage,
-          userId: ''
+          userId: null
         })
       }
     default:
@@ -82,8 +82,8 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
       console.log("received log out response", action)
       return {
         session: copyWith(state, {
-          errorMessage: '',
-          userId: ''
+          errorMessage: null,
+          userId: null
         })
       }
     default:
@@ -92,10 +92,15 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
 }
 
 function copyWith(
-    state: SessionState, changed: Partial<SessionState>): SessionState {
+    s: SessionState, c: Partial<SessionState>): SessionState {
   return {
-    userId: changed.userId || state.userId,
-    errorMessage: changed.errorMessage || state.errorMessage,
-    locale: changed.locale || state.locale,
+    userId: c.userId === undefined ?
+        s.userId : c.userId,
+    unconfirmedUserId: c.unconfirmedUserId === undefined ?
+        s.unconfirmedUserId : c.unconfirmedUserId,
+    errorMessage: c.errorMessage === undefined ?
+        s.errorMessage : c.errorMessage,
+    locale: c.locale === undefined ?
+        s.locale : c.locale,
   }
 }

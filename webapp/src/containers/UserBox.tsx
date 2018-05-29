@@ -57,7 +57,7 @@ const view = (props: Props) => {
 
   console.log("UserBox re-rendering")
 
-  if (props.userId && props.userId.length)
+  if (props.userId)
     return (
       <div>
         { userView(props) }
