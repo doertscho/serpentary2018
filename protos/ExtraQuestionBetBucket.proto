@@ -1,0 +1,32 @@
+syntax = "proto3";
+package models;
+
+import "BetStatus.proto";
+
+message ExtraQuestionBetBucket {
+
+  fixed32 updated = 1;
+
+  string squad_id = 2;
+  string tournament_id = 3;
+
+  repeated ExtraQuestionUserBetBucket bets = 4;
+}
+
+message ExtraQuestionUserBetBucket {
+
+  string user_id = 1;
+
+  repeated ExtraQuestionBet bets = 2;
+}
+
+message ExtraQuestionBet {
+
+  uint32 question_id = 1;
+
+  string text = 2;
+  string team_id = 3;
+  uint32 player_id = 4;
+
+  BetStatus status = 5;
+}

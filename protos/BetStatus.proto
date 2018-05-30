@@ -1,0 +1,8 @@
+syntax = "proto3";
+package models;
+
+enum BetStatus {
+  VISIBLE = 0;
+  HIDDEN = 1;
+  MISSING = 2;
+}

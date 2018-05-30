@@ -8,5 +8,9 @@ func MatchHasBegun(match *models.Match) bool {
 	if match == nil || match.KickOff == 0 {
 		return false
 	}
-	return (match.KickOff - BET_TIME_OUT_SECONDS) < Timestamp()
+	return DeadlineHasPassed(match.KickOff - BET_TIME_OUT_SECONDS)
+}
+
+func DeadlineHasPassed(time uint32) bool {
+	return time < Timestamp()
 }

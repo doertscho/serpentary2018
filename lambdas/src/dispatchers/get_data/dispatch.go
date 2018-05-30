@@ -117,7 +117,14 @@ func postRequest(
 		matchDayId := (*params)["matchDayId"]
 		squadId := (*params)["squadId"]
 		return handlers.SubmitBet(
-			&tournamentId, &matchDayId, &squadId, userId, data)
+			&squadId, &tournamentId, &matchDayId, userId, data)
+	}
+
+	if matchPath("tournaments", "_", "pools", "_", "extra-questions") {
+		tournamentId := (*params)["tournamentId"]
+		squadId := (*params)["squadId"]
+		return handlers.SubmitExtraQuestionBet(
+			&squadId, &tournamentId, userId, data)
 	}
 
 	return nil

@@ -8,6 +8,8 @@ import "User.proto";
 import "Squad.proto";
 import "Pool.proto";
 import "MatchDayBetBucket.proto";
+import "ExtraQuestionBetBucket.proto";
+import "Team.proto";
 
 message Update {
 
@@ -21,4 +23,7 @@ message Update {
   repeated Pool pools = 6;
 
   repeated MatchDayBetBucket bets = 7;
+  repeated ExtraQuestionBetBucket extraQuestionBets = 8;
+
+  repeated Team teams = 9;
 }
