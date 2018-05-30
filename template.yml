@@ -21,7 +21,7 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'users']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'users', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
@@ -31,27 +31,12 @@ Resources:
           AttributeName: "id"
           KeyType: "HASH"
       ProvisionedThroughput:
-        ReadCapacityUnits: "3"
-        WriteCapacityUnits: "3"
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
   SquadsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads']]
-      AttributeDefinitions:
-        -
-          AttributeName: "id"
-          AttributeType: "S"
-      KeySchema:
-        -
-          AttributeName: "id"
-          KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: "3"
-        WriteCapacityUnits: "3"
-  TournamentsTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'squads', '1']]
       AttributeDefinitions:
         -
           AttributeName: "id"
@@ -63,10 +48,25 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "2"
         WriteCapacityUnits: "2"
+  TournamentsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'tournaments', '1']]
+      AttributeDefinitions:
+        -
+          AttributeName: "id"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "3"
+        WriteCapacityUnits: "3"
   MatchDaysTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'match-days', '1']]
       AttributeDefinitions:
         -
           AttributeName: "tournament_id"
@@ -87,7 +87,7 @@ Resources:
   MatchesTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'matches', '1']]
       AttributeDefinitions:
         -
           AttributeName: "tournament_and_match_day_id"
@@ -103,12 +103,12 @@ Resources:
           AttributeName: "id"
           KeyType: "RANGE"
       ProvisionedThroughput:
-        ReadCapacityUnits: "5"
+        ReadCapacityUnits: "3"
         WriteCapacityUnits: "3"
   BetsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'bets', '1']]
       AttributeDefinitions:
         -
           AttributeName: "squad_id"
@@ -129,7 +129,7 @@ Resources:
   PoolsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Join ['', [!Ref 'DbTablePrefix', 'pools']]
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'pools', '1']]
       AttributeDefinitions:
         -
           AttributeName: "squad_id"
@@ -227,6 +227,16 @@ Resources:
           Type: Api
           Properties:
             Path: /squads/{squadId}
+            Method: options
+        SubmitExtraQuestionBet:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}/extra-questions
+            Method: post
+        SubmitExtraQuestionBetOptions:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}/extra-questions
             Method: options
   SessionManager:
     Type: AWS::Serverless::Function

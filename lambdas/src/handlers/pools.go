@@ -12,28 +12,32 @@ import (
 func GetPoolById(
 	squadId *string, tournamentId *string) *events.APIGatewayProxyResponse {
 
-	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
+	pool, users, extraQuestionBets :=
+		db.GetDb().GetPoolWithExtraBetsById(squadId, tournamentId)
 	if pool == nil {
 		log.Println("Pool " + *tournamentId + " / " + *squadId +
 			" not found in database")
 		return lib.NotFound()
 	}
-	pools := []*models.Pool{pool}
 
-	tournament := db.GetDb().GetTournamentById(tournamentId)
+	tournament, teams := db.GetDb().GetTournamentById(tournamentId)
 	if tournament == nil {
 		log.Println("Tournament " + *tournamentId + " not found in database")
 		tournament = &models.Tournament{}
 	}
-	tournaments := []*models.Tournament{tournament}
 
 	matchDays := db.GetDb().GetMatchDaysByTournamentId(tournamentId)
 
+	pools := []*models.Pool{pool}
+	tournaments := []*models.Tournament{tournament}
+	extraBuckets := []*models.ExtraQuestionBetBucket{extraQuestionBets}
 	data := &models.Update{
-		Pools:       pools,
-		Tournaments: tournaments,
-		MatchDays:   matchDays,
-		Users:       *users,
+		Pools:             pools,
+		Tournaments:       tournaments,
+		MatchDays:         matchDays,
+		Teams:             *teams,
+		Users:             *users,
+		ExtraQuestionBets: extraBuckets,
 	}
 
 	return lib.BuildUpdate(data)

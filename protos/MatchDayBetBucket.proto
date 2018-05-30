@@ -1,6 +1,8 @@
 syntax = "proto3";
 package models;
 
+import "BetStatus.proto";
+
 message MatchDayBetBucket {
 
   fixed32 updated = 1;
@@ -31,10 +33,4 @@ message Bet {
 
   int32 home_goals = 4;
   int32 away_goals = 5;
-}
-
-enum BetStatus {
-  VISIBLE = 0;
-  HIDDEN = 1;
-  MISSING = 2;
 }

@@ -20,7 +20,7 @@ func GetDb() Db {
 
 type Db interface {
 	GetTournaments() []*models.Tournament
-	GetTournamentById(tournamentId *string) *models.Tournament
+	GetTournamentById(tournamentId *string) (*models.Tournament, *[]*models.Team)
 
 	GetMatchDaysByTournamentId(tournamentId *string) []*models.MatchDay
 	GetMatchDayById(tournamentId *string, matchDayId *string) *models.MatchDay
@@ -36,11 +36,19 @@ type Db interface {
 	GetBatchOfUsersByIds(userIds *[]string) []*models.User
 
 	GetPoolById(
-		squadId *string, tournamentId *string) (*models.Pool, *[]*models.User)
+		squadId *string, tournamentId *string,
+	) (*models.Pool, *[]*models.User)
+	GetPoolWithExtraBetsById(
+		squadId *string, tournamentId *string,
+	) (*models.Pool, *[]*models.User, *models.ExtraQuestionBetBucket)
 	GetPoolsBySquadId(squadId *string) []*models.Pool
 	AddUserToPool(
 		squadId *string, tournamentId *string, userId *string,
 	) (*models.Pool, *models.User)
+	AddBetsToExtraQuestionBetBucket(
+		squadId *string, tournamentId *string,
+		userId *string, bets *models.ExtraQuestionUserBetBucket,
+	) *models.ExtraQuestionBetBucket
 
 	GetBetsByMatchDayAndSquadId(
 		tournamentId *string, matchDayId *string, squadId *string,

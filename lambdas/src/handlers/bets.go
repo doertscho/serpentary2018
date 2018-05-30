@@ -13,9 +13,9 @@ import (
 )
 
 func SubmitBet(
+	squadId *string,
 	tournamentId *string,
 	matchDayId *string,
-	squadId *string,
 	userId *string,
 	data *string,
 ) *events.APIGatewayProxyResponse {
