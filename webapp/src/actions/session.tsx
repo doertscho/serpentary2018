@@ -29,7 +29,6 @@ function initUser() {
   return function(dispatch: Dispatch<StoreState>) {
     if (sessionManager.canRecoverSessionFromCache()) {
       dispatch(recoverSession())
-      dispatch(getMe())
     } else {
       console.log('Can not recover session from local storage.')
       dispatch(initComplete())

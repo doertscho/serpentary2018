@@ -33,6 +33,8 @@ export interface DataState {
   matchDaysByTournament: ParentChildTable
   matches: Map<m.Match>
   matchesByMatchDay: ParentChildTable
+  teams: Map<m.Team>
+  teamsByTournament: ParentChildTable
 
   users: Map<m.User>
   squads: Map<m.Squad>
@@ -41,6 +43,7 @@ export interface DataState {
   poolsBySquad: ParentChildTable
 
   bets: Map<m.MatchDayBetBucket>
+  extraQuestionBets: Map<m.ExtraQuestionBetBucket>
 }
 
 export const INITIAL_DATA_STATE: DataState = {
@@ -50,6 +53,8 @@ export const INITIAL_DATA_STATE: DataState = {
   matchDaysByTournament: {},
   matches: {},
   matchesByMatchDay: {},
+  teams: {},
+  teamsByTournament: {},
 
   users: {},
   squads: {},
@@ -58,6 +63,7 @@ export const INITIAL_DATA_STATE: DataState = {
   poolsBySquad: {},
 
   bets: {},
+  extraQuestionBets: {},
 }
 
 const tournamentOneName =
@@ -181,6 +187,8 @@ export const SAMPLE_DATA_STATE: DataState = {
       'world-cup-2018/group-stage-1/2'
     ]
   },
+  teams: {},
+  teamsByTournament: {},
 
   users: sampleUsers,
   squads: sampleSquads,
@@ -189,4 +197,5 @@ export const SAMPLE_DATA_STATE: DataState = {
   poolsBySquad: { 'squad1': ['squad1/world-cup-2018'] },
 
   bets: sampleBets,
+  extraQuestionBets: {},
 }

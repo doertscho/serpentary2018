@@ -62,12 +62,24 @@ function mergeWithUpdate(
   let newMatches = matchData.state
   let newMatchesByMatchDay = matchData.refs[0]
 
-  let betsData = mergeRecordsAndRefs(
-      state.bets, update.bets, m.MatchDayBetBucket.create,
-      b => joinKeys(b.squadId, b.tournamentId, b.matchDayId),
-      [], []
+  let teamsData = mergeRecordsAndRefs(
+      state.teams, update.teams, m.Team.create,
+      t => joinKeys(t.tournamentId, t.id),
+      [state.teamsByTournament],
+      [t => t.tournamentId]
     )
-  let newBets = betsData.state
+  let newTeams = teamsData.state
+  let newTeamsByTournament = teamsData.refs[0]
+
+  let newBets = mergeRecords(
+      state.bets, update.bets, m.MatchDayBetBucket.create,
+      b => joinKeys(b.squadId, b.tournamentId, b.matchDayId)
+    )
+  let newExtraQuestionBets = mergeRecords(
+      state.extraQuestionBets, update.extraQuestionBets,
+      m.ExtraQuestionBetBucket.create,
+      b => joinKeys(b.squadId, b.tournamentId)
+    )
 
   return {
     tournaments: newTournaments,
@@ -75,6 +87,8 @@ function mergeWithUpdate(
     matchDaysByTournament: newMatchDaysByTournament,
     matches: newMatches,
     matchesByMatchDay: newMatchesByMatchDay,
+    teams: newTeams,
+    teamsByTournament: newTeamsByTournament,
 
     users: newUsers,
 
@@ -84,6 +98,7 @@ function mergeWithUpdate(
     poolsBySquad: newPoolsBySquad,
 
     bets: newBets,
+    extraQuestionBets: newExtraQuestionBets
   }
 }
 

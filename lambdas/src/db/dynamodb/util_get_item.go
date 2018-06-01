@@ -51,5 +51,9 @@ func (db DynamoDb) getItem(
 	if err != nil {
 		return nil, err
 	}
+	if result == nil || result.Item == nil || len(result.Item) == 0 {
+		return nil, errors.New("Item was not found")
+	}
+
 	return &result.Item, nil
 }

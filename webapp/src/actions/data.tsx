@@ -88,6 +88,15 @@ export const postBet = (
     callbacks,
     base64encode(m.Bet.encode(bet).finish())
   )
+export const postExtraQuestionBets = (
+    squadId: string, tournamentId: string,
+    betBucket: m.ExtraQuestionUserBetBucket,
+    callbacks?: Callbacks
+  ) => postData(
+    '/tournaments/' + tournamentId + '/pools/' + squadId + '/extra-questions',
+    callbacks,
+    base64encode(m.ExtraQuestionUserBetBucket.encode(betBucket).finish())
+  )
 
 /*
  * ACTION CREATORS

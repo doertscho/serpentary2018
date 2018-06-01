@@ -3,7 +3,12 @@ import { createSelector } from 'reselect'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { joinKeys } from '../types/data'
-import { getUsers, getPools, getPoolsBySquad } from './data'
+import {
+  getUsers,
+  getPools,
+  getPoolsBySquad,
+  getExtraQuestionBets
+} from './data'
 import { ModelSelector, StringSelector } from './util'
 
 export const makeGetPool = (
@@ -37,5 +42,15 @@ export const makeGetPoolsBySquad = (
     (   squadId,    poolsBySquad,    pools) => {
       if (!poolsBySquad || !poolsBySquad[squadId]) return []
       return poolsBySquad[squadId].map(poolId => pools[poolId])
+    }
+  )
+
+export const makeGetExtraQuestionBetBucket = (
+    getSquadId: StringSelector, getTournamentId: StringSelector
+) =>
+  createSelector(
+    [getSquadId, getTournamentId, getExtraQuestionBets],
+    (   squadId,    tournamentId,    extraQuestionBets) => {
+      return extraQuestionBets[joinKeys(squadId, tournamentId)]
     }
   )

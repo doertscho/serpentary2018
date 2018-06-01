@@ -42,7 +42,7 @@ func SubmitExtraQuestionBet(
 		return lib.NotFound()
 	}
 
-	if !lib.DeadlineHasPassed(pool.ExtraQuestionDeadline) {
+	if !lib.DeadlineHasPassed(pool.ExtraQuestionsDeadline) {
 		censorExtraQuestionBets(betBucket, userId)
 	}
 

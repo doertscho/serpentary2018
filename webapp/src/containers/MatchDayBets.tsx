@@ -13,10 +13,7 @@ import {
 } from '../selectors/MatchDay'
 import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
 import { getUserId } from '../selectors/session'
-import {
-  makeGetUrlParameter,
-  makeGetNumberUrlParameter
-} from '../selectors/util'
+import { makeGetUrlParameter } from '../selectors/util'
 import { Action } from '../actions'
 import { Callbacks, fetchBets, postBet } from '../actions/data'
 import { showPopover, hidePopover } from '../actions/ui'
@@ -113,7 +110,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let getBets = (match: m.Match) => betsByMatch[match.id] || []
     let makeShowBetForm = (match: m.Match) =>
         (bet: m.Bet) => this.showBetForm(match, bet)
-        
+
     return (
       <div>
         <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>

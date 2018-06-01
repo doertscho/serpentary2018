@@ -44,9 +44,11 @@ func (db DynamoDb) updateItem(
 		TableName:                 table(tableName),
 		Key:                       *key,
 		UpdateExpression:          &query.expression,
-		ExpressionAttributeNames:  query.names,
 		ExpressionAttributeValues: query.values,
 		ReturnValues:              aws.String("ALL_NEW"),
+	}
+	if len(query.names) > 0 {
+		updateSquadInput.ExpressionAttributeNames = query.names
 	}
 	s := newStopWatch("UpdateItem on " + tableName)
 	result, err := db.Svc.UpdateItem(updateSquadInput)
