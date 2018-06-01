@@ -10,7 +10,7 @@ import translation_de from './translation_de'
 
 export type Localiser =
   (
-    ref: string | m.ILocalisableString,
+    ref: string | number | m.ILocalisableString,
     fallback?: string,
     ...args: any[]
   ) => string
@@ -57,24 +57,30 @@ const translations: { [localeName: string]: Translation } = {
   'de': translation_de,
 }
 
+export const localeIdToJavaScriptDateLocale: { [id: number]: string } = { }
+localeIdToJavaScriptDateLocale[m.Locale.EN] = 'en-UK'
+localeIdToJavaScriptDateLocale[m.Locale.DE] = 'de-DE'
+
 const defaultLocaleId = m.Locale.EN
 
 function localiseWithTranslation(
     localeId: number, translation: Translation): Localiser {
 
-  return (ref, fallback, args) => {
+  return (ref, alt, args) => {
     if (!ref) {
-      if (fallback)
-        return integrateArgs(fallback, args)
+      if (alt)
+        return integrateArgs(alt, args)
       return '???'
     }
     if (typeof ref == 'string') {
       let key = ref
       if (translation[key])
         return integrateArgs(translation[key], args)
-      if (fallback)
-        return integrateArgs(fallback, args)
+      if (alt)
+        return integrateArgs(alt, args)
       return key
+    } else if (typeof ref == 'number') {
+      return formatTimestamp(ref, localeId, alt)
     } else {
       let localisableString = ref
       return selectFromLocalisableString(localisableString, localeId)
@@ -82,13 +88,30 @@ function localiseWithTranslation(
   }
 }
 
-const localiseWithFallback: Localiser = (ref, fallback, args) => {
+const localiseWithFallback: Localiser = (ref, alt, args) => {
   if (typeof ref == 'string') {
-    if (fallback)
-      return integrateArgs(fallback, args)
+    if (alt)
+      return integrateArgs(alt, args)
     return ref
+  } else if (typeof ref == 'number') {
+    return formatTimestamp(ref, defaultLocaleId, alt)
   } else {
     return selectFromLocalisableString(ref, defaultLocaleId)
+  }
+}
+
+function formatTimestamp(
+    timestamp: number, preferredLocale: number, option?: string): string {
+
+  let date = new Date(timestamp * 1000)
+  let localeString = localeIdToJavaScriptDateLocale[preferredLocale]
+  if (option == 'date') {
+    return date.toLocaleDateString(localeString)
+  } else if (option == 'time') {
+    return date.toLocaleTimeString(localeString)
+  } else {
+    return date.toLocaleDateString(localeString) + ', ' +
+        date.toLocaleTimeString(localeString)
   }
 }
 

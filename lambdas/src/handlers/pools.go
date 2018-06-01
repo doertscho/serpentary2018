@@ -28,9 +28,13 @@ func GetPoolById(
 
 	matchDays := db.GetDb().GetMatchDaysByTournamentId(tournamentId)
 
+	extraBuckets := []*models.ExtraQuestionBetBucket{}
+	if extraQuestionBets != nil {
+		extraBuckets = []*models.ExtraQuestionBetBucket{extraQuestionBets}
+	}
+
 	pools := []*models.Pool{pool}
 	tournaments := []*models.Tournament{tournament}
-	extraBuckets := []*models.ExtraQuestionBetBucket{extraQuestionBets}
 	data := &models.Update{
 		Pools:             pools,
 		Tournaments:       tournaments,

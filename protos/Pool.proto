@@ -13,7 +13,7 @@ message Pool {
   repeated string participants = 4;
 
   repeated ExtraQuestion extra_questions = 5;
-  fixed32 extra_question_deadline = 6;
+  fixed32 extra_questions_deadline = 6;
 }
 
 message ExtraQuestion {
@@ -23,7 +23,8 @@ message ExtraQuestion {
   ExtraQuestionType type = 2;
 
   LocalisableString question_text = 3;
-  int32 awarded_points = 4;
+  LocalisableString short_name = 4;
+  int32 awarded_points = 5;
 }
 
 enum ExtraQuestionType {

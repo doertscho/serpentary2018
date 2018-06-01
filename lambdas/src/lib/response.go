@@ -91,7 +91,7 @@ func BuildUpdate(data *models.Update) *events.APIGatewayProxyResponse {
 	serialised, err := proto.Marshal(data)
 
 	if err != nil {
-		log.Fatal("Failed to serialise data")
+		log.Fatal("Failed to serialise data: " + err.Error())
 		return &events.APIGatewayProxyResponse{StatusCode: 500}
 	}
 

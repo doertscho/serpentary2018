@@ -10,3 +10,5 @@ export const secondsToTimeout = (match: m.Match) => {
 }
 
 export const canEnterBets = (match: m.Match) => secondsToTimeout(match) > 0
+
+export const deadlineHasPassed = (timestamp: number) => timestamp < now()

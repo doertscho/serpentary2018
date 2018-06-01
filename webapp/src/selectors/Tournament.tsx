@@ -1,15 +1,18 @@
 import { createSelector } from 'reselect'
 
+import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import {
   getTournaments,
   getMatchDays,
   getMatchDaysByTournament,
   getUsers,
-  getSquads
+  getSquads,
+  getTeams,
+  getTeamsByTournament
 } from './data'
 import { getUserId } from './session'
-import { StringSelector } from './util'
+import { StringSelector, ModelSelector } from './util'
 
 export const makeGetTournament = (getTournamentId: StringSelector) =>
   (state: StoreState, props?: any) =>
@@ -22,6 +25,29 @@ export const makeGetMatchDays = (getTournamentId: StringSelector) =>
       let matchDayIds = matchDaysByTournament[tournamentId]
       if (!matchDayIds) return []
       return matchDayIds.map(id => matchDays[id])
+    }
+  )
+
+export const makeGetTeams = (getTournamentId: StringSelector) =>
+  createSelector(
+    [getTeams, getTeamsByTournament, getTournamentId],
+    (   teams,    teamsByTournament,    tournamentId) => {
+      let teamIds = teamsByTournament[tournamentId]
+      if (!teamIds) return []
+      return teamIds.map(id => teams[id])
+    }
+  )
+
+export const makeGetTeamsById = (getTeams: ModelSelector<m.Team[]>) =>
+  createSelector(
+    [getTeams],
+    (   teams) => {
+      let teamsById: { [id: string]: m.Team } = { }
+      for (let i = 0; i < teams.length; i++) {
+        let team = teams[i]
+        teamsById[team.id] = team
+      }
+      return teamsById
     }
   )
 

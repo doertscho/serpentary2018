@@ -4,6 +4,7 @@ import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { deadlineHasPassed } from '../rules'
 import { Action } from '../actions'
 import { fetchPool, Callbacks, joinPool } from '../actions/data'
 import { Localisable, withLocaliser, Localiser } from '../locales'
@@ -41,6 +42,73 @@ const alreadyMemberBox = (l: Localiser) =>
     { l('ALREADY_PARTICIPANT_POOL', 'You are participating in this pool') }
   </div>
 
+function extraQuestionsInputLink(pool: m.Pool, l: Localiser) {
+  return (
+    <div>
+      <p>
+        { l(
+          'POOL_EXTRA_QUESTIONS_DEADLINE',
+          'You can submit or edit your bets until {}.',
+          l(pool.extraQuestionsDeadline, 'date-and-time')
+        ) }
+      </p>
+      <p>
+        <Link to={
+              '/tournaments/' + pool.tournamentId +
+              '/pools/' + pool.squadId +
+              '/extra-questions-input'
+            }>
+          { l('POOL_EXTRA_QUESTION_INPUT_LINK', 'Go to the input form') }
+        </Link>
+      </p>
+    </div>
+  )
+}
+
+function extraQuestionsViewLink(pool: m.Pool, l: Localiser) {
+  return (
+    <div>
+      <p>
+        <Link to={
+              '/tournaments/' + pool.tournamentId +
+              '/pools/' + pool.squadId +
+              '/extra-questions-bets'
+            }>
+          { l(
+            'POOL_EXTRA_QUESTION_VIEW_LINK',
+            'See the participants\'s answers'
+          ) }
+        </Link>
+      </p>
+    </div>
+  )
+}
+
+function extraQuestionsBlock(pool: m.Pool, l: Localiser) {
+  if (pool.extraQuestions && pool.extraQuestions.length) {
+    let link = deadlineHasPassed(pool.extraQuestionsDeadline) ?
+        extraQuestionsViewLink(pool, l) : extraQuestionsInputLink(pool, l)
+    return (
+      <div>
+        <p>
+          { l(
+            'POOL_NUMBER_EXTRA_QUESTIONS',
+            'There are {} extra questions to be answered for this pool.',
+            pool.extraQuestions.length
+          ) }
+        </p>
+        { link }
+      </div>
+    )
+  } else {
+    return (
+      <p>
+        { l('POOL_NO_EXTRA_QUESTIONS', 'This pool has no extra questions.')}
+      </p>
+    )
+  }
+}
+
 function poolUserBox(
   pool: m.Pool,
   userId: string,
@@ -73,23 +141,29 @@ class poolPage extends LazyLoadingComponent<Props, {}> {
   }
 
   renderWithData() {
+
     let pool = this.props.pool
     let userId = this.props.userId
     let joinPool = this.props.joinPool
     let squadId = this.props.squadId
     let tournamentId = this.props.tournamentId
+    let participants = pool.participants || []
+    let matchDays = this.props.matchDays || []
+
     let tournamentName: string | m.ILocalisableString = tournamentId
     if (this.props.tournament && this.props.tournament.name) {
       tournamentName = this.props.tournament.name
     }
-    let participants = pool.participants || []
-    let matchDays = this.props.matchDays || []
+
     let l = this.props.l
+
     return (
       <div>
         <h1>{ l('POOL_PAGE_TITLE', 'Pool details') }</h1>
-        <h2>{ l(tournamentName) }, by #{squadId}</h2>
+        <h2>{ l(tournamentName) } – #{squadId}</h2>
         { poolUserBox(pool, userId, joinPool, l) }
+        <h3>{ l('POOL_EXTRA_QUESTIONS', 'Extra questions') }</h3>
+        { extraQuestionsBlock(pool, l) }
         <h3>{ l('POOL_MATCH_DAYS', 'Jump to the bets by match day') }</h3>
         <ul>
           { matchDays.map(matchDay =>

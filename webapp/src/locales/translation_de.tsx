@@ -52,7 +52,16 @@ const translation_de: Translation = {
 
   // pool page
   POOL_PAGE_TITLE: 'Tipprunde',
-  POOL_PARTICIPANTS: 'Angebotene Wettbewerbe dieser Tipprunde',
+  POOL_EXTRA_QUESTIONS: 'Zusatzfragen',
+  POOL_NO_EXTRA_QUESTIONS:
+    'Zu diesem Tippspiel wurden keine Zusatzfragen erstellt',
+  POOL_NUMBER_EXTRA_QUESTIONS: 'Dieses Tippspiel definiert {} Zusatzfragen',
+  POOL_EXTRA_QUESTION_VIEW_LINK: 'Abgegebene Antworten ansehen',
+  POOL_EXTRA_QUESTIONS_DEADLINE:
+    'Du kannst deine Antworten einreichen oder bearbeiten bis {}',
+  POOL_EXTRA_QUESTION_INPUT_LINK: 'Zum Eingabeformular',
+  POOL_MATCH_DAYS: 'Tipps nach Spieltag',
+  POOL_PARTICIPANTS: 'Teilnehmende Mitglieder',
   LOG_IN_TO_JOIN_POOL:
     'Du musst dich anmelden, um dich für ein Tippsiel registrieren zu können',
   CLICK_TO_JOIN_POOL:
