@@ -81,7 +81,7 @@ function localiseWithTranslation(
       return key
     } else if (typeof ref == 'number') {
       return formatTimestamp(ref, localeId, alt)
-    } else {
+    } else if (ref) {
       let localisableString = ref
       return selectFromLocalisableString(localisableString, localeId)
     }
@@ -125,6 +125,8 @@ function integrateArgs(template: string, ...args: any[]): string {
 
 function selectFromLocalisableString(
     localisable: m.ILocalisableString, preferredLocale: number) {
+
+  if (!localisable || !localisable.localisations) return '???'
 
   let count = localisable.localisations.length
   if (count == 0) {

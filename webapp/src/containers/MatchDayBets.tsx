@@ -56,6 +56,7 @@ interface Props extends Localisable {
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   getRequiredProps() {
+    console.log(this.props)
     return ['matchDay', 'pool', 'betsByMatch']
   }
 
@@ -113,9 +114,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
     return (
       <div>
-        <h1>{ l('MATCH_DAY_BETS_PAGE_TITLE', 'Match day') }</h1>
-        <h2>{ l(matchDay.name) }</h2>
-        <h3>{ l('MATCH_DAY_BETS_BY_SQUAD', 'As predicted by #{}', squadId) }</h3>
+        <h1>{ l(matchDay.name) } – #{squadId}</h1>
         <div className="betMatrix">
           <UserColumn participants={participants} />
           <div className="matches">

@@ -42,7 +42,7 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
   renderLoading() {
     let l = this.props.l
     return (
-      <div>
+      <div className="loadingPage">
         <div>{ l('LOADING', 'Loading ...') }</div>
         { this.refreshComponent }
       </div>
@@ -52,7 +52,7 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
   renderNoData() {
     let l = this.props.l
     return (
-      <div>
+      <div className="noDataPage">
         <div>{ l('NO_DATA', 'No data available.') }</div>
         { this.refreshComponent }
       </div>

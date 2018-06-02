@@ -5,7 +5,39 @@
 @import bets
 @import popover
 @import bet-input
+@import header
+@import user-icon
+@import loading
+@import forms
 
 body
   font-family: $fonts
+  font-size: $font-size-normal
+  background-color: $page-background-darker
+  padding: 0
+  margin: 0
+
+.page-container
+  width: 960px
+  margin: 0 auto
+  padding-bottom: 400px
+  color: $page-text
+  background-color: $page-background
+  padding-top: 24px
+
+h1
+  border-bottom: 4px solid $primary
+  margin: 12px 0 24px 148px
+  padding-bottom: 4px
+  display: inline-block
+
+a
   color: $primary
+  text-decoration: none
+  border-bottom: 1px dashed $primary
+  &:hover
+    color: $secondary
+    border-color: $secondary
+
+.main
+  padding: 20px
