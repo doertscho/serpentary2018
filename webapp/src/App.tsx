@@ -35,17 +35,25 @@ class App extends React.Component<Props, any> {
 
   render() {
     if (!this.props.isInitialised)
-      return <div>Initialising ...</div>
+      return (
+        <div className="page-container">
+          <main className="main">
+            <div className="loadingPage">Initialising ...</div>
+          </main>
+        </div>
+      )
 
     return (
       <BrowserRouter>
-        <div className='page-container'>
-          <h1>serpentary 2018</h1>
-          <nav>
-            <Navigation />
-            <UserBox />
-          </nav>
-          <main>
+        <div className="page-container">
+          <header className="header">
+            <div className="logo">
+              <img src={require('../styles/img/logo.png')} />
+            </div>
+            <div className="nav-container"><Navigation /></div>
+            <div className="userBox-container"><UserBox /></div>
+          </header>
+          <main className="main">
             <Switch>
 
               <Route exact path='/' component={ Dashboard } />

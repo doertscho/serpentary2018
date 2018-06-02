@@ -1,15 +1,19 @@
 import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 import { StoreState } from '../types'
 import { Localiser, Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
 import { signUp } from '../actions/session'
 import { getSessionErrorMessage } from '../selectors/session'
+import { getUserId } from '../selectors/session'
 
 import ErrorBox from '../components/ErrorBox'
 
 interface Props extends Localisable {
+  userId: string
+  referrer: string
   signUp: (
       userId: string,
       password: string,
@@ -27,28 +31,75 @@ interface State {
 class view extends React.Component<Props, State> {
 
   render() {
+    if (this.props.userId)
+      return <Redirect to={ this.props.referrer || '/' } />
     let l = this.props.l
     return (
       <div>
         <h1>{ l('SIGN_UP_PAGE_TITLE', 'Sign up') }</h1>
-        <div>
-          <input type="text" placeholder={l('USER_ID_INPUT', 'User ID')}
-            value={this.state.userId} onChange={this.onUserIdChange} />
+        <div className="formRow">
+          <div className="formInput">
+            <input type="text" value={this.state.userId}
+              onChange={this.onUserIdChange} />
+          </div>
+          <div className="formLabel">
+            <div className="formLabelHead">
+              { l('SIGN_UP_USER_ID_LABEL_HEAD', 'Pick your user ID') }
+            </div>
+            <div className="formLabelDetails">
+              { l(
+                'SIGN_UP_USER_ID_LABEL_DETAIL',
+                'The database will know you by this name – ' +
+                    'only lowercase letters, numbers and hyphens allowed. ' +
+                    'Don\'t worry, you can pick a display name later.') }
+            </div>
+          </div>
         </div>
-        <div>
-          <input type="password"
-            placeholder={l('PASSWORD_INPUT', 'Your password')}
-            value={this.state.password} onChange={this.onPasswordChange} />
+        <div className="formRow">
+          <div className="formInput">
+            <input type="password" value={this.state.password}
+              onChange={this.onPasswordChange} />
+          </div>
+          <div className="formLabel">
+            <div className="formLabelHead">
+              { l('SIGN_UP_PASSWORD_LABEL_HEAD', 'Pick your password') }
+            </div>
+            <div className="formLabelDetails">
+              { l(
+                'SIGN_UP_PASSWORD_LABEL_DETAIL',
+                'It must be at least 8 characters long ' +
+                    'and have at least one uppercase letter, ' +
+                    'one lowercase letter and one number.') }
+            </div>
+          </div>
         </div>
-        <div>
-          <input type="text"
-            placeholder={l('EMAIL_INPUT', 'Your email address')}
-            value={this.state.email} onChange={this.onEmailChange} />
+        <div className="formRow">
+          <div className="formInput">
+            <input type="text" value={this.state.email}
+              onChange={this.onEmailChange} />
+          </div>
+          <div className="formLabel">
+            <div className="formLabelHead">
+              { l('SIGN_UP_EMAIL_LABEL_HEAD',
+                'Enter your email – if you want') }
+            </div>
+            <div className="formLabelDetails">
+              { l(
+                'SIGN_UP_EMAIL_LABEL_DETAIL',
+                'Enter a valid email address, to which a confirmation link ' +
+                    'will be sent. ' +
+                    'You don\'t have to, however in that case ' +
+                    'you\'ll have to give me a nudge ' +
+                    'so I can unlock your account manually.') }
+            </div>
+          </div>
         </div>
-        <div>
-          <button onClick={this.onButtonClick}>
-            { l('SIGN_UP_BUTTON', 'Count me in!') }
-          </button>
+        <div className="formRow">
+          <div className="formInput">
+            <button onClick={this.onButtonClick}>
+              { l('SIGN_UP_BUTTON', 'Count me in!') }
+            </button>
+          </div>
         </div>
         <ErrorBox message={this.props.errorMessage} />
       </div>
@@ -66,7 +117,10 @@ class view extends React.Component<Props, State> {
   }
 
   onUserIdChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ userId: event.target.value })
+    let newUserId = event.target.value || ''
+    newUserId = newUserId.replace(/[^a-z0-9-]/, '')
+    if (newUserId.length > 24) newUserId = newUserId.substring(0, 24)
+    this.setState({ userId: newUserId })
   }
 
   onPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -86,8 +140,10 @@ class view extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = withLocaliser((state: StoreState) => {
+const mapStateToProps = withLocaliser((state: StoreState, props: any) => {
   return {
+    userId: getUserId(state),
+    referrer: props.referrer || '/',
     errorMessage: getSessionErrorMessage(state)
   }
 })

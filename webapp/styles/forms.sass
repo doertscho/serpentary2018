@@ -1,0 +1,36 @@
+@import defs
+
+.formRow
+  margin-bottom: 20px
+  display: flex
+
+.formInput
+  width: 240px
+  margin-right: 24px
+  text-align: right
+  flex-shrink: 0
+
+  input,
+  select
+    border: 2px solid $primary
+    border-radius: 2px
+    padding: 4px
+    width: 180px
+    font-size: $font-size-normal
+    margin-bottom: 4px
+  button
+    border: 2px solid $primary
+    border-radius: 2px
+    padding: 4px 12px
+    background-color: $primary
+    color: $primary-text
+    font-weight: bold
+    font-size: $font-size-normal
+
+.formLabel
+  flex-grow: 1
+
+  .formLabelHead
+    font-weight: bold
+    color: $primary
+    margin-bottom: 4px

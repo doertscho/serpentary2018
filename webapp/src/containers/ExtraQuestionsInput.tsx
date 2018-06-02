@@ -71,6 +71,7 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
 
     let squadId = this.props.squadId
     let tournamentId = this.props.tournamentId
+    let tournament = this.props.tournament
     let l = this.props.l
     let questions = this.props.pool.extraQuestions
 
@@ -83,20 +84,28 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
             'EXTRA_QUESTIONS_INPUT_PAGE_TITLE', 'Edit your extra question bets'
           ) }
         </h1>
-        <h2>{tournamentId} – #{squadId}</h2>
-        <div>
-          { questions.map(q =>
-            <div key={q.id}>
-              <h3>{ l(q.shortName) }</h3>
-              <div>{ l(q.questionText) }</div>
-              <div>{ this.buildAnswerInputForm(q) }</div>
+        <h2>{ l(tournament.name) } – #{squadId}</h2>
+        { questions.map(q =>
+          <div className="formRow" key={q.id}>
+            <div className="formInput">
+              { this.buildAnswerInputForm(q) }
             </div>
-          ) }
-        </div>
-        <div>
-          <button onClick={this.submitBets}>
-            { l('SUBMIT_EXTRA_BETS', 'Submit') }
-          </button>
+            <div className="formLabel">
+              <div className="formLabelHead">
+                { l(q.shortName) }
+                {' – '}
+                { l('AWARDED_POINTS', '{} points', q.awardedPoints) }
+              </div>
+              <div className="formLabelDetails">{ l(q.questionText) }</div>
+            </div>
+          </div>
+        ) }
+        <div className="formRow">
+          <div className="formInput">
+            <button onClick={this.submitBets}>
+              { l('SUBMIT_EXTRA_BETS', 'Submit') }
+            </button>
+          </div>
         </div>
         { this.refreshComponent }
       </div>

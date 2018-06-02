@@ -8,10 +8,10 @@ $betCellHeight: 40px
 $matchCellMargin: $betCellMargin
 $matchCellPadding: $betCellPadding
 $matchCellHeight: 80px
+$userCellWidth: 200px
 $countdownHeight: 30px
 
 .betMatrix
-  border: $betCellBorderWidth solid $primary
   display: flex
 
   .matches
@@ -27,6 +27,15 @@ $countdownHeight: 30px
     margin: $betCellMargin
     padding: $betCellPadding
     width: $betCellWidth
+
+  .users .user
+    width: $userCellWidth
+    .userName
+      margin-left: 8px
+      width: $userCellWidth - $user-icon-with - 8px
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
 
   .matches .match,
   .matches .bet
