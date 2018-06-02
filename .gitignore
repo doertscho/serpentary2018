@@ -3,7 +3,8 @@
 .DS_Store
 
 # generated from protobuf definitions
-lambdas/src/models
+lambdas/src/models/*
+!lambdas/src/models/dynamodb.go
 webapp/src/types/models*
 
 # config to be added at build time
