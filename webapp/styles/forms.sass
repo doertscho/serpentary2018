@@ -26,6 +26,9 @@
     color: $primary-text
     font-weight: bold
     font-size: $font-size-normal
+    &:disabled
+      opacity: 0.2
+      cursor: not-allowed
 
 .formLabel
   flex-grow: 1
@@ -34,3 +37,7 @@
     font-weight: bold
     color: $primary
     margin-bottom: 4px
+
+  .validationError
+    font-weight: bold
+    color: $error
