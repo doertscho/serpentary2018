@@ -22,6 +22,7 @@ import Pool from './containers/Pool'
 import ExtraQuestionsBets from './containers/ExtraQuestionsBets'
 import ExtraQuestionsInput from './containers/ExtraQuestionsInput'
 import PopoverContainer from './containers/PopoverContainer'
+import ActivityReporter from './containers/ActivityReporter'
 import NotFound from './components/NotFound'
 
 interface Props {
@@ -111,6 +112,7 @@ class App extends React.Component<Props, any> {
 
             </Switch>
           </main>
+          <ActivityReporter />
           <PopoverContainer />
         </div>
       </BrowserRouter>

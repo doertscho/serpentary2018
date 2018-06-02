@@ -4,6 +4,8 @@ import { UiState, INITIAL_UI_STATE } from './ui'
 
 export interface StoreState {
   isInitialised: boolean
+  pendingRequests: string[]
+
   data: DataState
   session: SessionState
   ui: UiState
@@ -11,6 +13,7 @@ export interface StoreState {
 
 export const INITIAL_STATE: StoreState = {
   isInitialised: false,
+  pendingRequests: [],
   data: INITIAL_DATA_STATE,
   session: INITIAL_SESSION_STATE,
   ui: INITIAL_UI_STATE
@@ -18,6 +21,7 @@ export const INITIAL_STATE: StoreState = {
 
 export const SAMPLE_STATE: StoreState = {
   isInitialised: false,
+  pendingRequests: [],
   data: SAMPLE_DATA_STATE,
   session: INITIAL_SESSION_STATE,
   ui: INITIAL_UI_STATE

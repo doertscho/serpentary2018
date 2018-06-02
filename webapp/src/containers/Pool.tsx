@@ -84,10 +84,15 @@ function extraQuestionsViewLink(pool: m.Pool, l: Localiser) {
   )
 }
 
-function extraQuestionsBlock(pool: m.Pool, l: Localiser) {
+function extraQuestionsBlock(pool: m.Pool, l: Localiser, userId: string) {
   if (pool.extraQuestions && pool.extraQuestions.length) {
-    let link = deadlineHasPassed(pool.extraQuestionsDeadline) ?
-        extraQuestionsViewLink(pool, l) : extraQuestionsInputLink(pool, l)
+
+    let link = null
+    if (!userId || deadlineHasPassed(pool.extraQuestionsDeadline))
+      link = extraQuestionsViewLink(pool, l)
+    else
+      link = extraQuestionsInputLink(pool, l)
+      
     return (
       <div>
         <p>
@@ -163,7 +168,7 @@ class poolPage extends LazyLoadingComponent<Props, {}> {
         <h2>{ l(tournamentName) } – #{squadId}</h2>
         { poolUserBox(pool, userId, joinPool, l) }
         <h3>{ l('POOL_EXTRA_QUESTIONS', 'Extra questions') }</h3>
-        { extraQuestionsBlock(pool, l) }
+        { extraQuestionsBlock(pool, l, userId) }
         <h3>{ l('POOL_MATCH_DAYS', 'Jump to the bets by match day') }</h3>
         <ul>
           { matchDays.map(matchDay =>

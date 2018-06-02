@@ -10,12 +10,18 @@ import { sessionManager } from '../session'
 
 export interface InitAction {
   type: constants.INIT
+  event: ActionEvent
 }
 
 export type ActionType = constants.DATA | constants.SESSION | constants.UI
 
 export type ActionEvent =
   constants.REQUEST | constants.RESPONSE | constants.ERROR
+
+export interface InitAction {
+  type: constants.INIT
+  event: ActionEvent
+}
 
 export interface BaseAction<StateType> {
   type: ActionType

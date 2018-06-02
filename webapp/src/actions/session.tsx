@@ -81,7 +81,7 @@ function determineLocale(name: string) {
 }
 
 function initComplete(): InitAction {
-  return { type: constants.INIT }
+  return { type: constants.INIT, event: constants.RESPONSE }
 }
 
 export function signUp(userId: string, password: string, email?: string) {
