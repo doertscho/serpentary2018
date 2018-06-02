@@ -28,41 +28,46 @@ class view extends React.Component<Props, State> {
     return (
       <div>
         <h1>{ l('LOG_IN_PAGE_TITLE', 'Log in') }</h1>
-        <div className="formRow">
-          <div className="formInput">
-            <input type="text" value={this.state.userId}
-              onChange={this.onUserIdChange} />
-          </div>
-          <div className="formLabel">
-            <div className="formLabelHead">
-              { l('LOG_IN_USER_ID_LABEL_HEAD', 'Who\'s there?') }
+        <form onSubmit={e => {
+          e.preventDefault()
+          this.submit()
+        }}>
+          <div className="formRow">
+            <div className="formInput">
+              <input type="text" value={this.state.userId}
+                onChange={this.onUserIdChange} />
             </div>
-            <div className="formLabelDetails">
-              { l(
-                'LOG_IN_USER_ID_LABEL_DETAIL',
-                'You may use your user ID, display name, ' +
-                    'or email address to log in.') }
-            </div>
-          </div>
-        </div>
-        <div className="formRow">
-          <div className="formInput">
-            <input type="password" value={this.state.password}
-              onChange={this.onPasswordChange} />
-          </div>
-          <div className="formLabel">
-            <div className="formLabelHead">
-              { l('LOG_IN_PASSWORD_LABEL_HEAD', 'Your password') }
+            <div className="formLabel">
+              <div className="formLabelHead">
+                { l('LOG_IN_USER_ID_LABEL_HEAD', 'Who\'s there?') }
+              </div>
+              <div className="formLabelDetails">
+                { l(
+                  'LOG_IN_USER_ID_LABEL_DETAIL',
+                  'You may use your user ID, display name, ' +
+                      'or email address to log in.') }
+              </div>
             </div>
           </div>
-        </div>
-        <div className="formRow">
-          <div className="formInput">
-            <button onClick={this.onButtonClick}>
-              { l('LOG_IN_BUTTON', 'Log in') }
-            </button>
+          <div className="formRow">
+            <div className="formInput">
+              <input type="password" value={this.state.password}
+                onChange={this.onPasswordChange} />
+            </div>
+            <div className="formLabel">
+              <div className="formLabelHead">
+                { l('LOG_IN_PASSWORD_LABEL_HEAD', 'Your password') }
+              </div>
+            </div>
           </div>
-        </div>
+          <div className="formRow">
+            <div className="formInput">
+              <button>
+                { l('LOG_IN_BUTTON', 'Log in') }
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     )
   }
@@ -73,7 +78,7 @@ class view extends React.Component<Props, State> {
 
     this.onUserIdChange = this.onUserIdChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
-    this.onButtonClick = this.onButtonClick.bind(this)
+    this.submit = this.submit.bind(this)
   }
 
   onUserIdChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -84,7 +89,7 @@ class view extends React.Component<Props, State> {
     this.setState({ password: event.target.value })
   }
 
-  onButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
+  submit() {
     let userId = this.state.userId
     let password = this.state.password
     this.setState({ password: '' })

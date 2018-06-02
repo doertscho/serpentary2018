@@ -17,6 +17,10 @@ const translation_de: Translation = {
   LOG_IN: 'Anmelden',
   LOG_OUT: 'Abmelden',
   SIGN_UP: 'Registrieren',
+  SIGN_UP_SUCCESS:
+    'Vielen Dank, {}, deine Registrierung war erfolgreich. ' +
+    'Bitte bestätige deine E-Mail-Adresse, oder gib mir Bescheid, ' +
+    'damit ich deinen Account freischalten kann.' ,
 
   // log in and sign up
   LOG_IN_PAGE_TITLE: 'Anmeldung',
