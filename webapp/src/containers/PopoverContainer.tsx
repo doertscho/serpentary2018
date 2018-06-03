@@ -20,7 +20,7 @@ const popoverContainer = (props: Props) => {
       <div className="popoverContainer"
           onClick={event => event.stopPropagation()}>
         <div className="popoverHeader">
-          <span onClick={hidePopover}>X</span>
+          <span onClick={hidePopover}><i className="fas fa-times"></i></span>
         </div>
         { props.element }
       </div>

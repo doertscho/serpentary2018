@@ -13,6 +13,7 @@ import MatchColumn from './MatchColumn'
 interface InfoBlock {
   text: string
   colspan: number
+  seq: number
 }
 
 interface Props extends Localisable {
@@ -63,7 +64,11 @@ const cellMargin = 4
 const buildBlocks = (blocks: InfoBlock[]) => blocks.map(block => {
   let width = (cellWidth * block.colspan) + (cellMargin * (block.colspan - 1))
   let style = { width: '' + width + 'px' }
-  return <div className="infoBlock" style={style}>{ block.text }</div>
+  return (
+    <div key={block.seq} className="infoBlock" style={style}>
+      { block.text }
+    </div>
+  )
 })
 
 const makeBlocksSelector = (textFunc: (m: m.Match, l: Localiser) => string) => (
@@ -72,17 +77,17 @@ const makeBlocksSelector = (textFunc: (m: m.Match, l: Localiser) => string) => (
   ) => createSelector(
     [getMatches, getLocaliser],
     (matches,       localiser) => {
-      console.log("got:", matches, localiser)
       if (!matches || matches.length == 0) return []
       let result: InfoBlock[] = []
-      let current = { text: textFunc(matches[0], localiser), colspan: 1 }
+      let current =
+          { text: textFunc(matches[0], localiser), colspan: 1, seq: 0 }
       for (let i = 1; i < matches.length; i++) {
         let newText = textFunc(matches[i], localiser)
         if (current.text == newText) {
           current.colspan = current.colspan + 1
         } else {
           result.push(current)
-          current = { text: newText, colspan: 1 }
+          current = { text: newText, colspan: 1, seq: i }
         }
       }
       result.push(current)

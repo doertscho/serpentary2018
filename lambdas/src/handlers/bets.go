@@ -93,12 +93,23 @@ func GetBetsByMatchDayAndSquadId(
 	censorBets(betBucket, userId, &matches)
 	bets := []*models.MatchDayBetBucket{betBucket}
 
+	tournament, teams := db.GetDb().GetTournamentById(tournamentId)
+	if tournament == nil {
+		return lib.NotFound()
+	}
+	if teams == nil {
+		teams = &[]*models.Team{}
+	}
+	tournaments := []*models.Tournament{tournament}
+
 	data := &models.Update{
-		MatchDays: matchDays,
-		Matches:   matches,
-		Bets:      bets,
-		Pools:     pools,
-		Users:     *users,
+		MatchDays:   matchDays,
+		Matches:     matches,
+		Bets:        bets,
+		Pools:       pools,
+		Users:       *users,
+		Tournaments: tournaments,
+		Teams:       *teams,
 	}
 
 	return lib.BuildUpdate(data)

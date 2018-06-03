@@ -51,16 +51,16 @@ const usersBet = (
   if (canEnterBets) {
     if (bet.status == m.BetStatus.MISSING) {
       return (
-        <div key={bet.userId} className="bet my-bet missing"
+        <div key={bet.userId} className="bet my-bet missing enter-now"
             onClick={() => showForm(bet)}>
-          -
+          <i className="fas fa-edit"></i>
         </div>
       )
     } else {
       return (
-        <div key={bet.userId} className="bet my-bet hidden"
+        <div key={bet.userId} className="bet my-bet hidden enter-now"
             onClick={() => showForm(bet)}>
-          ?
+          <i className="fas fa-edit"></i>
         </div>
       )
     }
