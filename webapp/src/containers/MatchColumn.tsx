@@ -66,7 +66,7 @@ const usersBet = (
     }
   } else {
     if (bet.status == m.BetStatus.MISSING) {
-      return <div key={bet.userId} className="bet my-bet missing">-</div>
+      return <div key={bet.userId} className="bet my-bet missing">–</div>
     } else {
       return (
         <div key={bet.userId} className="bet my-bet">

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
@@ -259,6 +260,14 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
             'EXTRA_QUESTIONS_DEADLINE_PASSED_TEXT',
             'The deadline has passed, you can not edit your answers any more.'
           ) }
+        </p>
+        <p>
+          <Link to={'extra-questions-bets'}>
+            { l(
+              'EXTRA_QUESTIONS_LINK_TO_BETS',
+              'Click here to see all bets that have been submitted.'
+            ) }
+          </Link>
         </p>
         { this.refreshComponent }
       </div>
