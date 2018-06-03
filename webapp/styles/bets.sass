@@ -105,6 +105,9 @@ $countdownHeight: 30px
       font-weight: bold
     &.hidden
       background-color: #ccc
-
-  .matches .bet.my-bet
-    border-color: $primary
+    &.my-bet
+      box-shadow: 0px 0px 4px 0px $primary
+    &.enter-now
+      &:hover
+        background-color: $secondary
+        cursor: pointer

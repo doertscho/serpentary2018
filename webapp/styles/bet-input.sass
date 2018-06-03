@@ -1,6 +1,20 @@
 @import defs
+@import forms
 
 .betInput
+  padding: 0 16px 12px
+
+  .matchTeams
+    text-align: center
+    margin-bottom: 8px
+    .teamName
+      font-size: 1.4em
+
+  .matchInfo
+    text-align: center
+    margin-bottom: 8px
+    .kickOffTime
+      font-weight: bold
 
   .goalInputs
     display: flex
@@ -13,5 +27,14 @@
 
   .goalCount,
   .goalSeparator
-    font-size: 3em
     font-weight: bold
+    font-size: 4em
+  .control
+    font-size: 3em
+
+  .submitArea
+    text-align: center
+    margin-top: 24px
+    button
+      @extend .defaultButton
+      width: 100%

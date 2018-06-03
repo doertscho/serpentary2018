@@ -3,11 +3,13 @@ import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { joinKeys } from '../types/data'
 import { Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
 import { Callbacks, postBet } from '../actions/data'
 import { hidePopover } from '../actions/ui'
 import { getUserId } from '../selectors/session'
+import { getTeams } from '../selectors/data'
 
 import Match from '../components/Match'
 
@@ -15,6 +17,8 @@ interface Props extends Localisable {
   match: m.Match
   bet: m.Bet
   userId: string
+  homeTeam: m.Team
+  awayTeam: m.Team
   postBet: (bet: m.Bet) => void
 }
 
@@ -28,35 +32,46 @@ class betInputView extends React.Component<Props, State> {
   render() {
     let match = this.props.match
     let userId = this.props.userId
+    let homeTeam = this.props.homeTeam
+    let awayTeam = this.props.awayTeam
     let homeGoals = this.state.homeGoals
     let awayGoals = this.state.awayGoals
     let l = this.props.l
     return (
       <div className="betInput">
-        <div className="match"><Match match={match} /></div>
-        <div className="userId">{ userId }</div>
+        <div className="matchTeams">
+          <div className="teamName">{ l(homeTeam.name) }</div>
+          <div>- vs. -</div>
+          <div className="teamName">{ l(awayTeam.name) }</div>
+        </div>
+        <div className="matchInfo">
+          <div>{ l('KICK_OFF', 'Kick off') }:</div>
+          <div className="kickOffTime">
+            { l(match.kickOff, 'date-and-time') }
+          </div>
+        </div>
         <div className="goalInputs">
           <div className="goalInput">
-            <div onClick={this.incHomeGoals}>
+            <div className="control" onClick={this.incHomeGoals}>
               <i className="fas fa-chevron-up"></i>
             </div>
             <div className="goalCount">{ homeGoals}</div>
-            <div onClick={this.decHomeGoals}>
+            <div className="control" onClick={this.decHomeGoals}>
               <i className="fas fa-chevron-down"></i>
             </div>
           </div>
           <div className="goalSeparator">:</div>
           <div className="goalInput">
-            <div onClick={this.incAwayGoals}>
+            <div className="control" onClick={this.incAwayGoals}>
               <i className="fas fa-chevron-up"></i>
             </div>
             <div className="goalCount">{ awayGoals}</div>
-            <div onClick={this.decAwayGoals}>
+            <div className="control" onClick={this.decAwayGoals}>
               <i className="fas fa-chevron-down"></i>
             </div>
           </div>
         </div>
-        <div>
+        <div className="submitArea">
           <button onClick={this.submitBet}>
             { l('SUBMIT_BET', 'Submit') }
           </button>
@@ -110,9 +125,15 @@ class betInputView extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = withLocaliser((state: StoreState) => {
+const mapStateToProps = withLocaliser((state: StoreState, props: any) => {
+  let match = props.match
+  let teams = getTeams(state)
+  let homeTeamKey = joinKeys(match.tournamentId, match.homeTeamId)
+  let awayTeamKey = joinKeys(match.tournamentId, match.awayTeamId)
   return {
-    userId: getUserId(state)
+    userId: getUserId(state),
+    homeTeam: teams[homeTeamKey],
+    awayTeam: teams[awayTeamKey]
   }
 })
 
