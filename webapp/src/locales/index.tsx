@@ -4,9 +4,12 @@ import { connect } from 'react-redux'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { getLocale } from '../selectors/session'
-import { Translation } from './base'
+import { Translation, TimeFormats } from './base'
 
+import translation_en from './translation_en'
 import translation_de from './translation_de'
+import time_formats_en from './time_formats_en'
+import time_formats_de from './time_formats_de'
 
 export type Localiser =
   (
@@ -34,8 +37,14 @@ export function withLocaliser(
     mapProps: (state: StoreState, props?: any) => any) {
 
   return function(state: StoreState, props?: any) {
-    let result = mapProps(state, props) || { }
-    result.l = getLocaliser(state)
+    let l = getLocaliser(state)
+    let propsCopy: any = {}
+    for (let key in props) {
+      propsCopy[key] = props[key]
+    }
+    propsCopy.l = l
+    let result = mapProps(state, propsCopy) || { }
+    result.l = l
     return result
   }
 }
@@ -53,9 +62,13 @@ export const localeNameToLocaleId: { [name: string]: m.Locale } = {
 const empty: Translation = { }
 
 const translations: { [localeName: string]: Translation } = {
-  'en': empty, // expecting English values to be defined inline as fallback
+  'en': translation_en,
   'de': translation_de,
 }
+
+const localeIdToTimeFormats: { [localeId: number]: TimeFormats } = { }
+localeIdToTimeFormats[m.Locale.EN] = time_formats_en
+localeIdToTimeFormats[m.Locale.DE] = time_formats_de
 
 export const localeIdToJavaScriptDateLocale: { [id: number]: string } = { }
 localeIdToJavaScriptDateLocale[m.Locale.EN] = 'en-UK'
@@ -104,6 +117,11 @@ function formatTimestamp(
     timestamp: number, preferredLocale: number, option?: string): string {
 
   let date = new Date(timestamp * 1000)
+  let timeFormats = localeIdToTimeFormats[preferredLocale]
+  if (option && timeFormats[option]) {
+    return timeFormats[option](date)
+  }
+
   let localeString = localeIdToJavaScriptDateLocale[preferredLocale]
   if (option == 'date') {
     return date.toLocaleDateString(localeString)

@@ -6,9 +6,11 @@ $betCellPadding: 4px
 $betCellWidth: 100px
 $betCellHeight: 40px
 $matchCellMargin: $betCellMargin
-$matchCellPadding: $betCellPadding
-$matchCellHeight: 80px
+$matchCellPadding: 0
+$matchCellHeight: 54px
 $userCellWidth: 200px
+$matchInfoHeight: 78px
+$matchInfoLineHeight: 26px
 $countdownHeight: 30px
 
 .betMatrix
@@ -18,7 +20,7 @@ $countdownHeight: 30px
     display: flex
 
   .users
-    margin-top: $matchCellHeight + $matchCellMargin
+    margin-top: $matchCellHeight + $matchCellMargin + $matchInfoHeight + $betCellMargin + $betCellHeight
 
   .users .user,
   .matches .match,
@@ -37,36 +39,70 @@ $countdownHeight: 30px
       overflow: hidden
       text-overflow: ellipsis
 
+  .matchInfo
+    height: $matchInfoHeight
+    .infoLine
+      white-space: nowrap
+      height: $matchInfoLineHeight
+      font-size: 14px
+      line-height: 14px
+      .infoBlock
+        display: inline-block
+        background-color: $primary
+        color: $primary-text
+        margin: $betCellMargin
+        padding: 4px 8px
+        height: 22px
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        box-shadow: 0px 0px 4px 0px rgba(128,128,128,1)
+
   .matches .match,
-  .matches .bet
+  .matches .bet,
+  .matches .matchResult
     display: flex
     justify-content: center
     text-align: center
 
   .matches .match
     height: $matchCellHeight
+    padding: $matchCellPadding
+
+  .matches .matchResult
+    position: relative
+    &.inProgress
+      color: $highlight
 
   .matchCountdown
+    background-color: $page-background
+    position: absolute
+    bottom: 0
+    margin: 0 auto
     text-align: center
-    height: $countdownHeight
+    border: $betCellBorderWidth solid $header-background
+    padding: 2px 4px
+    width: auto
     &.urgent
       color: $highlight
+      border-color: $highlight
       font-weight: bold
     &.closed
       font-weight: bold
 
   .users .user,
-  .matches .bet
+  .matches .bet,
+  .matches .matchResult
     display: flex
     align-items: center
     height: $betCellHeight
 
   .matches .bet
-    border: $betCellBorderWidth solid $primary
+    box-shadow: 0px 0px 4px 0px rgba(128,128,128,1)
     &.missing
       background-color: #c99
     &.hidden
       background-color: #ccc
 
   .matches .bet.my-bet
-    border-color: $highlight
+    border-color: $primary

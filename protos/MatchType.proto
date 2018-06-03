@@ -1,0 +1,13 @@
+syntax = "proto3";
+package models;
+
+enum MatchType {
+  NORMAL = 0;
+
+  FINAL = 1;
+  MATCH_FOR_THIRD_PLACE = 2;
+  SEMI_FINAL = 3;
+  QUARTER_FINAL = 4;
+  EIGHTH_FINAL = 5;
+  SIXTEENTH_FINAL = 6;
+}

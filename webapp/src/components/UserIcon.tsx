@@ -5,7 +5,7 @@ interface Props {
 }
 
 function hashString(input: string): number {
-  if (input.length == 0) return 128
+  if (input.length == 0) return 240
   let hash = 0
   for (let i = 0; i < input.length; i++) {
     let char = input.charCodeAt(i)
@@ -33,7 +33,6 @@ function makeColors(userId: string): { backgroundColor: string, color: string} {
   let textColor = '#fff'
   if (red > 160 && blue > 160 && green > 160) textColor = '#000'
 
-  console.log('made a background colour:', backgroundColor)
   return {
     backgroundColor: backgroundColor,
     color: textColor
@@ -43,7 +42,7 @@ function makeColors(userId: string): { backgroundColor: string, color: string} {
 export default (props: Props) => {
   let userId = props.userId || ''
   return (
-    <div className="userIcon" style={makeColors(userId)}>
+    <div className="userIcon" style={makeColors(userId)} title={userId}>
       { userId.substring(0, 1).toUpperCase() }
     </div>
   )

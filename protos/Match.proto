@@ -1,6 +1,9 @@
 syntax = "proto3";
 package models;
 
+import "MatchType.proto";
+import "MatchStatus.proto";
+
 message Match {
 
   fixed32 updated = 1;
@@ -13,4 +16,10 @@ message Match {
   string away_team_id = 6;
   string stadium_id = 7;
   fixed32 kick_off = 8;
+
+  MatchType match_type = 9;
+  MatchStatus match_status = 10;
+
+  uint32 home_goals = 11;
+  uint32 away_goals = 12;
 }

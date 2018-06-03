@@ -10,7 +10,6 @@ interface Props {
 
 export default ({ participants }: Props) =>
   <div className="users">
-    <div className="matchCountdown"></div>
     { participants.map(user =>
     <div key={user.id} className="user">
       <UserIcon userId={user.id} />
