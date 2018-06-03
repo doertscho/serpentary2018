@@ -3,18 +3,21 @@ import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { Map, joinKeys } from '../types/data'
 import { Action } from '../actions'
 import { showPopover } from '../actions/ui'
-import { joinKeys } from '../types/data'
+import { Localisable, withLocaliser } from '../locales'
 import { getUserId } from '../selectors/session'
 import { secondsToTimeout } from '../rules'
 
 import Match from '../components/Match'
 import MatchCountdown from '../components/MatchCountdown'
+import UserIcon from '../components/UserIcon'
 
-interface Props {
+interface Props extends Localisable {
   match: m.Match
   bets: m.Bet[]
+  teamsById: Map<m.Team>
   userId: string
   showBetForm: (bet: m.Bet) => void
 }
@@ -33,7 +36,7 @@ const readOnlyBet = (bet: m.Bet) => {
     default:
       return (
         <div key={bet.userId} className="bet">
-          {bet.homeGoals}:{bet.awayGoals}
+          {bet.homeGoals}{' : '}{bet.awayGoals}
         </div>
       )
   }
@@ -67,19 +70,10 @@ const usersBet = (
     } else {
       return (
         <div key={bet.userId} className="bet my-bet">
-          {bet.homeGoals}:{bet.awayGoals}
+          {bet.homeGoals}{' : '}{bet.awayGoals}
         </div>
       )
     }
-  }
-}
-
-function buildCountdownComponent(showCountdown: boolean, match: m.Match) {
-  if (showCountdown) {
-    console.log("Will show countdown!")
-    return <MatchCountdown match={match} />
-  } else {
-    return <div className="matchCountdown"></div>
   }
 }
 
@@ -91,17 +85,26 @@ class matchColumnView extends React.Component<Props, State> {
     let userId = this.props.userId
     let showBetForm = this.props.showBetForm
     let canEnterBets = this.state.canEnterBets
-    let showCountdown = this.state.showCountdown
+    let inProgress = match.matchStatus == m.MatchStatus.IN_PROGRESS
+
+    let l = this.props.l
+    let homeTeamName = match.homeTeamId
+    if (this.props.teamsById[match.homeTeamId])
+      homeTeamName = l(this.props.teamsById[match.homeTeamId].name)
+    let awayTeamName = match.awayTeamId
+    if (this.props.teamsById[match.awayTeamId])
+      awayTeamName = l(this.props.teamsById[match.awayTeamId].name)
+
     return (
       <div className="matchWithBets">
         <div className="match">
-          { match.homeTeamId }
-          <br />
-          vs.
-          <br />
-          { match.awayTeamId }
+          <UserIcon userId={homeTeamName} />
+          <UserIcon userId={awayTeamName} />
         </div>
-        { buildCountdownComponent(showCountdown, match) }
+        <div className={'matchResult' + (inProgress ? ' inProgress' : '')}>
+          { this.buildMatchResult() }
+          { this.buildCountdownComponent() }
+        </div>
         <div className="bets">
           { bets.map(bet => {
             if (userId == bet.userId) {
@@ -115,11 +118,31 @@ class matchColumnView extends React.Component<Props, State> {
     )
   }
 
+  buildCountdownComponent() {
+    if (this.state.showCountdown) {
+      console.log("Will show countdown!")
+      return <MatchCountdown match={this.props.match} />
+    } else {
+      return null
+    }
+  }
+
+  buildMatchResult() {
+    let match = this.props.match
+    if (match.matchStatus == m.MatchStatus.NOT_STARTED)
+      return '- : -'
+    let homeGoals = match.homeGoals || 0
+    let awayGoals = match.awayGoals || 0
+    return '' + homeGoals + ' : ' + awayGoals
+  }
+
   constructor(props: Props) {
     super(props)
 
     this.showCountdown = this.showCountdown.bind(this)
     this.closeBetCounter = this.closeBetCounter.bind(this)
+    this.buildCountdownComponent = this.buildCountdownComponent.bind(this)
+    this.buildMatchResult = this.buildMatchResult.bind(this)
 
     let timeToClosure = secondsToTimeout(props.match)
     let open = timeToClosure > 0
@@ -149,10 +172,10 @@ class matchColumnView extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
     userId: getUserId(state)
   }
-}
+})
 
 export default connect(mapStateToProps)(matchColumnView)

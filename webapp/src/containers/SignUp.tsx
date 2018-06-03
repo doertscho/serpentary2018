@@ -95,7 +95,7 @@ class view extends React.Component<Props, State> {
             <div className="formLabel">
               <div className="formLabelHead">
                 { l('SIGN_UP_PASSWORD_CHECK_LABEL_HEAD',
-                  'Repeat that password (safety first)') }
+                  'Repeat that password (just to be sure)') }
               </div>
               { this.passwordsMatch() ? null :
                 <div className="formLabelDetails validationError">

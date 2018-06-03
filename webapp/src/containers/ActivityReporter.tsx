@@ -18,7 +18,9 @@ const view = (props: Props) => {
     )
 
   else
-    return null
+    return (
+      <div className="activityReporter">&nbsp;</div>
+    )
 }
 
 const mapStateToProps = (state: StoreState) => {

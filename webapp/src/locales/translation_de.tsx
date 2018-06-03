@@ -2,6 +2,13 @@ import { Translation } from './base'
 
 const translation_de: Translation = {
 
+  // enum names
+  FINAL: 'Finale',
+  MATCH_FOR_THIRD_PLACE: 'Dritter Platz',
+  SEMI_FINAL: 'Halbfinale',
+  QUARTER_FINAL: 'Viertelfinale',
+  EIGHTH_FINAL: 'Achtelfinale',
+
   // page-wide
   REFRESH: 'Daten neu laden',
 
@@ -62,6 +69,7 @@ const translation_de: Translation = {
   // match day bets page
   MATCH_DAY_BETS_PAGE_TITLE: 'Spieltag: Tipps',
   MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
+  COUNTDOWN_CLOSED: 'geschlossen!',
 
   // squad page
   SQUAD_PAGE_TITLE: 'Tipprunde',

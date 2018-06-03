@@ -3,6 +3,7 @@ import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
+import { Map } from '../types/data'
 import { Localisable, withLocaliser } from '../locales'
 import {
   makeGetMatchDay,
@@ -11,6 +12,7 @@ import {
   makeGetMatchDayBetBucket,
   makeGetBetsByMatch
 } from '../selectors/MatchDay'
+import { makeGetTeams, makeGetTeamsById } from '../selectors/Tournament'
 import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
@@ -20,7 +22,7 @@ import { showPopover, hidePopover } from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 import BetInputPopover from './BetInputPopover'
-import MatchColumn from './MatchColumn'
+import MatchDayBetBlock from './MatchDayBetBlock'
 import UserColumn from '../components/UserColumn'
 
 interface Props extends Localisable {
@@ -35,6 +37,7 @@ interface Props extends Localisable {
   pool: m.Pool
   betsByMatch: m.Bet[][]
   userId: string
+  teamsById: Map<m.Team>
 
   fetchBets: (
       squadId: string,
@@ -106,6 +109,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let participants = this.props.participants || []
     let matches = this.props.matches || []
     let userId = this.props.userId
+    let teamsById = this.props.teamsById
     let l = this.props.l
 
     let getBets = (match: m.Match) => betsByMatch[match.id] || []
@@ -117,13 +121,9 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
         <h1>{ l(matchDay.name) } – #{squadId}</h1>
         <div className="betMatrix">
           <UserColumn participants={participants} />
-          <div className="matches">
-            { matches.map(match =>
-              <MatchColumn key={match.id}
-                  match={match} bets={getBets(match)}
-                  showBetForm={makeShowBetForm(match)} />
-            ) }
-          </div>
+          <MatchDayBetBlock
+            matchDay={matchDay} matches={matches} teamsById={teamsById}
+            getBets={getBets} makeShowBetForm={makeShowBetForm} />
         </div>
         { this.refreshComponent }
       </div>
@@ -152,6 +152,8 @@ const makeMapStateToProps = () => {
       getSquadIdFromUrl, getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getBetsByMatch =
       makeGetBetsByMatch(getPool, getMatches, getMatchDayBetBucket)
+  let getTeams = makeGetTeams(getTournamentIdFromUrl)
+  let getTeamsById = makeGetTeamsById(getTeams)
   return withLocaliser((state: StoreState, props: any) => {
     return {
       squadId: getSquadIdFromUrl(state, props),
@@ -162,7 +164,8 @@ const makeMapStateToProps = () => {
       pool: getPool(state, props),
       participants: getParticipants(state, props),
       betsByMatch: getBetsByMatch(state, props),
-      userId: getUserId(state)
+      userId: getUserId(state),
+      teamsById: getTeamsById(state, props),
     }
   })
 }
