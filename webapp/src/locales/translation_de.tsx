@@ -13,9 +13,12 @@ const translation_de: Translation = {
   REFRESH: 'Daten neu laden',
 
   // navigation links
-  NAV_HOME: 'Übersicht',
-  NAV_MATCH_DAY: 'Spieltag',
+  NAV_HOME: 'Start',
+  NAV_RULES: 'Regeln',
+  NAV_STATISTICS: 'Statistik',
+  NAV_BETS: 'Tipps',
   NAV_RANKING: 'Rangliste',
+  NAV_EXTRA_QUESTIONS: 'Sondertipps',
 
   // user box
   GREETING: 'Hallo, {}!',

@@ -11,8 +11,5 @@ export const getUi = (state: StoreState) => state.ui
 export const hasPendingRequests =
   createSelector(
     [getPendingRequests],
-    (   pendingRequests) => {
-      console.log("pending:", pendingRequests)
-      return pendingRequests.length > 0
-    }
+    (   pendingRequests) => pendingRequests.length > 0
   )
