@@ -17,6 +17,18 @@ func (db DynamoDb) getItemById(
 	return db.getItem(tableName, key)
 }
 
+func (db DynamoDb) getItemByKey(
+	tableName string,
+	fieldName string,
+	value *string,
+) (*map[string]*sdk.AttributeValue, error) {
+
+	key := map[string]*sdk.AttributeValue{
+		fieldName: stringAttr(value),
+	}
+	return db.getItem(tableName, key)
+}
+
 func (db DynamoDb) getItemByCompoundKey(
 	tableName string,
 	partitionKeyName string,

@@ -38,6 +38,22 @@ export const makeGetTeams = (getTournamentId: StringSelector) =>
     }
   )
 
+export const makeGetTeamsSorted = (getTournamentId: StringSelector) =>
+  createSelector(
+    [getTeams, getTeamsByTournament, getTournamentId],
+    (   teams,    teamsByTournament,    tournamentId) => {
+      let teamIds = teamsByTournament[tournamentId]
+      if (!teamIds) return []
+      let selectedTeams = teamIds.map(id => teams[id])
+      selectedTeams.sort((a: m.Team, b: m.Team) => {
+        if (a.id < b.id) return -1;
+        if (a.id > b.id) return 1;
+        return 0;
+      })
+      return selectedTeams
+    }
+  )
+
 export const makeGetTeamsById = (getTeams: ModelSelector<m.Team[]>) =>
   createSelector(
     [getTeams],

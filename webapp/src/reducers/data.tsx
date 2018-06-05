@@ -106,17 +106,13 @@ function mergeRecords<I extends Entity, R extends I>(
     state: Map<R>, update: I[],
     makeRecord: (u: I) => R, getKey: (u: I) => string
 ): Map<R> {
-  const changed: R[] = []
-  update.forEach(u => {
-    if (updateIsNewer(state[getKey(u)], u)) changed.push(makeRecord(u))
-  })
-  if (changed.length == 0) return state
-  else return copyAndMergeRecordMap(state, changed, getKey)
+  if (update.length == 0) return state
+  else return copyAndMergeRecordMap(state, update, makeRecord, getKey)
 }
 
 function mergeRecordsAndRefs<I extends Entity, R extends I>(
     state: Map<R>, update: I[],
-    makeRecord: (u: I) => R, getKey: (u: I) => string,
+    makeRecord: (u: Partial<I>) => R, getKey: (u: I) => string,
     refs: ParentChildTable[],
     refsGetParentIdFuncs: ((u: I) => string)[]
 ): {
@@ -124,7 +120,6 @@ function mergeRecordsAndRefs<I extends Entity, R extends I>(
   refs: ParentChildTable[]
 } {
 
-  let changed: R[] = []
   let newRefs: Relation[][] = []
   for (var i = 0; i < refsGetParentIdFuncs.length; i++) {
     newRefs[i] = []
@@ -133,33 +128,30 @@ function mergeRecordsAndRefs<I extends Entity, R extends I>(
   for (var i = 0; i < update.length; i++) {
     let u = update[i]
     let key = getKey(u)
-    if (updateIsNewer(state[key], u)) {
-      changed.push(makeRecord(u))
-      if (!state[key]) {
-        for (var j = 0; j < refsGetParentIdFuncs.length; j++) {
-          newRefs[j].push({
-            parentId: refsGetParentIdFuncs[j](u),
-            childId: key
-          })
-        }
+    if (!state[key]) {
+      for (var j = 0; j < refsGetParentIdFuncs.length; j++) {
+        newRefs[j].push({
+          parentId: refsGetParentIdFuncs[j](u),
+          childId: key
+        })
       }
     }
   }
-  if (changed.length == 0) return { state, refs }
+
+  if (update.length == 0) return { state, refs }
   if (newRefs.length == 0 || newRefs[0].length == 0)
     return {
-      state: copyAndMergeRecordMap(state, changed, getKey),
+      state: copyAndMergeRecordMap(state, update, makeRecord, getKey),
       refs
     }
-  else {
-    let mergedRefs = []
-    for (var i = 0; i < refsGetParentIdFuncs.length; i++) {
-      mergedRefs[i] = copyAndMergeReferenceArray(refs[i], newRefs[i])
-    }
-    return {
-      state: copyAndMergeRecordMap(state, changed, getKey),
-      refs: mergedRefs
-    }
+
+  let mergedRefs = []
+  for (var i = 0; i < refsGetParentIdFuncs.length; i++) {
+    mergedRefs[i] = copyAndMergeReferenceArray(refs[i], newRefs[i])
+  }
+  return {
+    state: copyAndMergeRecordMap(state, update, makeRecord, getKey),
+    refs: mergedRefs
   }
 }
 
@@ -169,13 +161,41 @@ function updateIsNewer<T extends Entity>(state: T, update: T): boolean {
 }
 
 function copyAndMergeRecordMap<I extends Entity, R extends I>(
-    input: Map<R>, changes: R[], getKey: (u: I) => string): Map<R> {
+  input: Map<R>, changes: I[],
+  makeRecord: (u: Partial<I>) => R, getKey: (u: I) => string
+): Map<R> {
   const output: Map<R> = {}
   for (let key in input) {
     output[key] = input[key]
   }
-  changes.forEach(e => { output[getKey(e)] = e })
+  changes.forEach(e => {
+    let key = getKey(e)
+    if (!output[key]) {
+      output[key] = makeRecord(e)
+    } else {
+      output[key] = mergeRecordAndUpdate(output[key], e, makeRecord)
+    }
+  })
   return output
+}
+
+function mergeRecordAndUpdate<I extends Entity, R extends I>(
+  current: I, update: I, makeRecord: (u: Partial<I>) => R): R {
+
+  let copy: Partial<I> = { }
+  for (let prop in current) {
+    if (!current.hasOwnProperty(prop)) continue
+    copy[prop] = current[prop]
+  }
+  for (let prop in update) {
+    if (!update.hasOwnProperty(prop)) continue
+    if (!copy[prop] || !copy[prop].length) {
+      copy[prop] = update[prop]
+    } else if (copy[prop].length && update[prop].length) {
+      copy[prop] = update[prop]
+    }
+  }
+  return makeRecord(copy)
 }
 
 interface Relation {
