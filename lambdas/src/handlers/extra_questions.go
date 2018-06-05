@@ -21,20 +21,30 @@ func GetExtraQuestionData(
 		return lib.NotFound()
 	}
 
+	tournament, partialTeams := db.GetDb().GetTournamentById(tournamentId)
+	if tournament == nil {
+		return lib.NotFound()
+	}
+
 	teams := db.GetDb().GetFullTeamDataByTournamentId(tournamentId)
 	if teams == nil {
-		return lib.NotFound()
+		if partialTeams == nil {
+			return lib.NotFound()
+		}
+		teams = partialTeams
 	}
 
 	betBucket := db.GetDb().GetExtraBetsByPoolId(squadId, tournamentId)
 
 	extraQuestionBets := []*models.ExtraQuestionBetBucket{betBucket}
 	pools := []*models.Pool{pool}
+	tournaments := []*models.Tournament{tournament}
 	update := &models.Update{
 		ExtraQuestionBets: extraQuestionBets,
 		Pools:             pools,
 		Users:             *users,
 		Teams:             *teams,
+		Tournaments:       tournaments,
 	}
 
 	return lib.BuildUpdate(update)
