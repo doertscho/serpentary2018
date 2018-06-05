@@ -78,7 +78,7 @@ func (db DynamoDb) AddBetToBetBucket(
 		"bets",
 		compoundKey(
 			"squad_id", squadId,
-			"tournament_and_match_day_id", joinKeys(tournamentId, matchDayId),
+			"tournament_and_match_day_id", models.JoinKeys(tournamentId, matchDayId),
 		),
 		set("bets.#userId = :bets").
 			withFieldName("#userId", userId).
@@ -105,7 +105,7 @@ func (db DynamoDb) getBetBucketRecord(
 	record, err := db.getItemByCompoundKey(
 		"bets",
 		"squad_id", squadId,
-		"tournament_and_match_day_id", joinKeys(tournamentId, matchDayId),
+		"tournament_and_match_day_id", models.JoinKeys(tournamentId, matchDayId),
 	)
 	if err != nil {
 		log.Println("Error occurred querying bet record: " + err.Error())

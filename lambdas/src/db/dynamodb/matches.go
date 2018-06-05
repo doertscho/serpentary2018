@@ -12,7 +12,7 @@ func (db DynamoDb) GetMatchesByMatchDayId(
 
 	result, err := db.queryItemsByKey(
 		"matches",
-		"tournament_and_match_day_id", joinKeys(tournamentId, matchDayId),
+		"tournament_and_match_day_id", models.JoinKeys(tournamentId, matchDayId),
 	)
 	if err != nil {
 		log.Println("error occurred querying match days: " + err.Error())

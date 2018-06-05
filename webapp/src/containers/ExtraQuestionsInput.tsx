@@ -7,7 +7,11 @@ import { StoreState } from '../types'
 import { deadlineHasPassed } from '../rules'
 import { Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
-import { fetchPool, postExtraQuestionBets, Callbacks } from '../actions/data'
+import {
+  fetchExtraQuestions,
+  postExtraQuestionBets,
+  Callbacks
+} from '../actions/data'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
 import { makeGetPool, makeGetExtraQuestionBetBucket } from '../selectors/Pool'
@@ -28,7 +32,7 @@ interface Props extends Localisable {
   tournament: m.Tournament
   teams: m.Team[]
   teamsById: { [id: string]: m.Team }
-  fetchPool: (
+  fetchExtraQuestions: (
     squadId: string, tournamentId: string, callbacks?: Callbacks) => void
   postExtraQuestionBets: (
       squadId: string, tournamentId: string,
@@ -42,23 +46,27 @@ type State = { [answerKey: string]: m.IExtraQuestionBet }
 class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
 
   getRequiredProps() {
-    return ['pool', 'tournament', 'teams']
+    return ['pool', 'tournament', 'teams', 'bets']
   }
 
   shouldRefreshOnMount() {
     let betBucket = this.props.bets
     let teams = this.props.teams
-    return !betBucket || !betBucket.bets || !teams.length
+    return !betBucket.bets || !teams.length
   }
 
   requestData() {
-    this.props.fetchPool(
+    this.props.fetchExtraQuestions(
         this.props.squadId, this.props.tournamentId, this.requestDataCallbacks)
   }
 
   onRequestDataSuccess(): void {
     this.initAnswers()
     super.onRequestDataSuccess()
+  }
+
+  onMountWithNoRefreshNeeded() {
+    this.initAnswers()
   }
 
   renderWithData() {
@@ -75,8 +83,6 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
     let tournament = this.props.tournament
     let l = this.props.l
     let questions = this.props.pool.extraQuestions
-
-    console.log("state:", this.state)
 
     return (
       <div>
@@ -295,6 +301,8 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
     super(props)
     this.state = { }
 
+    console.log("EQ Input constructing")
+
     this.initAnswers = this.initAnswers.bind(this)
     this.buildAnswerInputForm = this.buildAnswerInputForm.bind(this)
     this.buildTextInputForm = this.buildTextInputForm.bind(this)
@@ -351,12 +359,12 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
-    fetchPool: (
+    fetchExtraQuestions: (
         squadId: string,
         tournamentId: string,
         callbacks?: Callbacks
       ) => {
-        dispatch(fetchPool(squadId, tournamentId, callbacks))
+        dispatch(fetchExtraQuestions(squadId, tournamentId, callbacks))
       },
     postExtraQuestionBets: (
         squadId: string, tournamentId: string,

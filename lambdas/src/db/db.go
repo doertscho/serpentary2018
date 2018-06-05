@@ -38,9 +38,9 @@ type Db interface {
 	GetPoolById(
 		squadId *string, tournamentId *string,
 	) (*models.Pool, *[]*models.User)
-	GetPoolWithExtraBetsById(
+	GetExtraBetsByPoolId(
 		squadId *string, tournamentId *string,
-	) (*models.Pool, *[]*models.User, *models.ExtraQuestionBetBucket)
+	) *models.ExtraQuestionBetBucket
 	GetPoolsBySquadId(squadId *string) []*models.Pool
 	AddUserToPool(
 		squadId *string, tournamentId *string, userId *string,

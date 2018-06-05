@@ -45,11 +45,6 @@ func stringListAttr(value *string) *sdk.AttributeValue {
 	}
 }
 
-func joinKeys(keyA *string, keyB *string) *string {
-	joined := *keyA + "/" + *keyB
-	return &joined
-}
-
 func splitKey(joinedKey *sdk.AttributeValue) (*string, *string, error) {
 	val := joinedKey.S
 	if val == nil {
