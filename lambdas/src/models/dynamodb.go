@@ -205,7 +205,7 @@ func (ubb *ExtraQuestionUserBetBucket) UnmarshalDynamoDBAttributeValue(
 		}
 		split := SplitKey(entry.S)
 		if len(*split) == 2 {
-			playerId, err := strconv.Atoi(key)
+			playerId, err := strconv.Atoi((*split)[1])
 			if err != nil {
 				bet.Text = *entry.S
 			} else {
