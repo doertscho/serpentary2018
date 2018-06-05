@@ -86,6 +86,12 @@ func getRequest(
 		return handlers.GetPoolById(&squadId, &tournamentId)
 	}
 
+	if matchPath("tournaments", "_", "pools", "_", "extra-questions") {
+		tournamentId := (*params)["tournamentId"]
+		squadId := (*params)["squadId"]
+		return handlers.GetExtraQuestionData(&squadId, &tournamentId)
+	}
+
 	if matchPath("squads", "_") {
 		squadId := (*params)["squadId"]
 		return handlers.GetSquadById(&squadId)

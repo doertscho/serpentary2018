@@ -70,6 +70,18 @@ export const fetchPool = (
       callbacks
   )
 
+export const fetchExtraQuestions = (
+  squadId: string,
+  tournamentId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId +
+        '/pools/' + squadId +
+        '/extra-questions',
+      callbacks
+  )
+
 /*
  * POSTING DATA
  */

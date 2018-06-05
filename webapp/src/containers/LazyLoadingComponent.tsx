@@ -121,6 +121,8 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
     if (this.shouldRefreshOnMount()) {
       console.log('required props are available, but should refresh')
       this.requestData()
+    } else {
+      this.onMountWithNoRefreshNeeded()
     }
   }
 
@@ -140,5 +142,9 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
   shouldRefreshOnMount() {
     // override in implementation!
     return false
+  }
+
+  onMountWithNoRefreshNeeded() {
+    // override in implementation!
   }
 }

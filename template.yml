@@ -147,6 +147,27 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "2"
         WriteCapacityUnits: "2"
+  ExtraBetsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'extra-bets']]
+      AttributeDefinitions:
+        -
+          AttributeName: "squad_id"
+          AttributeType: "S"
+        -
+          AttributeName: "tournament_id"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "squad_id"
+          KeyType: "HASH"
+        -
+          AttributeName: "tournament_id"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "2"
+        WriteCapacityUnits: "2"
 
   # Authorizer for the API Gateway
   CognitoAuthorizer:
@@ -228,6 +249,11 @@ Resources:
           Properties:
             Path: /squads/{squadId}
             Method: options
+        GetExtraQuestions:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/pools/{squadId}/extra-questions
+            Method: get
         SubmitExtraQuestionBet:
           Type: Api
           Properties:

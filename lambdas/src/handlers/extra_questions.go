@@ -12,6 +12,34 @@ import (
 	"github.com/golang/protobuf/proto"
 )
 
+func GetExtraQuestionData(
+	squadId *string, tournamentId *string,
+) *events.APIGatewayProxyResponse {
+
+	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
+	if pool == nil {
+		return lib.NotFound()
+	}
+
+	_, teams := db.GetDb().GetTournamentById(tournamentId)
+	if teams == nil {
+		return lib.NotFound()
+	}
+
+	betBucket := db.GetDb().GetExtraBetsByPoolId(squadId, tournamentId)
+
+	extraQuestionBets := []*models.ExtraQuestionBetBucket{betBucket}
+	pools := []*models.Pool{pool}
+	update := &models.Update{
+		ExtraQuestionBets: extraQuestionBets,
+		Pools:             pools,
+		Users:             *users,
+		Teams:             *teams,
+	}
+
+	return lib.BuildUpdate(update)
+}
+
 func SubmitExtraQuestionBet(
 	squadId *string,
 	tournamentId *string,
