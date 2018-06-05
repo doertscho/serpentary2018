@@ -4,7 +4,7 @@ import { connect, Dispatch } from 'react-redux'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { Map } from '../types/data'
-import { Localisable, withLocaliser } from '../locales'
+import { Localisable, withLocaliser, Localiser } from '../locales'
 import {
   makeGetMatchDay,
   makeGetMatches,
@@ -17,7 +17,7 @@ import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
 import { Action } from '../actions'
-import { Callbacks, fetchBets, postBet } from '../actions/data'
+import { Callbacks, fetchBets, postBet, joinPool } from '../actions/data'
 import { showPopover, hidePopover } from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
@@ -34,6 +34,7 @@ interface Props extends Localisable {
   matchDay: m.MatchDay
   participants: m.User[]
   matches: m.Match[]
+  squad: m.Squad
   pool: m.Pool
   betsByMatch: m.Bet[][]
   userId: string
@@ -52,9 +53,16 @@ interface Props extends Localisable {
       bet: m.Bet,
       callbacks?: Callbacks
     ) => void
+  joinPool: (squadId: string, tournamentId: string) => void
   showPopover: (element: React.ReactElement<any>) => void
   hidePopover: () => void
 }
+
+
+const clickToJoinBox = (l: Localiser, onClick: () => void) =>
+  <div className="headsUp note" onClick={onClick}>
+    { l('CLICK_TO_JOIN_POOL', 'Click here to join this pool') }
+  </div>
 
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
@@ -103,14 +111,21 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   renderWithData() {
     let squadId = this.props.squadId
+    let tournamentId = this.props.tournamentId
     let matchDay = this.props.matchDay
+    let squad = this.props.squad
     let pool = this.props.pool
     let betsByMatch = this.props.betsByMatch
     let participants = this.props.participants || []
     let matches = this.props.matches || []
     let userId = this.props.userId
     let teamsById = this.props.teamsById
+    let joinPool = this.props.joinPool
     let l = this.props.l
+
+    let showJoinLink =
+      (squad && squad.members && squad.members.indexOf(userId) !== -1) &&
+      (pool && pool.participants && pool.participants.indexOf(userId) === -1)
 
     let getBets = (match: m.Match) => betsByMatch[match.id] || []
     let makeShowBetForm = (match: m.Match) =>
@@ -119,6 +134,9 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     return (
       <div>
         <h1>{ l(matchDay.name) } – #{squadId}</h1>
+        { showJoinLink ?
+            clickToJoinBox(l, () => joinPool(squadId, tournamentId)) :
+            null }
         <div className="betMatrix">
           <UserColumn participants={participants} />
           <MatchDayBetBlock
@@ -146,6 +164,7 @@ const makeMapStateToProps = () => {
   let getMatchDay =
       makeGetMatchDay(getTournamentIdFromUrl, getMatchDayIdFromUrl)
   let getMatches = makeGetMatches(getMatchDay)
+  let getSquad = makeGetSquad(getSquadIdFromUrl)
   let getPool = makeGetPool(getSquadIdFromUrl, getTournamentIdFromUrl)
   let getParticipants = makeGetParticipants(getPool)
   let getMatchDayBetBucket = makeGetMatchDayBetBucket(
@@ -161,6 +180,7 @@ const makeMapStateToProps = () => {
       matchDayId: getMatchDayIdFromUrl(state, props),
       matchDay: getMatchDay(state, props),
       matches: getMatches(state, props),
+      squad: getSquad(state, props),
       pool: getPool(state, props),
       participants: getParticipants(state, props),
       betsByMatch: getBetsByMatch(state, props),
@@ -193,6 +213,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
       ) => {
         dispatch(postBet(squadId, tournamentId, matchDayId, bet, callbacks))
       },
+    joinPool: (squadId: string, tournamentId: string) => {
+      dispatch(joinPool(squadId, tournamentId))
+    }
   }
 }
 

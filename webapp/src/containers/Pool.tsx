@@ -28,17 +28,17 @@ interface Props extends Localisable {
 }
 
 const notLoggedInBox = (l: Localiser) =>
-  <div>
+  <div className="headsUp note">
     { l('LOG_IN_TO_JOIN_POOL', 'You need to sign up in order to join a pool') }
   </div>
 
 const clickToJoinBox = (l: Localiser, onClick: () => void) =>
-  <div onClick={onClick}>
+  <div className="headsUp note" onClick={onClick}>
     { l('CLICK_TO_JOIN_POOL', 'Click here to join this pool') }
   </div>
 
 const alreadyMemberBox = (l: Localiser) =>
-  <div>
+  <div className="headsUp success">
     { l('ALREADY_PARTICIPANT_POOL', 'You are participating in this pool') }
   </div>
 
@@ -92,7 +92,7 @@ function extraQuestionsBlock(pool: m.Pool, l: Localiser, userId: string) {
       link = extraQuestionsViewLink(pool, l)
     else
       link = extraQuestionsInputLink(pool, l)
-      
+
     return (
       <div>
         <p>
