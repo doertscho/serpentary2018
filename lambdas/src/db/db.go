@@ -22,6 +22,8 @@ type Db interface {
 	GetTournaments() []*models.Tournament
 	GetTournamentById(tournamentId *string) (*models.Tournament, *[]*models.Team)
 
+	GetFullTeamDataByTournamentId(tournamentId *string) *[]*models.Team
+
 	GetMatchDaysByTournamentId(tournamentId *string) []*models.MatchDay
 	GetMatchDayById(tournamentId *string, matchDayId *string) *models.MatchDay
 

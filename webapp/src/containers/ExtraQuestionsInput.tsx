@@ -17,7 +17,7 @@ import { makeGetUrlParameter } from '../selectors/util'
 import { makeGetPool, makeGetExtraQuestionBetBucket } from '../selectors/Pool'
 import {
   makeGetTournament,
-  makeGetTeams,
+  makeGetTeamsSorted,
   makeGetTeamsById
 } from '../selectors/Tournament'
 
@@ -219,6 +219,11 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
     let teams = this.props.teams || []
     let players: m.IPlayer[] = []
     if (currentTeamId) players = this.props.teamsById[currentTeamId].players
+    players.sort((a: m.IPlayer, b: m.IPlayer) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    })
     let l = this.props.l
 
     let teamSelect =
@@ -342,7 +347,7 @@ const makeMapStateToProps = () => {
     let getTournament = makeGetTournament(getTournamentIdFromUrl)
     let getExtraQuestionBetBucket = makeGetExtraQuestionBetBucket(
         getSquadIdFromUrl,  getTournamentIdFromUrl)
-    let getTeams = makeGetTeams(getTournamentIdFromUrl)
+    let getTeams = makeGetTeamsSorted(getTournamentIdFromUrl)
     let getTeamsById = makeGetTeamsById(getTeams)
     return {
       squadId: getSquadIdFromUrl(state, props),

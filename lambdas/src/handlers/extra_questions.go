@@ -21,7 +21,7 @@ func GetExtraQuestionData(
 		return lib.NotFound()
 	}
 
-	_, teams := db.GetDb().GetTournamentById(tournamentId)
+	teams := db.GetDb().GetFullTeamDataByTournamentId(tournamentId)
 	if teams == nil {
 		return lib.NotFound()
 	}

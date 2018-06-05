@@ -168,6 +168,21 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "2"
         WriteCapacityUnits: "2"
+  TeamsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'teams']]
+      AttributeDefinitions:
+        -
+          AttributeName: "tournament_id"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "tournament_id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "2"
+        WriteCapacityUnits: "2"
 
   # Authorizer for the API Gateway
   CognitoAuthorizer:
