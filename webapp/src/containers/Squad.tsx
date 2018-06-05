@@ -24,17 +24,17 @@ interface Props extends Localisable {
 }
 
 const notLoggedInBox = (l: Localiser) =>
-  <div>
+  <div className="headsUp note">
     { l('LOG_IN_TO_JOIN', 'You need to sign up in order to join a squad') }
   </div>
 
 const clickToJoinBox = (l: Localiser, onClick: () => void) =>
-  <div onClick={onClick}>
+  <div className="headsUp note" onClick={onClick}>
     { l('CLICK_TO_JOIN', 'Click here to join this squad') }
   </div>
 
 const alreadyMemberBox = (l: Localiser) =>
-  <div>
+  <div className="headsUp success">
     { l('ALREADY_MEMBER', 'You are a member of this squad') }
   </div>
 
