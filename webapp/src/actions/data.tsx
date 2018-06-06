@@ -79,7 +79,8 @@ export const fetchExtraQuestions = (
       '/tournaments/' + tournamentId +
         '/pools/' + squadId +
         '/extra-questions',
-      callbacks
+      callbacks,
+      true
   )
 
 /*

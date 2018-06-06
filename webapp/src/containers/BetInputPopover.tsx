@@ -12,6 +12,7 @@ import { getUserId } from '../selectors/session'
 import { getTeams } from '../selectors/data'
 
 import Match from '../components/Match'
+import TeamIcon from '../components/TeamIcon'
 
 interface Props extends Localisable {
   match: m.Match
@@ -39,6 +40,10 @@ class betInputView extends React.Component<Props, State> {
     let l = this.props.l
     return (
       <div className="betInput">
+        <div className="teamIcons">
+          <TeamIcon teamId={homeTeam.id} teamName={l(homeTeam.name)} />
+          <TeamIcon teamId={awayTeam.id} teamName={l(awayTeam.name)} />
+        </div>
         <div className="matchTeams">
           <div className="teamName">{ l(homeTeam.name) }</div>
           <div>- vs. -</div>

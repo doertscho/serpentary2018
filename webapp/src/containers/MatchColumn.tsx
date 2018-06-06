@@ -12,7 +12,7 @@ import { secondsToTimeout } from '../rules'
 
 import Match from '../components/Match'
 import MatchCountdown from '../components/MatchCountdown'
-import UserIcon from '../components/UserIcon'
+import TeamIcon from '../components/TeamIcon'
 
 interface Props extends Localisable {
   match: m.Match
@@ -32,7 +32,11 @@ const readOnlyBet = (bet: m.Bet) => {
     case m.BetStatus.MISSING:
       return <div key={bet.userId} className="bet missing">-</div>
     case m.BetStatus.HIDDEN:
-      return <div key={bet.userId} className="bet hidden">?</div>
+      return (
+        <div key={bet.userId} className="bet hidden">
+          <i className="fas fa-user-secret"></i>
+        </div>
+      )
     default:
       return (
         <div key={bet.userId} className="bet">
@@ -98,8 +102,8 @@ class matchColumnView extends React.Component<Props, State> {
     return (
       <div className="matchWithBets">
         <div className="match">
-          <UserIcon userId={homeTeamName} />
-          <UserIcon userId={awayTeamName} />
+          <TeamIcon teamId={match.homeTeamId} teamName={homeTeamName} />
+          <TeamIcon teamId={match.awayTeamId} teamName={awayTeamName} />
         </div>
         <div className={'matchResult' + (inProgress ? ' inProgress' : '')}>
           { this.buildMatchResult() }
