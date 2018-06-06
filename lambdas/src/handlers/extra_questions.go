@@ -13,7 +13,7 @@ import (
 )
 
 func GetExtraQuestionData(
-	squadId *string, tournamentId *string,
+	squadId *string, tournamentId *string, userId *string,
 ) *events.APIGatewayProxyResponse {
 
 	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
@@ -35,6 +35,9 @@ func GetExtraQuestionData(
 	}
 
 	betBucket := db.GetDb().GetExtraBetsByPoolId(squadId, tournamentId)
+	if !lib.DeadlineHasPassed(pool.ExtraQuestionsDeadline) {
+		censorExtraQuestionBets(betBucket, userId)
+	}
 
 	extraQuestionBets := []*models.ExtraQuestionBetBucket{betBucket}
 	pools := []*models.Pool{pool}

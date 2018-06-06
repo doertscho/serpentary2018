@@ -13,6 +13,9 @@ $matchInfoHeight: 78px
 $matchInfoLineHeight: 26px
 $countdownHeight: 30px
 
+.matchDayBlock
+  overflow-x: scroll
+
 .betMatrix
   display: flex
 
@@ -100,14 +103,15 @@ $countdownHeight: 30px
   .matches .bet
     box-shadow: 0px 0px 4px 0px rgba(128,128,128,1)
     &.missing
-      background-color: #c4001d
-      color: #fff
+      background-color: #ffcc80
+      color: #000
       font-weight: bold
     &.hidden
-      background-color: #ccc
+      background-color: #e1bee7
     &.my-bet
-      box-shadow: 0px 0px 4px 0px $primary
+      box-shadow: 0px 0px 8px 0px $primary
     &.enter-now
       &:hover
-        background-color: $secondary
+        background-color: $primary
+        color: $primary-text
         cursor: pointer

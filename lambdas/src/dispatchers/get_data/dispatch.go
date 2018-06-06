@@ -89,7 +89,7 @@ func getRequest(
 	if matchPath("tournaments", "_", "pools", "_", "extra-questions") {
 		tournamentId := (*params)["tournamentId"]
 		squadId := (*params)["squadId"]
-		return handlers.GetExtraQuestionData(&squadId, &tournamentId)
+		return handlers.GetExtraQuestionData(&squadId, &tournamentId, userId)
 	}
 
 	if matchPath("squads", "_") {
