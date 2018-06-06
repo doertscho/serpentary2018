@@ -30,10 +30,14 @@ interface State {
 const readOnlyBet = (bet: m.Bet) => {
   switch (bet.status) {
     case m.BetStatus.MISSING:
-      return <div key={bet.userId} className="bet missing">-</div>
+      return (
+        <div key={bet.userId} className="bet missing" title="Bet missing">
+          <i className="fas fa-minus"></i>
+        </div>
+      )
     case m.BetStatus.HIDDEN:
       return (
-        <div key={bet.userId} className="bet hidden">
+        <div key={bet.userId} className="bet hidden" title="Hidden bet">
           <i className="fas fa-user-secret"></i>
         </div>
       )
