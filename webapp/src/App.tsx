@@ -25,6 +25,8 @@ import PopoverContainer from './containers/PopoverContainer'
 import ActivityReporter from './containers/ActivityReporter'
 import NotFound from './components/NotFound'
 
+require('../styles/img/logo.png')
+
 interface Props {
   isInitialised: boolean
   initApp: () => void
@@ -49,7 +51,7 @@ class App extends React.Component<Props, any> {
         <div className="page-container">
           <header className="header">
             <div className="logo">
-              <img src={require('../styles/img/logo.png')} />
+              <img src="/img/logo.png" />
             </div>
             <div className="nav-container"><Navigation /></div>
             <div className="userBox-container"><UserBox /></div>
