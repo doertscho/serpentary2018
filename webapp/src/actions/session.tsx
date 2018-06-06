@@ -113,7 +113,7 @@ export function logIn(userId: string, password: string) {
       password,
       () => {
         dispatch(sessionResponse(operation, userId))
-        dispatch(getMe())
+        dispatch(recoverSession())
       },
       (errorMessage: string) => {
         dispatch(sessionError(operation, errorMessage))
