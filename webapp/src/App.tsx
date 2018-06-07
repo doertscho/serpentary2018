@@ -21,6 +21,8 @@ import Squad from './containers/Squad'
 import Pool from './containers/Pool'
 import ExtraQuestionsBets from './containers/ExtraQuestionsBets'
 import ExtraQuestionsInput from './containers/ExtraQuestionsInput'
+import Rules from './containers/Rules'
+import Statistics from './containers/Statistics'
 import PopoverContainer from './containers/PopoverContainer'
 import ActivityReporter from './containers/ActivityReporter'
 import NotFound from './components/NotFound'
@@ -109,6 +111,10 @@ class App extends React.Component<Props, any> {
 
               <Route path={'/squads/:squad_id' + ID}
                   component={ Squad } />
+
+              <Route path={'/rules'} component={ Rules } />
+
+              <Route path={'/statistics'} component={ Statistics } />
 
               <Route component={ NotFound } />
 

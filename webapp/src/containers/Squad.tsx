@@ -71,6 +71,7 @@ class squadPage extends LazyLoadingComponent<Props, {}> {
   renderWithData() {
     let squadId = this.props.squadId
     let squad = this.props.squad
+    let members = squad.members || []
     let userId = this.props.userId
     let joinSquad = this.props.joinSquad
     let pools = this.props.pools || []
@@ -91,6 +92,12 @@ class squadPage extends LazyLoadingComponent<Props, {}> {
                 #{pool.tournamentId}
               </Link>
             </li>
+          )}
+        </ul>
+        <h3>{ l('SQUAD_MEMBERS', 'Members of this squad') }</h3>
+        <ul>
+          { members.map(userId =>
+            <li key={userId}>{userId}</li>
           )}
         </ul>
         { this.refreshComponent }

@@ -77,6 +77,7 @@ const translation_de: Translation = {
   // squad page
   SQUAD_PAGE_TITLE: 'Tipprunde',
   SQUAD_POOLS: 'Angebotene Wettbewerbe dieser Tipprunde',
+  SQUAD_MEMBERS: 'Mitglieder dieser Tipprunde',
   LOG_IN_TO_JOIN:
     'Du musst dich anmelden, um einer Tipprunde beitreten zu können',
   CLICK_TO_JOIN: 'Klicke hier, um dieser Tipprunde beizutreten',
