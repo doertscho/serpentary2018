@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
-import { Redirect, withRouter } from 'react-router-dom'
+import { Redirect, withRouter, RouteComponentProps } from 'react-router-dom'
 
 import { StoreState } from '../types'
 import { Action } from '../actions'
@@ -8,9 +8,8 @@ import { logIn } from '../actions/session'
 import { Localiser, Localisable, withLocaliser } from '../locales'
 import { getUserId } from '../selectors/session'
 
-interface Props extends Localisable {
+interface Props extends Localisable, RouteComponentProps<any> {
   userId: string
-  referrer: string
   logIn: (username: string, password: string) => void
 }
 
@@ -22,8 +21,14 @@ interface State {
 class view extends React.Component<Props, State> {
 
   render() {
+    let referrer = '/'
+    if (this.props.location
+        && this.props.location.state
+        && this.props.location.state.from) {
+      referrer = this.props.location.state.from.pathname || '/'
+    }
     if (this.props.userId)
-      return <Redirect to={ this.props.referrer || '/' } />
+      return <Redirect to={referrer} />
     let l = this.props.l
     return (
       <div>

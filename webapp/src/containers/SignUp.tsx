@@ -160,7 +160,9 @@ class view extends React.Component<Props, State> {
           { l('SIGN_UP_SUCCESS',
               'Thanks, {}, your registration was successful. ' +
               'Please check your email to confirm your account ' +
-              'or let me know so I can activate it manually.',
+              'or let me know so I can activate it manually. ' +
+              'Once your account is activated, you can log in ' +
+              'and join a squad by going back to the squad\'s page.',
               this.props.unconfirmedUserId
             ) }
         </p>

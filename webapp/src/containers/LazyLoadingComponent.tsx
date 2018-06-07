@@ -20,15 +20,12 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
 
   constructor(props: Props) {
     super(props)
-    console.log('LazyLoadingComponent constructing')
     this.requestData = this.requestData.bind(this)
     this.refreshComponent =
         <Refresh l={this.props.l} refresh={this.requestData} />
   }
 
   render() {
-
-    console.log('LazyLoadingComponent rendering')
 
     if (this.loadingInProgress())
       return this.renderLoading()
@@ -111,7 +108,6 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
   }
 
   componentWillMount() {
-    console.log('LazyLoadingComponent mounting')
     if (!this.allRequiredPropsProvided()) {
       console.log('required props are missing, will request data')
       this.loadingState = LoadingState.LoadingInProgress
