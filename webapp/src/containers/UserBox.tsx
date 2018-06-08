@@ -46,7 +46,7 @@ const guestView = (props: Props) => {
   return (
     <div className="userInfo">
       <div className="greeting">
-        { l('GREETING_GUEST', 'Greetings, unkown entity!') }
+        { l('GREETING_GUEST', 'Greetings, unknown entity!') }
       </div>
       <div className="signUpLink">
         <Link to="/sign-up">{ l('SIGN_UP', 'Sign up') }</Link>
