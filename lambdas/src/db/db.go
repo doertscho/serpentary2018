@@ -30,12 +30,16 @@ type Db interface {
 	GetMatchesByMatchDayId(
 		tournamentId *string, matchDayId *string) []*models.Match
 
-	GetSquadById(squadId *string) *models.Squad
+	GetSquadById(squadId *string) (*models.Squad, *[]*models.User)
 	AddUserToSquad(squadId *string, userId *string) (*models.Squad, *models.User)
+	UpdatePreferredNameForUserOnSquad(
+		squadId *string,
+		userId *string, preferredName *string,
+	) *models.Squad
 
 	GetUserById(userId *string) *models.User
 	RegisterNewUser(userId *string) *models.User
-	GetBatchOfUsersByIds(userIds *[]string) []*models.User
+	UpdatePreferredNameForUser(userId *string, preferredName *string) *models.User
 
 	GetPoolById(
 		squadId *string, tournamentId *string,
@@ -51,6 +55,10 @@ type Db interface {
 		squadId *string, tournamentId *string,
 		userId *string, bets *models.ExtraQuestionUserBetBucket,
 	) *models.ExtraQuestionBetBucket
+	UpdatePreferredNameForUserOnPool(
+		squadId *string, tournamentId *string,
+		userId *string, preferredName *string,
+	) *models.Pool
 
 	GetBetsByMatchDayAndSquadId(
 		tournamentId *string, matchDayId *string, squadId *string,

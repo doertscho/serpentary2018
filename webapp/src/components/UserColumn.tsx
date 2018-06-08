@@ -12,8 +12,8 @@ export default ({ participants }: Props) =>
   <div className="users">
     { participants.map(user =>
     <div key={user.id} className="user">
-      <UserIcon userId={user.id} />
-      <span className="userName">{user.id}</span>
+      <UserIcon userId={user.id} userName={user.preferredName} />
+      <span className="userName">{user.preferredName || user.id}</span>
     </div>
     )}
   </div>

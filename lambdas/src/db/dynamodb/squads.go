@@ -7,22 +7,29 @@ import (
 	attr "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
-func (db DynamoDb) GetSquadById(squadId *string) *models.Squad {
+func (db DynamoDb) GetSquadById(
+	squadId *string,
+) (*models.Squad, *[]*models.User) {
 
 	record, err := db.getItemById("squads", squadId)
 	if err != nil {
 		log.Println("error occurred querying item: " + err.Error())
-		return nil
+		return nil, nil
 	}
 
 	squad := models.Squad{}
 	err = attr.UnmarshalMap(*record, &squad)
 	if err != nil {
 		log.Println("error unmarshalling item: " + err.Error())
-		return nil
+		return nil, nil
 	}
 
-	return &squad
+	users := buildUsersFromPreferredNames(record)
+	if users == nil {
+		users = &[]*models.User{}
+	}
+
+	return &squad, users
 }
 
 func (db DynamoDb) AddUserToSquad(
@@ -65,4 +72,30 @@ func (db DynamoDb) AddUserToSquad(
 	}
 
 	return &squad, &user
+}
+
+func (db DynamoDb) UpdatePreferredNameForUserOnSquad(
+	squadId *string,
+	userId *string, preferredName *string,
+) *models.Squad {
+
+	squadRecord, err := db.updateItem(
+		"squads",
+		stringId(squadId),
+		set("preferred_names.#userId = :newName").
+			withFieldName("#userId", userId).
+			bind(":newName", stringAttr(preferredName)),
+	)
+	if err != nil {
+		log.Println("Failed to update squad: " + err.Error())
+		return nil
+	}
+	squad := models.Squad{}
+	err = attr.UnmarshalMap(*squadRecord, &squad)
+	if err != nil {
+		log.Println("Error unmarshalling squad record: " + err.Error())
+		return nil
+	}
+
+	return &squad
 }

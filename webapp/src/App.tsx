@@ -13,6 +13,7 @@ import Navigation from './containers/Navigation'
 import Dashboard from './containers/Dashboard'
 import SignUp from './containers/SignUp'
 import LogIn from './containers/LogIn'
+import Profile from './containers/Profile'
 import Tournament from './containers/Tournament'
 import MatchDay from './containers/MatchDay'
 import MatchDayBets from './containers/MatchDayBets'
@@ -115,6 +116,8 @@ class App extends React.Component<Props, any> {
               <Route path={'/rules'} component={ Rules } />
 
               <Route path={'/statistics'} component={ Statistics } />
+
+              <Route path={'/profile'} component={ Profile } />
 
               <Route component={ NotFound } />
 

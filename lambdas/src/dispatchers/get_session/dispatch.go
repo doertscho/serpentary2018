@@ -33,8 +33,16 @@ func dispatch(request events.APIGatewayProxyRequest) (
 
 	matchPath := lib.MakePathMatcher(request.Path)
 
-	if matchPath("me") {
-		return *handlers.GetMe(userId), nil
+	if request.HTTPMethod == "GET" {
+		if matchPath("me") {
+			return *handlers.GetMe(userId), nil
+		}
+	}
+
+	if request.HTTPMethod == "POST" {
+		if matchPath("me", "preferred-name") {
+			return *handlers.UpdatePreferredName(userId, &request.Body), nil
+		}
 	}
 
 	return *lib.NotFound(), nil

@@ -2,6 +2,7 @@ import * as React from 'react'
 
 interface Props {
   userId?: string
+  userName?: string
 }
 
 function hashString(input: string): number {
@@ -41,9 +42,10 @@ function makeColors(userId: string): { backgroundColor: string, color: string} {
 
 export default (props: Props) => {
   let userId = props.userId || ''
+  let userName = props.userName || userId
   return (
-    <div className="userIcon" style={makeColors(userId)} title={userId}>
-      { userId.substring(0, 1).toUpperCase() }
+    <div className="userIcon" style={makeColors(userId)} title={userName}>
+      { userName.substring(0, 1).toUpperCase() }
     </div>
   )
 }

@@ -98,6 +98,32 @@ func (db DynamoDb) AddUserToPool(
 	return &pool, &user
 }
 
+func (db DynamoDb) UpdatePreferredNameForUserOnPool(
+	squadId *string, tournamentId *string,
+	userId *string, preferredName *string,
+) *models.Pool {
+
+	poolRecord, err := db.updateItem(
+		"pools",
+		compoundKey("squad_id", squadId, "tournament_id", tournamentId),
+		set("preferred_names.#userId = :newName").
+			withFieldName("#userId", userId).
+			bind(":newName", stringAttr(preferredName)),
+	)
+	if err != nil {
+		log.Println("Failed to update pool: " + err.Error())
+		return nil
+	}
+	pool := models.Pool{}
+	err = attr.UnmarshalMap(*poolRecord, &pool)
+	if err != nil {
+		log.Println("Error unmarshalling pool record: " + err.Error())
+		return nil
+	}
+
+	return &pool
+}
+
 func (db DynamoDb) getPoolRecord(
 	squadId *string, tournamentId *string,
 ) *map[string]*sdk.AttributeValue {
@@ -117,13 +143,13 @@ func buildUsersFromPreferredNames(
 	if record == nil {
 		return nil
 	}
-	preferredNamesAttribute := (*record)["participants_preferred_names"]
+	preferredNamesAttribute := (*record)["preferred_names"]
 	if preferredNamesAttribute == nil {
 		return nil
 	}
 	idToNameMap := preferredNamesAttribute.M
 	if idToNameMap == nil {
-		log.Println("Field 'participants_preferred_names' exists but is not a map")
+		log.Println("Field 'preferred_names' exists but is not a map")
 		return nil
 	}
 	users := make([]*models.User, len(idToNameMap))

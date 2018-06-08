@@ -54,24 +54,25 @@ func (db DynamoDb) RegisterNewUser(userId *string) *models.User {
 	return &user
 }
 
-func (db DynamoDb) GetBatchOfUsersByIds(userIds *[]string) []*models.User {
+func (db DynamoDb) UpdatePreferredNameForUser(
+	userId *string, preferredName *string) *models.User {
 
-	records, err := db.getItemBatchByIds("users", userIds)
+	userRecord, err := db.updateItem(
+		"users",
+		stringId(userId),
+		set("preferred_name = :newName").
+			bind(":newName", stringAttr(preferredName)),
+	)
 	if err != nil {
-		log.Println("Error occurred querying item: " + err.Error())
+		log.Println("Failed to update squad: " + err.Error())
+		return nil
+	}
+	user := models.User{}
+	err = attr.UnmarshalMap(*userRecord, &user)
+	if err != nil {
+		log.Println("error unmarshalling item: " + err.Error())
 		return nil
 	}
 
-	users := make([]*models.User, len(*records))
-	for idx, record := range *records {
-		user := models.User{}
-		err = attr.UnmarshalMap(record, &user)
-		if err != nil {
-			log.Println("Error unmarshalling user record: " + err.Error())
-			return nil
-		}
-		users[idx] = &user
-	}
-
-	return users
+	return &user
 }

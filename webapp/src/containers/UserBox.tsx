@@ -5,26 +5,32 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { logOut, setLocale } from '../actions/session'
-import { getUserId, getLocale } from '../selectors/session'
+import {
+  getUserId,
+  getLocale,
+  getPreferredUserName
+} from '../selectors/session'
 import { Localisable, withLocaliser, supportedLocales } from '../locales'
 
 import UserIcon from '../components/UserIcon'
 
 interface Props extends Localisable, RouteComponentProps<any> {
   userId?: string
+  preferredUserName?: string
   logOut: () => void
   setLocale: (locale: string) => void
 }
 
 const userView = (props: Props) => {
   let userId = props.userId
+  let userName = props.preferredUserName || userId
   let logOut = props.logOut
   let l = props.l
   return (
     <div className="userInfo">
-      <div className="greeting">{ l('GREETING', 'Hello, {}!', userId) }</div>
+      <div className="greeting">{ l('GREETING', 'Hello, {}!', userName) }</div>
       <div className="editProfile">
-        <Link to="/my-profile">
+        <Link to="/profile">
           { l('EDIT_PROFILE_SETTINGS', 'Profile and settings') }
         </Link>
       </div>
@@ -82,10 +88,11 @@ class view  extends React.Component<Props, {}> {
 
   render() {
     let userId = this.props.userId
+    let userName = this.props.preferredUserName || userId
     let selectedView = userId ? userView(this.props) : guestView(this.props)
     return (
       <div className="userBox">
-        <UserIcon userId={userId} />
+        <UserIcon userId={userId} userName={userName} />
         { selectedView }
         { localeSelector(this.props) }
       </div>
@@ -95,7 +102,8 @@ class view  extends React.Component<Props, {}> {
 
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
-    userId: getUserId(state)
+    userId: getUserId(state),
+    preferredUserName: getPreferredUserName(state)
   }
 })
 
