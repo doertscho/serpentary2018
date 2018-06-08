@@ -59,6 +59,17 @@ const translation_de: Translation = {
 
   // dashboard page
   DASHBOARD_PAGE_TITLE: 'Übersicht',
+  DASHBOARD_INTRO_TEXT:
+    'Willkommen bei dieser kleinen Tippspiel-App. ' +
+    'Um einer Tipprunde und ihren Tippspielen beizutreten, ' +
+    'muss jemand den direkten Link zu dessen Seite mit dir teilen. ' +
+    'Mehr Informationen findest du unter "Regeln".',
+  DASHBOARD_SUGGESTIONS_TEXT:
+    'Diese Übersichtsseite sieht derzeit recht leer aus. ' +
+    'Vorschläge, was diese Seite nützlicher machen könnte, ' +
+    'kannst du jederzeit über das Ticketsystem des Projekts übermitteln. ' +
+    'Dieses erreichst du über das Käfer-Icon in der oberen Navigation.',
+  DASHBOARD_TOURNAMENTS: 'Derzeit aktive Wettbewerbe',
 
   // tournament details page
   TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo',

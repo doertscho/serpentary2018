@@ -39,6 +39,23 @@ class dashboardPage extends LazyLoadingComponent<Props, {}> {
     return (
       <div>
         <h1>{ l('DASHBOARD_PAGE_TITLE', 'Dashboard') }</h1>
+        <p>
+          { l('DASHBOARD_INTRO_TEXT',
+            'Welcome to this little football pool app. ' +
+            'In order to join a pool, ' +
+            'someone needs to share their squad\'s page link with you. ' +
+            'For more information check the Rules page.'
+          )}
+        </p>
+        <p>
+          { l('DASHBOARD_SUGGESTIONS_TEXT',
+            'This page currently looks rather empty. ' +
+            'For any suggestions on what could make this page more useful, ' +
+            'please use the issue tracker of this project ' +
+            'which you can find via the bug icon at the top.'
+          )}
+        </p>
+        <h2>{ l('DASHBOARD_TOURNAMENTS', 'Currently active tournaments') }</h2>
         <ul>
           { tournaments.map(t =>
             <li key={t.id}><TournamentLink tournament={t} /></li>) }
