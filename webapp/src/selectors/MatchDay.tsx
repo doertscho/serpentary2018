@@ -67,16 +67,16 @@ export function makeGetMatchDayBetBucket(
 }
 
 export function makeGetBetsByMatch(
-  getPool: ModelSelector<m.Pool>,
+  getParticipants: ModelSelector<m.User[]>,
   getMatches: ModelSelector<m.Match[]>,
   getMatchDayBetBucket: ModelSelector<m.MatchDayBetBucket>
 ): ModelSelector<m.Bet[][]> {
   return createSelector(
-    [getPool, getMatches, getMatchDayBetBucket],
-    (   pool,    matches,    matchDayBetBucket) => {
-      if (!pool || !matches || !matchDayBetBucket) return []
+    [getParticipants, getMatches, getMatchDayBetBucket],
+    (   participants,    matches,    matchDayBetBucket) => {
+      if (!participants || !matches || !matchDayBetBucket) return []
       matches = matches || []
-      let participantIds: string[] = pool.participants || []
+      let participantIds: string[] = participants.map(user => user.id)
       let userBetBuckets: m.IUserBetBucket[] = []
       if (matchDayBetBucket && matchDayBetBucket.bets)
         userBetBuckets = matchDayBetBucket.bets
