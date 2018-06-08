@@ -49,6 +49,7 @@ const translation_de: Translation = {
   SIGN_UP_PASSWORD_LABEL_DETAIL:
     'Verwende mindestens acht Zeichen und mindestens ' +
     'je einen Kleinbuchstaben, einen Großbuchstaben und eine Zahl.',
+  SIGN_UP_PASSWORD_CHECK_LABEL_HEAD: 'Bitte wiederhole dieses Passwort',
   SIGN_UP_EMAIL_LABEL_HEAD: 'Deine E-Mail-Adresse – wenn du möchtest',
   SIGN_UP_EMAIL_LABEL_DETAIL:
     'Gib eine E-Mail-Adresse an, ' +

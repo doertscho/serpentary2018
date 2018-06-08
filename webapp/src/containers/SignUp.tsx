@@ -186,11 +186,7 @@ class view extends React.Component<Props, State> {
   }
 
   onUserIdChange(event: React.ChangeEvent<HTMLInputElement>) {
-    let newUserId = event.target.value || ''
-    newUserId = newUserId.toLowerCase()
-    newUserId = newUserId.replace(/[_.]/, '-')
-    newUserId = newUserId.replace(/[^a-z0-9-]/, '')
-    if (newUserId.length > 24) newUserId = newUserId.substring(0, 24)
+    let newUserId = cleanUserId(event.target.value)
     this.setState({ userId: newUserId })
   }
 
@@ -240,6 +236,15 @@ class view extends React.Component<Props, State> {
       this.state.userId &&
       this.emailValid()
   }
+}
+
+const cleanUserId = (input: string) => {
+  let newUserId = input || ''
+  newUserId = newUserId.toLowerCase()
+  newUserId = newUserId.replace(new RegExp('[_.]', 'g'), '-')
+  newUserId = newUserId.replace(new RegExp('[^a-z0-9-]', 'g'), '')
+  if (newUserId.length > 24) newUserId = newUserId.substring(0, 24)
+  return newUserId
 }
 
 const mapStateToProps = withLocaliser((state: StoreState, props: any) => {
