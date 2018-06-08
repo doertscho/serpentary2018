@@ -3,6 +3,7 @@ import { models as m } from './models'
 export interface SessionState {
   userId?: string
   unconfirmedUserId?: string
+  preferredUserName?: string
   errorMessage?: string
   locale?: string
 }

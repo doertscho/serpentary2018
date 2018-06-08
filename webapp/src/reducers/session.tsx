@@ -60,6 +60,7 @@ const handleLogInEvent: Reducer<SessionState, SessionAction> =
           errorMessage: null,
           userId: action.userId,
           unconfirmedUserId: null,
+          preferredUserName: action.preferredUserName,
         })
       }
     case constants.ERROR:
@@ -98,6 +99,8 @@ function copyWith(
         s.userId : c.userId,
     unconfirmedUserId: c.unconfirmedUserId === undefined ?
         s.unconfirmedUserId : c.unconfirmedUserId,
+    preferredUserName: c.preferredUserName === undefined ?
+        s.preferredUserName : c.preferredUserName,
     errorMessage: c.errorMessage === undefined ?
         s.errorMessage : c.errorMessage,
     locale: c.locale === undefined ?

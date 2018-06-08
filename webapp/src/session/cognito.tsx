@@ -3,7 +3,8 @@ import {
   CognitoUserAttribute,
   AuthenticationDetails,
   CognitoUser,
-  CognitoUserSession
+  CognitoUserSession,
+  ICognitoUserAttributeData
 } from 'amazon-cognito-identity-js'
 
 import * as conf from '../../conf/cognito'
@@ -162,6 +163,31 @@ export default class CognitoSessionManager implements SessionManager {
     this.cognitoUser.signOut()
     this.cognitoUser = null
     onSuccess()
+  }
+
+  updatePreferredName(
+    newName: string,
+    onSuccess: () => void,
+    onError: () => void
+  ) {
+
+    if (!this.cognitoUser) {
+      onError()
+      return
+    }
+
+    let data = { Name: 'preferred_username', Value: newName }
+    let attributes = [data]
+
+    this.cognitoUser.updateAttributes(attributes, (err?, result?) => {
+      if (err) {
+        console.log('error updating preferred name:', err)
+        if (onError) onError()
+        return
+      }
+      console.log('updated preferred name:', result)
+      onSuccess()
+    })
   }
 }
 

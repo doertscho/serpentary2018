@@ -298,3 +298,13 @@ Resources:
           Properties:
             Path: /me
             Method: get
+        PreferredNameOptions:
+          Type: Api
+          Properties:
+            Path: /me/preferred-name
+            Method: options
+        PostPreferredName:
+          Type: Api
+          Properties:
+            Path: /me/preferred-name
+            Method: post

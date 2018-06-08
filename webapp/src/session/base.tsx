@@ -31,4 +31,7 @@ export interface SessionManager {
     onSuccess: () => void,
     onError: (errorMessage?: string) => void
   ) => void
+
+  updatePreferredName:
+    (newName: string, onSuccess: () => void, onError: () => void) => void
 }

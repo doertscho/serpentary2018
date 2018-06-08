@@ -10,7 +10,7 @@ import (
 
 func GetSquadById(squadId *string) *events.APIGatewayProxyResponse {
 
-	squad := db.GetDb().GetSquadById(squadId)
+	squad, users := db.GetDb().GetSquadById(squadId)
 	if squad == nil {
 		return lib.NotFound()
 	}
@@ -21,6 +21,7 @@ func GetSquadById(squadId *string) *events.APIGatewayProxyResponse {
 	data := &models.Update{
 		Squads: squads,
 		Pools:  pools,
+		Users:  *users,
 	}
 
 	return lib.BuildUpdate(data)
@@ -30,7 +31,7 @@ func AddUserToSquad(
 	squadId *string, userId *string,
 ) *events.APIGatewayProxyResponse {
 
-	squad := db.GetDb().GetSquadById(squadId)
+	squad, _ := db.GetDb().GetSquadById(squadId)
 	if squad == nil {
 		return lib.NotFound()
 	}

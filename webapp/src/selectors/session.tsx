@@ -7,6 +7,8 @@ export const getUserId =
     (state: StoreState) => getSession(state).userId
 export const getUnconfirmedUserId =
     (state: StoreState) => getSession(state).unconfirmedUserId
+export const getPreferredUserName =
+    (state: StoreState) => getSession(state).preferredUserName
 export const getSessionErrorMessage =
     (state: StoreState) => getSession(state).errorMessage
 

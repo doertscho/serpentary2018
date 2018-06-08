@@ -10,7 +10,7 @@ import {
   BaseSessionAction,
   SessionOperation
 } from './base'
-import { getMe } from './data'
+import { getMe, postNewPreferredName } from './data'
 
 export function initSession() {
   return function(dispatch: Dispatch<StoreState>) {
@@ -59,9 +59,24 @@ function fetchAttributes() {
       (attributes: { [key: string]: string }) => {
         if (attributes.preferred_username)
           dispatch(sessionResponse(
-              constants.LOG_IN, null, attributes.preferred_username))
+              constants.LOG_IN, undefined, attributes.preferred_username))
         if (attributes.locale)
           dispatch(determineLocale(attributes.locale))
+      }
+    )
+  }
+}
+
+export function updatePreferredName(newName: string) {
+  return function(dispatch: Dispatch<StoreState>) {
+    sessionManager.updatePreferredName(
+      newName,
+      () => {
+        dispatch(sessionResponse(constants.LOG_IN, undefined, newName))
+        dispatch(postNewPreferredName(newName))
+      },
+      () => {
+        console.log("error updating preferred name")
       }
     )
   }

@@ -111,6 +111,19 @@ export const postExtraQuestionBets = (
     base64encode(m.ExtraQuestionUserBetBucket.encode(betBucket).finish())
   )
 
+export const postNewPreferredName = (
+  newName: string, callbacks?: Callbacks) => {
+
+  console.log("posting preferred name", newName)
+  let obj = m.User.create({ preferredName: newName })
+  let payload = m.User.encode(obj).finish()
+  return postData(
+    '/me/preferred-name',
+    callbacks,
+    base64encode(payload)
+  )
+}
+
 /*
  * ACTION CREATORS
  */
