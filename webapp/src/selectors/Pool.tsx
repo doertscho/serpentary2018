@@ -9,6 +9,7 @@ import {
   getPoolsBySquad,
   getExtraQuestionBets
 } from './data'
+import { getUserId } from './session'
 import { ModelSelector, StringSelector } from './util'
 
 export const makeGetPool = (
@@ -23,14 +24,18 @@ export const makeGetPool = (
 
 export const makeGetParticipants = (getPool: ModelSelector<m.Pool>) =>
   createSelector(
-    [getPool, getUsers],
-    (   pool,    users) => {
+    [getPool, getUserId, getUsers],
+    (   pool,    userId,    users) => {
       if (!pool || !pool.participants) return []
-      return pool.participants.map(userId => {
-        let user = users[userId]
-        if (!user) user = m.User.create({ id: userId })
-        return user
+      let me: m.User[] = []
+      let rest: m.User[] = []
+      pool.participants.forEach(participantId => {
+        let user = users[participantId]
+        if (!user) user = m.User.create({ id: participantId })
+        if (participantId == userId) me.push(user)
+        else rest.push(user)
       })
+      return me.concat(rest)
     }
   )
 

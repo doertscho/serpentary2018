@@ -84,7 +84,8 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
       return {
         session: copyWith(state, {
           errorMessage: null,
-          userId: null
+          userId: null,
+          preferredUserName: null
         })
       }
     default:
