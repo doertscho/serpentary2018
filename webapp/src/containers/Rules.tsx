@@ -57,17 +57,17 @@ const rulesView = (props: Localisable) => {
       <p>
         { l('RULES_SCORING_SYSTEM_TEXT',
           'When a match is over, ' +
-          'the actual result will be compared to your prediction.' +
+          'the actual result will be compared to your prediction. ' +
           'If you got the right tendency ' +
           '(that is, win, lose, or draw; ' +
           'for example, your bet was 3:1 and the game ended 1:0) ' +
           'three points will be added to your score. ' +
-          'If you got the correct goal difference as well, ' +
+          'If you got the correct goal difference as well ' +
+          '(for example, your bet was 3:0 and the game ended 4:1), '
           'you\'ve earned yourself another point ' +
-          'and the match is worth four for you. ' +
+          'and the match is worth four for you (except for draws). ' +
           'If you predicted the exact outcome of the match correctly, ' +
-          'it\'s another point on top ' +
-          'and you get the maximum of five points for this match. '
+          'you get the maximum of five points for this match. '
         ) }
       </p>
       <p>
