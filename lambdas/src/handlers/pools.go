@@ -62,9 +62,20 @@ func AddUserToPool(
 	}
 	*users = append(*users, user)
 
+	squads := []*models.Squad{}
+	if !lib.SliceContains(user.Squads, *squadId) {
+		squad, user := db.GetDb().AddUserToSquad(squadId, userId)
+		if squad == nil {
+			return lib.InternalError()
+		}
+		squads = []*models.Squad{squad}
+		*users = append(*users, user)
+	}
+
 	data := &models.Update{
-		Pools: []*models.Pool{pool},
-		Users: *users,
+		Pools:  []*models.Pool{pool},
+		Users:  *users,
+		Squads: squads,
 	}
 	return lib.BuildUpdate(data)
 }
