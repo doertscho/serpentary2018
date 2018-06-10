@@ -31,3 +31,5 @@ export const SHOW_POPOVER = 'SHOW_POPOVER'
 export type SHOW_POPOVER = typeof SHOW_POPOVER
 export const HIDE_POPOVER = 'HIDE_POPOVER'
 export type HIDE_POPOVER = typeof HIDE_POPOVER
+export const HIDE_ERROR = 'HIDE_ERROR'
+export type HIDE_ERROR = typeof HIDE_ERROR

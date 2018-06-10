@@ -11,6 +11,7 @@ const translation_de: Translation = {
 
   // page-wide
   REFRESH: 'Daten neu laden',
+  ERROR_TITLE: 'Es ist ein Fehler aufgetreten',
 
   // navigation links
   NAV_HOME: 'Start',

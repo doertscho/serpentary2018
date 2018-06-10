@@ -9,6 +9,8 @@ export const uiReducer: Reducer<UiState, UiAction> = (state, action) => {
       return { ui: { popoverElement: action.popoverElement } }
     case constants.HIDE_POPOVER:
       return { ui: { popoverElement: null } }
+    case constants.HIDE_ERROR:
+      return { errorMessage: null }
     default:
       return { }
   }

@@ -158,14 +158,14 @@ export function dataResponse(
 export interface DataError extends BaseDataAction {
   event: constants.ERROR
   path: string
-  error: any
+  errorMessage: string
 }
-export function dataError(path: string, error: any): DataError {
+export function dataError(path: string, errorMessage: string): DataError {
   return {
     type: constants.DATA,
     event: constants.ERROR,
     path: path,
-    error: error
+    errorMessage: errorMessage
   }
 }
 
@@ -232,6 +232,12 @@ function handleError(
     error: any, path: string,
     dispatch: Dispatch<StoreState>, callbacks?: Callbacks
 ) {
-  dispatch(dataError(path, error))
+  let errorMessage = 'Request failed'
+  if (error.message) errorMessage = error.message
+  else if (error.toString) errorMessage = error.toString()
+
+  let errorText = 'Request to [' + path + '] :: ' + errorMessage
+
+  dispatch(dataError(path, errorText))
   if (callbacks && callbacks.onError) callbacks.onError()
 }

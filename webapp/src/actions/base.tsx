@@ -42,7 +42,8 @@ export interface BaseSessionAction extends BaseAction<SessionState> {
 }
 
 export type UiOperation =
-  constants.SHOW_POPOVER | constants.HIDE_POPOVER
+  constants.SHOW_POPOVER | constants.HIDE_POPOVER |
+  constants.HIDE_ERROR
 
 export interface BaseUiAction extends BaseAction<UiState> {
   type: constants.UI
