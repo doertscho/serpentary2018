@@ -86,6 +86,13 @@ const translation_de: Translation = {
   MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
   COUNTDOWN_CLOSED: 'geschlossen!',
 
+  // ranking tables
+  RANKING_USER: 'Mensch / Hund',
+  RANKING_TENDENCY: 'Tendenz',
+  RANKING_DIFFERENCE: 'Differenz',
+  RANKING_EXACT: 'Volltreffer',
+  RANKING_SCORE: 'Punkte',
+
   // squad page
   SQUAD_PAGE_TITLE: 'Tipprunde',
   SQUAD_POOLS: 'Angebotene Wettbewerbe dieser Tipprunde',

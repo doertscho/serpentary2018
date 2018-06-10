@@ -16,6 +16,8 @@ export function mapValues<T>(input: Map<T>): T[] {
 
 export type ParentChildTable = Map<string[]>
 
+export type BetsByMatchTable = { [matchId: number]: m.Bet[] }
+
 export function joinKeys(
     keyA: number | string,
     keyB: number | string,

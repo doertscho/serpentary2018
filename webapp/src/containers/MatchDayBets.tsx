@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux'
 
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
-import { Map } from '../types/data'
+import { Map, BetsByMatchTable } from '../types/data'
 import { Localisable, withLocaliser, Localiser } from '../locales'
 import {
   makeGetMatchDay,
@@ -24,6 +24,7 @@ import { LazyLoadingComponent } from './LazyLoadingComponent'
 import BetInputPopover from './BetInputPopover'
 import MatchDayBetBlock from './MatchDayBetBlock'
 import UserColumn from '../components/UserColumn'
+import MatchDayRanking from './MatchDayRanking'
 
 interface Props extends Localisable {
 
@@ -36,7 +37,7 @@ interface Props extends Localisable {
   matches: m.Match[]
   squad: m.Squad
   pool: m.Pool
-  betsByMatch: m.Bet[][]
+  betsByMatch: BetsByMatchTable
   userId: string
   teamsById: Map<m.Team>
 
@@ -75,9 +76,11 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let participants = this.props.participants
     let matches = this.props.matches
     let betsByMatch = this.props.betsByMatch
-    return (!participants || !participants.length ||
+    return (
+        !participants || !participants.length ||
         !matches || !matches.length ||
-        !betsByMatch || !betsByMatch.length)
+        !betsByMatch
+    )
   }
 
   requestData() {
@@ -128,6 +131,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
       (pool && pool.participants && pool.participants.indexOf(userId) === -1)
 
     let getBets = (match: m.Match) => betsByMatch[match.id] || []
+
     let makeShowBetForm = (match: m.Match) =>
         (bet: m.Bet) => this.showBetForm(match, bet)
 
@@ -143,6 +147,9 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
             matchDay={matchDay} matches={matches} teamsById={teamsById}
             getBets={getBets} makeShowBetForm={makeShowBetForm} />
         </div>
+        <h2>{ l('MATCH_DAY_RANKING', 'Match day ranking') }</h2>
+        <MatchDayRanking matches={matches} participants={participants}
+          betsByMatch={betsByMatch} />
         { this.refreshComponent }
       </div>
     )

@@ -1,0 +1,31 @@
+@import defs
+@import bets
+
+.rankingTable
+  td
+    height: $betCellHeight
+    padding: $betCellPadding (2 * $betCellPadding)
+    text-align: center
+
+    &.positionCell
+      font-weight: bold
+
+    &.userNameHead
+      text-align: left
+
+    &.userNameCell
+      text-align: left
+      padding: 0 (2 * $betCellPadding)
+      .userInfoContainer
+        display: flex
+        align-items: center
+        height: $betCellHeight
+        padding: $betCellPadding
+        span
+          margin-left: 8px
+
+.rankingHead
+  font-weight: bold
+  color: $primary
+
+.rankingBody
