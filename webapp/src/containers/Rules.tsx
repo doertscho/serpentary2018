@@ -15,7 +15,9 @@ const rulesView = (props: Localisable) => {
           'and see for which tournaments it is currently offering pools. ' +
           'In order to join a squad, ' +
           'someone must share the link to the squad\'s page with you. ' +
-          'Visit that page and click the prominent button to join the squad.'
+          'Visit that page and click the prominent button to join the squad. ' +
+          'After you have become member of a squad, ' +
+          'you can sign up for one of its pools and start submitting your bets.'
         ) }
       </p>
       <h2>{ l('RULES_SUBMITTING_BETS_HEAD', 'Submitting your bets') }</h2>
