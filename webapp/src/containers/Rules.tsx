@@ -63,7 +63,7 @@ const rulesView = (props: Localisable) => {
           'for example, your bet was 3:1 and the game ended 1:0) ' +
           'three points will be added to your score. ' +
           'If you got the correct goal difference as well ' +
-          '(for example, your bet was 3:0 and the game ended 4:1), '
+          '(for example, your bet was 3:0 and the game ended 4:1), ' +
           'you\'ve earned yourself another point ' +
           'and the match is worth four for you (except for draws). ' +
           'If you predicted the exact outcome of the match correctly, ' +
