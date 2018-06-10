@@ -162,6 +162,7 @@ export default class CognitoSessionManager implements SessionManager {
     console.log('attempting to log out user')
     this.cognitoUser.signOut()
     this.cognitoUser = null
+    this.cognitoSession = null
     onSuccess()
   }
 
