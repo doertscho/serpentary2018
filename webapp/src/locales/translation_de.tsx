@@ -63,6 +63,10 @@ const translation_de: Translation = {
   DASHBOARD_PAGE_TITLE: 'Übersicht',
   DASHBOARD_INTRO_TEXT:
     'Willkommen bei dieser kleinen Tippspiel-App. ' +
+    'Endlich kannst du der Welt beweisen, ' +
+    'dass niemand so viel von Fußball versteht wie du. ' +
+    'Sage die Ergebnisse der WM-Spiele korrekt vorher, ' +
+    'um Punkte zu sammeln und die Spitze der Tabelle zu erobern. ' +
     'Um einer Tipprunde und ihren Tippspielen beizutreten, ' +
     'muss jemand den direkten Link zu dessen Seite mit dir teilen. ' +
     'Mehr Informationen findest du unter "Regeln".',

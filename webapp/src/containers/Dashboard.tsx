@@ -42,9 +42,14 @@ class dashboardPage extends LazyLoadingComponent<Props, {}> {
         <p>
           { l('DASHBOARD_INTRO_TEXT',
             'Welcome to this little football pool app. ' +
+            'Finally there is a way to prove to the world ' +
+            '(or your colleagues or friends) ' +
+            'that you are the single greatest expert about football. ' +
+            'Predict the results of the world cup matches, ' +
+            'win points for correct bets, and climb the leaderbord. ' +
             'In order to join a pool, ' +
             'someone needs to share their squad\'s page link with you. ' +
-            'For more information check the Rules page.'
+            'For more information please check the Rules page.'
           )}
         </p>
         <p>

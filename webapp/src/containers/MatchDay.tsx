@@ -89,15 +89,14 @@ class matchDayPage extends LazyLoadingComponent<Props, {}> {
     let l = this.props.l
     return (
       <div>
-        <h1>{ l('MATCH_DAY_PAGE_TITLE', 'Match day') }</h1>
-        <h2>#{matchDay.id}</h2>
-        <h3>{ l('MATCH_DAY_MATCHES', 'Matches on this match day') }</h3>
+        <h1>{ l(matchDay.name) }</h1>
+        <h2>{ l('MATCH_DAY_SQUADS', 'Bets for this match day by squad') }</h2>
+        { this.renderPools() }
+        <h2>{ l('MATCH_DAY_MATCHES', 'Matches on this match day') }</h2>
         <ul>
           { matches.map(match =>
           <li key={match.id}><Match match={match} /></li>) }
         </ul>
-        <h3>{ l('MATCH_DAY_SQUADS', 'Bets for this match day by squad') }</h3>
-        { this.renderPools() }
         { this.refreshComponent }
       </div>
     )
