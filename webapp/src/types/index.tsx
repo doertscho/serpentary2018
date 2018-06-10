@@ -5,6 +5,7 @@ import { UiState, INITIAL_UI_STATE } from './ui'
 export interface StoreState {
   isInitialised: boolean
   pendingRequests: string[]
+  errorMessage?: string
 
   data: DataState
   session: SessionState

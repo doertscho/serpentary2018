@@ -10,17 +10,13 @@ interface Props {
 
 const view = (props: Props) => {
 
-  if (props.hasPendingRequests)
-    return (
-      <div className="activityReporter">
-        <i className="fas fa-sync fa-spin"></i>
-      </div>
-    )
+  if (!props.hasPendingRequests) return null
 
-  else
-    return (
-      <div className="activityReporter">&nbsp;</div>
-    )
+  return (
+    <div className="activityReporter">
+      <i className="fas fa-futbol fa-spin"></i>
+    </div>
+  )
 }
 
 const mapStateToProps = (state: StoreState) => {

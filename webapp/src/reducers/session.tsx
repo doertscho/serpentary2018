@@ -23,23 +23,25 @@ const handleSignUpEvent: Reducer<SessionState, SessionAction> =
     (state, action) => {
   switch (action.event) {
     case constants.REQUEST:
-      console.log("received notice of sign up request", action)
-      return { session: copyWith(state, { errorMessage: '' }) }
-    case constants.RESPONSE:
-      console.log("received sign up response", action)
       return {
+        errorMessage: null,
+        session: copyWith(state, { errorMessage: null })
+      }
+    case constants.RESPONSE:
+      return {
+        errorMessage: null,
         session: copyWith(state, {
-          errorMessage: '',
-          userId: '',
+          errorMessage: null,
+          userId: null,
           unconfirmedUserId: action.userId
         })
       }
     case constants.ERROR:
-      console.log("received sign up error", action)
       return {
+        errorMessage: action.errorMessage,
         session: copyWith(state, {
           errorMessage: action.errorMessage,
-          userId: ''
+          userId: null
         })
       }
     default:
@@ -51,11 +53,13 @@ const handleLogInEvent: Reducer<SessionState, SessionAction> =
     (state, action) => {
   switch (action.event) {
     case constants.REQUEST:
-      console.log("received notice of log in request", action)
-      return { session: copyWith(state, { errorMessage: null }) }
-    case constants.RESPONSE:
-      console.log("received log in response", action)
       return {
+        errorMessage: null,
+        session: copyWith(state, { errorMessage: null })
+      }
+    case constants.RESPONSE:
+      return {
+        errorMessage: null,
         session: copyWith(state, {
           errorMessage: null,
           userId: action.userId,
@@ -64,8 +68,8 @@ const handleLogInEvent: Reducer<SessionState, SessionAction> =
         })
       }
     case constants.ERROR:
-      console.log("received log in error", action)
       return {
+        errorMessage: action.errorMessage,
         session: copyWith(state, {
           errorMessage: action.errorMessage,
           userId: null
@@ -80,11 +84,11 @@ const handleLogOutEvent: Reducer<SessionState, SessionAction> =
     (state, action) => {
   switch (action.event) {
     case constants.RESPONSE:
-      console.log("received log out response", action)
       return {
+        errorMessage: null,
         session: copyWith(state, {
-          errorMessage: null,
           userId: null,
+          errorMessage: null,
           preferredUserName: null
         })
       }

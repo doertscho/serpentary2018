@@ -32,3 +32,11 @@ export function hidePopover(): UiRequest {
     operation: constants.HIDE_POPOVER
   }
 }
+
+export function hideError(): UiRequest {
+  return {
+    type: constants.UI,
+    event: constants.REQUEST,
+    operation: constants.HIDE_ERROR
+  }
+}

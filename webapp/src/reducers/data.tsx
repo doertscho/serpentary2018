@@ -17,6 +17,10 @@ export const dataReducer: Reducer<DataState, DataAction> = (state, action) => {
       return {
         data: mergeWithUpdate(state, (action as DataResponse).data)
       }
+    case constants.ERROR:
+      return {
+        errorMessage: action.errorMessage,
+      }
     default:
       return { }
   }
