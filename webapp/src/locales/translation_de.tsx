@@ -76,11 +76,18 @@ const translation_de: Translation = {
   // tournament details page
   TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo',
   TOURNAMENT_MATCH_DAYS: 'Spieltage in diesem Wettbewerb',
+  TOURNAMENT_POOLS: 'Tippspiele zu diesem Wettbewerb von deinen Tipprunden',
 
   // match day details page
   MATCH_DAY_PAGE_TITLE: 'Spieltagsinfo',
   MATCH_DAY_MATCHES: 'Spiele an diesem Spieltag',
   MATCH_DAY_SQUADS: 'Tipps für diesen Spieltag',
+  LOG_IN_TO_SEE_BETS:
+    'Du musst dich anmelden, um Tipps zu sehen und abzugeben.',
+  JOIN_SQUAD_TO_SEE_BETS:
+    'Du musst Mitglied einer Tipprunde werden ' +
+    'und dich für ihr Tippspiel anmelden, ' +
+    'um Tipps zu sehen und abzugeben.',
 
   // match day bets page
   MATCH_DAY_BETS_PAGE_TITLE: 'Spieltag: Tipps',
