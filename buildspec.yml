@@ -86,6 +86,8 @@ phases:
       - cd "${CODEBUILD_SRC_DIR}"
       # Copy static webapp assets to S3
       - aws s3 cp --recursive webapp/dist/ s3://$WEBSITE_S3_BUCKET/
+      # Invalidate CloudFront cache for the app's main files
+      - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths /serpentary.js /serpentary.css
       # Package application with AWS CloudFormation/SAM
       - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
 
