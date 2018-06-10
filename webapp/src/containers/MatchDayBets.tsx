@@ -127,8 +127,8 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     let l = this.props.l
 
     let showJoinLink =
-      (squad && squad.members && squad.members.indexOf(userId) !== -1) &&
-      (pool && pool.participants && pool.participants.indexOf(userId) === -1)
+      userId && pool && pool.participants &&
+      pool.participants.indexOf(userId) === -1
 
     let getBets = (match: m.Match) => betsByMatch[match.id] || []
 
