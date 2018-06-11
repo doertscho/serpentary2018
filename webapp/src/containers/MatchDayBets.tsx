@@ -17,7 +17,13 @@ import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
 import { Action } from '../actions'
-import { Callbacks, fetchBets, postBet, joinPool } from '../actions/data'
+import {
+  Callbacks,
+  fetchBetsAsUser,
+  fetchBetsAsGuest,
+  postBet,
+  joinPool
+} from '../actions/data'
 import { showPopover, hidePopover } from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
@@ -42,6 +48,7 @@ interface Props extends Localisable {
   teamsById: Map<m.Team>
 
   fetchBets: (
+      isLoggedIn: boolean,
       squadId: string,
       tournamentId: string,
       matchDayId: string,
@@ -74,17 +81,32 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   shouldRefreshOnMount() {
     let participants = this.props.participants
+    if (!participants || !participants.length) return true
     let matches = this.props.matches
+    if (!matches || !matches.length) return true
     let betsByMatch = this.props.betsByMatch
-    return (
-        !participants || !participants.length ||
-        !matches || !matches.length ||
-        !betsByMatch
-    )
+    if (!betsByMatch) return true
+
+    // if (any of) the current user's bets are marked as hidden, refresh too
+    let userId = this.props.userId
+    if (userId) {
+      for (let i = 0; i < participants.length; i++) {
+        if (participants[i].id != userId) continue
+        for (let j = 0; j < matches.length; j++) {
+          let match = matches[j]
+          let bet = betsByMatch[match.id][i]
+          if (bet && bet.status == m.BetStatus.HIDDEN) return true
+        }
+      }
+    }
+
+    return false
   }
 
   requestData() {
+    let isLoggedIn = !!this.props.userId
     this.props.fetchBets(
+        isLoggedIn,
         this.props.squadId,
         this.props.tournamentId,
         this.props.matchDayId,
@@ -200,12 +222,18 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
   return {
     fetchBets: (
+        isLoggedIn: boolean,
         squadId: string,
         tournamentId: string,
         matchDayId: string,
         callbacks?: Callbacks
       ) => {
-        dispatch(fetchBets(squadId, tournamentId, matchDayId, callbacks))
+        if (isLoggedIn)
+          dispatch(fetchBetsAsUser(
+              squadId, tournamentId, matchDayId, callbacks))
+        else
+          dispatch(fetchBetsAsGuest(
+              squadId, tournamentId, matchDayId, callbacks))
       },
     showPopover: (element: React.ReactElement<any>) => {
         dispatch(showPopover(element))
