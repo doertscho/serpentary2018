@@ -27,6 +27,13 @@ function initLocale() {
 
 function initUser() {
   return function(dispatch: Dispatch<StoreState>) {
+
+    let storage = window.localStorage
+    if (storage) {
+      let preferredSquad = storage.getItem('currentSquad')
+      if (preferredSquad) dispatch(setCurrentSquadId(preferredSquad))
+    }
+
     if (sessionManager.canRecoverSessionFromCache()) {
       dispatch(recoverSession())
     } else {
@@ -42,7 +49,7 @@ function recoverSession() {
       (userId: string) => {
         dispatch(sessionResponse(constants.LOG_IN, userId))
         dispatch(fetchAttributes())
-        dispatch(getMe())
+        dispatch(getMe({ onSuccess: () => dispatch(userDataReceived()) }))
         // Attributes are not mandatory, signal initialisation completion now.
         dispatch(initComplete())
       },
@@ -200,15 +207,43 @@ export function sessionError(
 }
 
 export interface SetLocale extends BaseSessionAction {
-  event: constants.REQUEST
+  event: constants.ONE_OFF
   operation: constants.SET_LOCALE
   locale: string
 }
 export function setLocale(locale: string): SetLocale {
   return {
     type: constants.SESSION,
-    event: constants.REQUEST,
+    event: constants.ONE_OFF,
     operation: constants.SET_LOCALE,
     locale: locale
+  }
+}
+
+export interface UserDataReceived extends BaseSessionAction {
+  event: constants.ONE_OFF
+  operation: constants.USER_DATA_RECEIVED
+}
+export function userDataReceived(): UserDataReceived {
+  return {
+    type: constants.SESSION,
+    event: constants.ONE_OFF,
+    operation: constants.USER_DATA_RECEIVED
+  }
+}
+
+export interface SetCurrentSquad extends BaseSessionAction {
+  event: constants.ONE_OFF
+  operation: constants.SET_CURRENT_SQUAD
+  currentSquadId: string
+}
+export function setCurrentSquadId(squadId: string): SetCurrentSquad {
+  let storage = window.localStorage
+  if (storage) storage.setItem('currentSquad', squadId)
+  return {
+    type: constants.SESSION,
+    event: constants.ONE_OFF,
+    operation: constants.SET_CURRENT_SQUAD,
+    currentSquadId: squadId
   }
 }

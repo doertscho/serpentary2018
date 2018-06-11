@@ -10,4 +10,6 @@ message Tournament {
   string id = 2;
 
   LocalisableString name = 3;
+
+  repeated string pools = 4;
 }

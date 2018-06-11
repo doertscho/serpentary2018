@@ -7,19 +7,19 @@ import {
   getMatchDays,
   getUsers
 } from './data'
-import { getUserId } from './session'
+import { getUserId, getCurrentSquadId } from './session'
 import { StringSelector, ModelSelector } from './util'
 
-export const getCurrentSquadId =
+/* export const getCurrentSquadId =
   createSelector(
-    [getUserId, getUsers],
-    (   userId,    users) => {
+    [getCurrentSquadId, getUserId, getUsers],
+    (   currentSquadId, userId,    users) => {
       if (!userId || !users) return null
       let user = users[userId]
       if (!user || !user.squads || !user.squads.length) return null
       return user.squads[0]
     }
-  )
+  )*/
 
 export const getCurrentTournamentId =
   createSelector(

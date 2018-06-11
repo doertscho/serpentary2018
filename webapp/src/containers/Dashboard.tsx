@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect, Dispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { StoreState } from '../types'
 import { Action } from '../actions'
@@ -65,6 +66,22 @@ class dashboardPage extends LazyLoadingComponent<Props, {}> {
           { tournaments.map(t =>
             <li key={t.id}><TournamentLink tournament={t} /></li>) }
         </ul>
+        <h2>{ l('DASHBOARD_POOLS', 'Currently active pools') }</h2>
+        { tournaments.map(t =>
+          (!t.pools || !t.pools.length) ? null : (
+            <ul key={'pools-' + t.id}>
+              { t.pools.map(squadId =>
+                <li key={t.id + '/' + squadId}>
+                  <Link to={'/tournaments/' + t.id + '/pools/' + squadId}>
+                    { l(t.name) }
+                  </Link>
+                  {' by '}
+                  <Link to={'/squads/' + squadId}>#{squadId}</Link>
+                </li>
+              )}
+            </ul>
+          )
+        ) }
         { this.refreshComponent }
       </div>
     )

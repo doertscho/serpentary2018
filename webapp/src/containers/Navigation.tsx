@@ -5,10 +5,10 @@ import { connect, Dispatch } from 'react-redux'
 import { StoreState } from '../types'
 import { Localisable, withLocaliser } from '../locales'
 import {
-  getCurrentSquadId,
   getCurrentTournamentId,
   getCurrentMatchDayId
 } from '../selectors/Navigation'
+import { getCurrentSquadId } from '../selectors/session'
 
 interface Props extends Localisable {
   squadId: string

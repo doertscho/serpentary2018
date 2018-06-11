@@ -14,3 +14,6 @@ export const getSessionErrorMessage =
 
 export const getLocale =
     (state: StoreState) => getSession(state).locale
+
+export const getCurrentSquadId =
+    (state: StoreState) => getSession(state).currentSquadId
