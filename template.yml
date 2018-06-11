@@ -219,20 +219,25 @@ Resources:
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}
             Method: get
-        GetBetsByMatchDayIdAndSquad:
+        GetBetsByMatchDayIdAndSquadAsGuest:
           Type: Api
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
             Method: get
+        GetBetsByMatchDayIdAndSquadAsUser:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}/mine
+            Method: get
         SubmitBet:
           Type: Api
           Properties:
-            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}/mine
             Method: post
         SubmitBetOptions:
           Type: Api
           Properties:
-            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}/mine
             Method: options
         GetPoolById:
           Type: Api

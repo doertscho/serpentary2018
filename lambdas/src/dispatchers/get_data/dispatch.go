@@ -72,12 +72,20 @@ func getRequest(
 		return handlers.GetMatchDayById(&tournamentId, &matchDayId)
 	}
 
-	if matchPath("tournaments", "_", "match-days", "_", "bets", "_") {
+	if matchPath("tournaments", "_", "match-days", "_", "bets", "_", "mine") {
 		tournamentId := (*params)["tournamentId"]
 		matchDayId := (*params)["matchDayId"]
 		squadId := (*params)["squadId"]
 		return handlers.GetBetsByMatchDayAndSquadId(
 			&tournamentId, &matchDayId, &squadId, userId)
+	}
+
+	if matchPath("tournaments", "_", "match-days", "_", "bets", "_") {
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
+		squadId := (*params)["squadId"]
+		return handlers.GetBetsByMatchDayAndSquadId(
+			&tournamentId, &matchDayId, &squadId, nil)
 	}
 
 	if matchPath("tournaments", "_", "pools", "_") {
@@ -118,7 +126,7 @@ func postRequest(
 		return handlers.AddUserToPool(&squadId, &tournamentId, userId)
 	}
 
-	if matchPath("tournaments", "_", "match-days", "_", "bets", "_") {
+	if matchPath("tournaments", "_", "match-days", "_", "bets", "_", "mine") {
 		tournamentId := (*params)["tournamentId"]
 		matchDayId := (*params)["matchDayId"]
 		squadId := (*params)["squadId"]

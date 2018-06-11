@@ -42,7 +42,7 @@ export const fetchMatchDay = (
       callbacks
   )
 
-export const fetchBets = (
+export const fetchBetsAsGuest = (
   squadId: string,
   tournamentId: string,
   matchDayId: string,
@@ -52,6 +52,19 @@ export const fetchBets = (
       '/tournaments/' + tournamentId +
         '/match-days/' + matchDayId +
         '/bets/' + squadId,
+      callbacks
+  )
+
+export const fetchBetsAsUser = (
+  squadId: string,
+  tournamentId: string,
+  matchDayId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId +
+        '/match-days/' + matchDayId +
+        '/bets/' + squadId + '/mine',
       callbacks,
       true
   )
@@ -97,7 +110,7 @@ export const postBet = (
     callbacks?: Callbacks
   ) => postData(
     '/tournaments/' + tournamentId + '/match-days/' + matchDayId +
-      '/bets/' + squadId,
+      '/bets/' + squadId + '/mine',
     callbacks,
     base64encode(m.Bet.encode(bet).finish())
   )

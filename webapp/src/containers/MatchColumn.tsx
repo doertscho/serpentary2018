@@ -27,27 +27,27 @@ interface State {
   showCountdown: boolean
 }
 
-const readOnlyBet = (bet: m.Bet) => {
-  switch (bet.status) {
-    case m.BetStatus.MISSING:
-      return (
-        <div key={bet.userId} className="bet missing" title="Bet missing">
-          <i className="fas fa-minus"></i>
-        </div>
-      )
-    case m.BetStatus.HIDDEN:
-      return (
-        <div key={bet.userId} className="bet hidden" title="Hidden bet">
-          <i className="fas fa-user-secret"></i>
-        </div>
-      )
-    default:
-      return (
-        <div key={bet.userId} className="bet">
-          {bet.homeGoals}{' : '}{bet.awayGoals}
-        </div>
-      )
-  }
+const readOnlyBet = (bet: m.Bet, canEnterBets: boolean) => {
+
+  if (bet.status == m.BetStatus.MISSING)
+    return (
+      <div key={bet.userId} className="bet missing" title="Bet missing">
+        <i className="fas fa-minus"></i>
+      </div>
+    )
+
+  if (bet.status == m.BetStatus.HIDDEN || canEnterBets)
+    return (
+      <div key={bet.userId} className="bet hidden" title="Hidden bet">
+        <i className="fas fa-user-secret"></i>
+      </div>
+    )
+
+  return (
+    <div key={bet.userId} className="bet">
+      {bet.homeGoals}{' : '}{bet.awayGoals}
+    </div>
+  )
 }
 
 const usersBet = (
@@ -118,7 +118,7 @@ class matchColumnView extends React.Component<Props, State> {
             if (userId == bet.userId) {
               return usersBet(bet, showBetForm, canEnterBets)
             } else {
-              return readOnlyBet(bet)
+              return readOnlyBet(bet, canEnterBets)
             }
           }) }
         </div>
