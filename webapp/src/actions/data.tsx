@@ -199,22 +199,36 @@ const fetch = (
   path: string,
   dispatch: Dispatch<StoreState>,
   callbacks?: Callbacks,
-  withIdentity?: boolean
+  withIdentity?: boolean,
+  retries?: number
 ) => {
+  if (retries === undefined) retries = 1
   apiGet(path, withIdentity)
     .then(response => handleResponse(response, path, dispatch, callbacks))
-    .catch(error => handleError(error, path, dispatch, callbacks))
+    .catch(error =>
+      handleError(
+        error, path, dispatch, callbacks, retries,
+        (remainingRetries: number) =>
+          fetch(path, dispatch, callbacks, withIdentity, remainingRetries)
+    ))
 }
 
 const post = (
  path: string,
  dispatch: Dispatch<StoreState>,
  callbacks?: Callbacks,
- data?: string
+ data?: string,
+ retries?: number
 ) => {
- apiPost(path, data)
-   .then(response => handleResponse(response, path, dispatch, callbacks))
-   .catch(error => handleError(error, path, dispatch, callbacks))
+  if (retries === undefined) retries = 1
+  apiPost(path, data)
+    .then(response => handleResponse(response, path, dispatch, callbacks))
+    .catch(error =>
+      handleError(
+        error, path, dispatch, callbacks, retries,
+        (remainingRetries: number) =>
+          post(path, dispatch, callbacks, data, remainingRetries)
+    ))
 }
 
 function handleResponse(
@@ -230,7 +244,25 @@ function handleResponse(
 
 function handleError(
     error: any, path: string,
-    dispatch: Dispatch<StoreState>, callbacks?: Callbacks
+    dispatch: Dispatch<StoreState>, callbacks?: Callbacks,
+    retries?: number, retryFunc?: (remainingRetries: number) => void
+) {
+  console.log("error:", error)
+  console.log("retries:", retries)
+  if (retries) {
+    sessionManager.refreshSession(
+      () => retryFunc(retries - 1),
+      () => showError(error, path, dispatch, callbacks)
+    )
+    return
+  }
+
+  showError(error, path, dispatch, callbacks)
+}
+
+function showError(
+  error: any, path: string,
+  dispatch: Dispatch<StoreState>, callbacks?: Callbacks
 ) {
   let errorMessage = 'Request failed'
   if (error.message) errorMessage = error.message

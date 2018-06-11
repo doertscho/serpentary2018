@@ -7,6 +7,9 @@ export interface SessionManager {
   retrieveSession:
     (onSuccess: (userName: string) => void, onError?: () => void) => void
 
+  refreshSession:
+    (onSuccess: () => void, onError?: () => void) => void
+
   retrieveUserAttributes: (
     onSuccess: (attributes: { [key: string]: string }) => void,
     onError?: () => void
