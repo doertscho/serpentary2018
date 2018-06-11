@@ -75,7 +75,8 @@ const translation_de: Translation = {
     'Vorschläge, was diese Seite nützlicher machen könnte, ' +
     'kannst du jederzeit über das Ticketsystem des Projekts übermitteln. ' +
     'Dieses erreichst du über das Käfer-Icon in der oberen Navigation.',
-  DASHBOARD_TOURNAMENTS: 'Derzeit aktive Wettbewerbe',
+  DASHBOARD_TOURNAMENTS: 'Derzeit laufende Wettbewerbe',
+  DASHBOARD_POOLS: 'Derzeit aktive Tippspiele',
 
   // tournament details page
   TOURNAMENT_PAGE_TITLE: 'Wettbewerbsinfo',
