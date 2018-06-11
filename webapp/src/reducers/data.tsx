@@ -11,11 +11,11 @@ import { DataAction } from '../actions'
 import { DataResponse } from '../actions/data'
 import { Reducer } from './base'
 
-export const dataReducer: Reducer<DataState, DataAction> = (state, action) => {
+export const dataReducer: Reducer<DataAction> = (state, action) => {
   switch(action.event) {
     case constants.RESPONSE:
       return {
-        data: mergeWithUpdate(state, (action as DataResponse).data)
+        data: mergeWithUpdate(state.data, (action as DataResponse).data)
       }
     case constants.ERROR:
       return {

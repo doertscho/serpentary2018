@@ -24,6 +24,7 @@ import {
   postBet,
   joinPool
 } from '../actions/data'
+import { setCurrentSquadId } from '../actions/session'
 import { showPopover, hidePopover } from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
@@ -64,6 +65,7 @@ interface Props extends Localisable {
   joinPool: (squadId: string, tournamentId: string) => void
   showPopover: (element: React.ReactElement<any>) => void
   hidePopover: () => void
+  updateCurrentSquadId: (squadId: string) => void
 }
 
 
@@ -84,8 +86,9 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     if (!participants || !participants.length) return true
     let matches = this.props.matches
     if (!matches || !matches.length) return true
+    let firstMatch = matches[0]
     let betsByMatch = this.props.betsByMatch
-    if (!betsByMatch) return true
+    if (!betsByMatch || !betsByMatch[firstMatch.id]) return true
 
     // if (any of) the current user's bets are marked as hidden, refresh too
     let userId = this.props.userId
@@ -183,6 +186,10 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
     this.showBetForm = this.showBetForm.bind(this)
     this.submitBet = this.submitBet.bind(this)
   }
+
+  componentDidMount() {
+    if (this.props.squadId) this.props.updateCurrentSquadId(this.props.squadId)
+  }
 }
 
 const getTournamentIdFromUrl = makeGetUrlParameter('tournament_id')
@@ -250,6 +257,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
       },
     joinPool: (squadId: string, tournamentId: string) => {
       dispatch(joinPool(squadId, tournamentId))
+    },
+    updateCurrentSquadId: (squadId: string) => {
+      dispatch(setCurrentSquadId(squadId))
     }
   }
 }

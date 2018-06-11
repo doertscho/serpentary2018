@@ -7,6 +7,7 @@ import { StoreState } from '../types'
 import { deadlineHasPassed } from '../rules'
 import { Action } from '../actions'
 import { fetchPool, Callbacks, joinPool } from '../actions/data'
+import { setCurrentSquadId } from '../actions/session'
 import { Localisable, withLocaliser, Localiser } from '../locales'
 import { makeGetUrlParameter } from '../selectors/util'
 import { getUserId } from '../selectors/session'
@@ -25,6 +26,7 @@ interface Props extends Localisable {
   fetchPool: (
     squadId: string, tournamentId: string, callbacks?: Callbacks) => void
   joinPool: (squadId: string, tournamentId: string) => void
+  updateCurrentSquadId: (squadId: string) => void
 }
 
 const notLoggedInBox = (l: Localiser) =>
@@ -191,6 +193,10 @@ class poolPage extends LazyLoadingComponent<Props, {}> {
       </div>
     )
   }
+
+  componentDidMount() {
+    if (this.props.squadId) this.props.updateCurrentSquadId(this.props.squadId)
+  }
 }
 
 const getSquadIdFromUrl = makeGetUrlParameter('squad_id')
@@ -223,6 +229,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
       },
     joinPool: (squadId: string, tournamentId: string) => {
       dispatch(joinPool(squadId, tournamentId))
+    },
+    updateCurrentSquadId: (squadId: string) => {
+      dispatch(setCurrentSquadId(squadId))
     }
   }
 }

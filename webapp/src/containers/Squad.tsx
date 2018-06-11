@@ -6,6 +6,7 @@ import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { Action } from '../actions'
 import { fetchSquad, Callbacks, joinSquad } from '../actions/data'
+import { setCurrentSquadId } from '../actions/session'
 import { Localisable, withLocaliser, Localiser } from '../locales'
 import { makeGetUrlParameter } from '../selectors/util'
 import { getUserId } from '../selectors/session'
@@ -21,6 +22,7 @@ interface Props extends Localisable {
   userId: string
   fetchSquad: (squadId: string, callbacks?: Callbacks) => void
   joinSquad: (squadId: string) => void
+  updateCurrentSquadId: (squadId: string) => void
 }
 
 const notLoggedInBox = (l: Localiser) =>
@@ -104,6 +106,10 @@ class squadPage extends LazyLoadingComponent<Props, {}> {
       </div>
     )
   }
+
+  componentDidMount() {
+    if (this.props.squadId) this.props.updateCurrentSquadId(this.props.squadId)
+  }
 }
 
 const getSquadIdFromUrl = makeGetUrlParameter('squad_id')
@@ -128,6 +134,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
     },
     joinSquad: (squadId: string) => {
       dispatch(joinSquad(squadId))
+    },
+    updateCurrentSquadId: (squadId: string) => {
+      dispatch(setCurrentSquadId(squadId))
     }
   }
 }

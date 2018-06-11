@@ -16,7 +16,7 @@ export interface InitAction {
 export type ActionType = constants.DATA | constants.SESSION | constants.UI
 
 export type ActionEvent =
-  constants.REQUEST | constants.RESPONSE | constants.ERROR
+  constants.REQUEST | constants.RESPONSE | constants.ERROR | constants.ONE_OFF
 
 export interface InitAction {
   type: constants.INIT
@@ -34,7 +34,8 @@ export interface BaseDataAction extends BaseAction<DataState> {
 
 export type SessionOperation =
   constants.SIGN_UP | constants.LOG_IN | constants.LOG_OUT |
-  constants.SET_LOCALE
+  constants.SET_LOCALE | constants.SET_CURRENT_SQUAD |
+  constants.USER_DATA_RECEIVED
 
 export interface BaseSessionAction extends BaseAction<SessionState> {
   type: constants.SESSION

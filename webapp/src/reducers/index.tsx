@@ -10,11 +10,11 @@ export function rootReducer(state: StoreState, action: Action): StoreState {
   console.log("got action:", action)
   switch (action.type) {
     case constants.DATA:
-      return copyWith(state, dataReducer(state.data, action), action)
+      return copyWith(state, dataReducer(state, action), action)
     case constants.SESSION:
-      return copyWith(state, sessionReducer(state.session, action), action)
+      return copyWith(state, sessionReducer(state, action), action)
     case constants.UI:
-      return copyWith(state, uiReducer(state.ui, action), action)
+      return copyWith(state, uiReducer(state, action), action)
     case constants.INIT:
       console.log("Initialisation finished.")
       return copyWith(state, { isInitialised: true }, action)
@@ -59,7 +59,6 @@ function getRequestId(action: Action): string {
     case constants.DATA:
       return action.path
     case constants.SESSION:
-      if (action.operation == constants.SET_LOCALE) return null
       return action.operation
   }
   return null

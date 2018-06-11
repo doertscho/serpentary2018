@@ -6,6 +6,7 @@ export interface SessionState {
   preferredUserName?: string
   errorMessage?: string
   locale?: string
+  currentSquadId?: string
 }
 
 export const INITIAL_SESSION_STATE: SessionState = {
