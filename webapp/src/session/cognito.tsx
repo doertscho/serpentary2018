@@ -32,34 +32,61 @@ export default class CognitoSessionManager implements SessionManager {
   }
 
   retrieveSession(onSuccess: (userName: string) => void, onError?: () => void) {
-
+    console.log('Trying to retrieve session from local storage.')
     if (!this.cognitoUser) {
       if (onError) onError()
       return
     }
-
     let self = this
     this.cognitoUser.getSession((err: Error, session: CognitoUserSession) => {
-
       if (err) {
         console.log('Session recovery failed.', err)
         if (onError) onError()
         return
       }
-
-      console.log('Received session from local recovery.', session)
-      self.cognitoSession = session
-      let accessToken =
-          session.getAccessToken() || { decodePayload: () => null }
-      let payload = accessToken.decodePayload() || {}
-      let userName = payload.username
-
-      if (!userName) {
-        if (onError) onError()
-        return
-      }
-      onSuccess(userName)
+      self.updateSession(session, onSuccess, onError)
     })
+  }
+
+  refreshSession(onSuccess: (userName: string) => void, onError?: () => void) {
+    console.log('Trying to refresh session.')
+    if (!this.cognitoUser || !this.cognitoSession) {
+      if (onError) onError()
+      return
+    }
+    let refreshToken = this.cognitoSession.getRefreshToken()
+    if (!refreshToken) {
+      if (onError) onError()
+      return
+    }
+    let self = this
+    this.cognitoUser.refreshSession(
+      refreshToken,
+      (err: Error, session: CognitoUserSession) => {
+        if (err) {
+          console.log('Session recovery failed.', err)
+          if (onError) onError()
+          return
+        }
+        self.updateSession(session, onSuccess, onError)
+      })
+  }
+
+  updateSession(
+    newSession: CognitoUserSession,
+    onSuccess: (userName: string) => void, onError?: () => void
+  ) {
+    console.log('Received session:', newSession)
+    this.cognitoSession = newSession
+    let accessToken =
+        newSession.getAccessToken() || { decodePayload: () => null }
+    let payload = accessToken.decodePayload() || {}
+    let userName = payload.username
+    if (!userName) {
+      if (onError) onError()
+      return
+    }
+    onSuccess(userName)
   }
 
   retrieveUserAttributes(
