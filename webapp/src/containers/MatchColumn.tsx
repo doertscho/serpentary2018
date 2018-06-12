@@ -8,7 +8,11 @@ import { Action } from '../actions'
 import { showPopover } from '../actions/ui'
 import { Localisable, withLocaliser } from '../locales'
 import { getUserId } from '../selectors/session'
-import { secondsToTimeout } from '../rules'
+import {
+  secondsToTimeout,
+  EXACT_POINTS, DIFFERENCE_POINTS, TENDENCY_POINTS,
+  isExact, isCorrectDifference, isCorrectTendency
+} from '../rules'
 
 import Match from '../components/Match'
 import MatchCountdown from '../components/MatchCountdown'
@@ -27,7 +31,7 @@ interface State {
   showCountdown: boolean
 }
 
-const readOnlyBet = (bet: m.Bet, canEnterBets: boolean) => {
+const readOnlyBet = (bet: m.Bet, canEnterBets: boolean, match: m.Match) => {
 
   if (bet.status == m.BetStatus.MISSING)
     return (
@@ -44,7 +48,7 @@ const readOnlyBet = (bet: m.Bet, canEnterBets: boolean) => {
     )
 
   return (
-    <div key={bet.userId} className="bet">
+    <div key={bet.userId} className={'bet ' + betClass(bet, match)}>
       {bet.homeGoals}{' : '}{bet.awayGoals}
     </div>
   )
@@ -53,7 +57,8 @@ const readOnlyBet = (bet: m.Bet, canEnterBets: boolean) => {
 const usersBet = (
   bet: m.Bet,
   showForm: (bet: m.Bet) => void,
-  canEnterBets: boolean
+  canEnterBets: boolean,
+  match: m.Match
 ) => {
 
   if (canEnterBets) {
@@ -77,12 +82,19 @@ const usersBet = (
       return <div key={bet.userId} className="bet my-bet missing">–</div>
     } else {
       return (
-        <div key={bet.userId} className="bet my-bet">
+        <div key={bet.userId} className={'bet my-bet ' + betClass(bet, match)}>
           {bet.homeGoals}{' : '}{bet.awayGoals}
         </div>
       )
     }
   }
+}
+
+const betClass = (bet: m.Bet, match: m.Match) => {
+  if (isExact(bet, match)) return 'exact'
+  if (isCorrectDifference(bet, match)) return 'difference'
+  if (isCorrectTendency(bet, match)) return 'tendency'
+  return 'blank'
 }
 
 class matchColumnView extends React.Component<Props, State> {
@@ -116,9 +128,9 @@ class matchColumnView extends React.Component<Props, State> {
         <div className="bets">
           { bets.map(bet => {
             if (userId == bet.userId) {
-              return usersBet(bet, showBetForm, canEnterBets)
+              return usersBet(bet, showBetForm, canEnterBets, match)
             } else {
-              return readOnlyBet(bet, canEnterBets)
+              return readOnlyBet(bet, canEnterBets, match)
             }
           }) }
         </div>
