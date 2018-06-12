@@ -16,3 +16,15 @@ export const secondsToTimeout = (match: m.Match) => {
 export const canEnterBets = (match: m.Match) => secondsToTimeout(match) > 0
 
 export const deadlineHasPassed = (timestamp: number) => timestamp < now()
+
+export const isExact = (bet: m.Bet, match: m.Match) =>
+  bet.homeGoals == match.homeGoals && bet.awayGoals == match.awayGoals
+
+export const isCorrectDifference = (bet: m.Bet, match: m.Match) =>
+  ((bet.homeGoals - bet.awayGoals) == (match.homeGoals - match.homeGoals)) &&
+  (match.homeGoals != match.awayGoals)
+
+export const isCorrectTendency = (bet: m.Bet, match: m.Match) =>
+  (bet.homeGoals < bet.awayGoals && match.homeGoals < match.awayGoals) ||
+  (bet.homeGoals > bet.awayGoals && match.homeGoals > match.awayGoals) ||
+  (bet.homeGoals == bet.awayGoals && match.homeGoals == match.awayGoals)

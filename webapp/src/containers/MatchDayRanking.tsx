@@ -6,7 +6,10 @@ import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { Map, BetsByMatchTable } from '../types/data'
 import { Localisable, withLocaliser, Localiser } from '../locales'
-import { EXACT_POINTS, DIFFERENCE_POINTS, TENDENCY_POINTS } from '../rules'
+import {
+  EXACT_POINTS, DIFFERENCE_POINTS, TENDENCY_POINTS,
+  isExact, isCorrectDifference, isCorrectTendency
+} from '../rules'
 import { ModelSelector } from '../selectors/util'
 
 import UserIcon from '../components/UserIcon'
@@ -138,18 +141,6 @@ const makeGetTable = (
 
 const skipBet = (bet: m.Bet) =>
   !bet || bet.status == m.BetStatus.HIDDEN || bet.status == m.BetStatus.MISSING
-
-const isExact = (bet: m.Bet, match: m.Match) =>
-  bet.homeGoals == match.homeGoals && bet.awayGoals == match.awayGoals
-
-const isCorrectDifference = (bet: m.Bet, match: m.Match) =>
-  ((bet.homeGoals - bet.awayGoals) == (match.homeGoals - match.homeGoals)) &&
-  (match.homeGoals != match.awayGoals)
-
-const isCorrectTendency = (bet: m.Bet, match: m.Match) =>
-  (bet.homeGoals < bet.awayGoals && match.homeGoals < match.awayGoals) ||
-  (bet.homeGoals > bet.awayGoals && match.homeGoals > match.awayGoals) ||
-  (bet.homeGoals == bet.awayGoals && match.homeGoals == match.awayGoals)
 
 const makeMapStateToProps = () => {
   let getMatches = (state: StoreState, props: any) => props.matches
