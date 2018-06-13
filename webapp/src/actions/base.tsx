@@ -8,6 +8,11 @@ import { SessionState } from '../types/session'
 import { UiState } from '../types/ui'
 import { sessionManager } from '../session'
 
+export interface Callbacks {
+  onSuccess?: () => void
+  onError?: () => void
+}
+
 export interface InitAction {
   type: constants.INIT
   event: ActionEvent
@@ -44,7 +49,7 @@ export interface BaseSessionAction extends BaseAction<SessionState> {
 
 export type UiOperation =
   constants.SHOW_POPOVER | constants.HIDE_POPOVER |
-  constants.HIDE_ERROR
+  constants.SHOW_MESSAGE | constants.HIDE_MESSAGE
 
 export interface BaseUiAction extends BaseAction<UiState> {
   type: constants.UI

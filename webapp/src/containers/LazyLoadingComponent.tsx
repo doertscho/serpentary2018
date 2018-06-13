@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { Localisable } from '../locales'
-import { Callbacks } from '../actions/data'
+import { Callbacks } from '../actions/base'
 
 import Refresh from '../components/Refresh'
 

@@ -28,10 +28,6 @@ const translation_de: Translation = {
   LOG_IN: 'Anmelden',
   LOG_OUT: 'Abmelden',
   SIGN_UP: 'Registrieren',
-  SIGN_UP_SUCCESS:
-    'Vielen Dank, {}, deine Registrierung war erfolgreich. ' +
-    'Bitte bestätige deine E-Mail-Adresse, oder gib mir Bescheid, ' +
-    'damit ich deinen Account freischalten kann.' ,
 
   // log in and sign up
   LOG_IN_PAGE_TITLE: 'Anmeldung',
@@ -58,6 +54,10 @@ const translation_de: Translation = {
     'Dies ist optional, allerdings musst du mir andernfalls Bescheid geben ' +
     'und warten, bis ich deinen Account manuell aktiviert habe.',
   SIGN_UP_BUTTON: 'Bin dabei!',
+  SIGN_UP_SUCCESS:
+    'Vielen Dank, {}, deine Registrierung war erfolgreich. ' +
+    'Bitte bestätige deine E-Mail-Adresse, oder gib mir Bescheid, ' +
+    'damit ich deinen Account freischalten kann.',
 
   // dashboard page
   DASHBOARD_PAGE_TITLE: 'Übersicht',
@@ -98,6 +98,7 @@ const translation_de: Translation = {
   MATCH_DAY_BETS_PAGE_TITLE: 'Spieltag: Tipps',
   MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
   COUNTDOWN_CLOSED: 'geschlossen!',
+  BET_STORED: 'Dein Tipp wurde gespeichert!',
 
   // ranking tables
   RANKING_USER: 'Mensch / Hund',
@@ -138,6 +139,14 @@ const translation_de: Translation = {
   SELECT_TEAM: '- Wähle ein Team -',
   SELECT_PLAYER: '- Wähle einen Spieler -',
   AWARDED_POINTS: '{} Punkte',
+  EXTRA_BETS_STORED: 'Deine Sondertipps wurden gespeichert!',
+
+  // profile page
+  PROFILE_PAGE_TITLE: 'Profil und Einstellungen',
+  PROFILE_USER_ID_LABEL_HEAD: 'Deine Account-ID',
+  PROFILE_PREFERRED_NAME_HEAD: 'Dein Anzeigename',
+  PROFILE_SAVE_BUTTON: 'So sei es',
+  PROFILE_UPDATED: 'Deine Einstellungen wurden übernommen!',
 }
 
 export default translation_de

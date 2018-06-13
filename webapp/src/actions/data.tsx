@@ -7,13 +7,8 @@ import {
 import * as constants from '../constants'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
-import { BaseDataAction, apiGet, apiPost } from './base'
+import { Callbacks, BaseDataAction, apiGet, apiPost } from './base'
 import { sessionManager } from '../session'
-
-export interface Callbacks {
-  onSuccess?: () => void
-  onError?: () => void
-}
 
 /*
  * SESSION SYNC

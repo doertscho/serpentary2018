@@ -4,7 +4,8 @@ import { StoreState } from '../types'
 
 export const isInitialised = (state: StoreState) => state.isInitialised
 export const getPendingRequests = (state: StoreState) => state.pendingRequests
-export const getErrorMessage = (state: StoreState) => state.errorMessage
+export const getMessage = (state: StoreState) => state.message
+export const getMessageType = (state: StoreState) => state.messageType
 
 export const getData = (state: StoreState) => state.data
 export const getSession = (state: StoreState) => state.session

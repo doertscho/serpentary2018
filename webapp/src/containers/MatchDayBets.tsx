@@ -17,15 +17,20 @@ import { makeGetPool, makeGetParticipants } from '../selectors/Pool'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
 import { Action } from '../actions'
+import { Callbacks } from '../actions/base'
 import {
-  Callbacks,
   fetchBetsAsUser,
   fetchBetsAsGuest,
   postBet,
   joinPool
 } from '../actions/data'
 import { setCurrentSquadId } from '../actions/session'
-import { showPopover, hidePopover } from '../actions/ui'
+import {
+  showPopover,
+  hidePopover,
+  showMessage,
+  hideMessage
+} from '../actions/ui'
 
 import { LazyLoadingComponent } from './LazyLoadingComponent'
 import BetInputPopover from './BetInputPopover'
@@ -65,6 +70,8 @@ interface Props extends Localisable {
   joinPool: (squadId: string, tournamentId: string) => void
   showPopover: (element: React.ReactElement<any>) => void
   hidePopover: () => void
+  showMessage: (message: string) => void
+  hideMessage: () => void
   updateCurrentSquadId: (squadId: string) => void
 }
 
@@ -128,12 +135,21 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
   submitBet(match: m.Match, bet: m.Bet) {
     bet.matchId = match.id
     let hidePopover = this.props.hidePopover
+    let showMessage = this.props.showMessage
+    let hideMessage = this.props.hideMessage
+    let l = this.props.l
     this.props.postBet(
       this.props.squadId,
       this.props.tournamentId,
       this.props.matchDayId,
       bet,
-      { onSuccess: hidePopover }
+      {
+        onSuccess: () => {
+          hidePopover()
+          showMessage(l('BET_STORED', 'Your bet has been saved!'))
+          setTimeout(hideMessage, 3000)
+        }
+      }
     )
   }
 
@@ -246,6 +262,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
         dispatch(showPopover(element))
       },
     hidePopover: () => { dispatch(hidePopover()) },
+    showMessage: (message: string) => { dispatch(showMessage(message)) },
+    hideMessage: () => { dispatch(hideMessage()) },
     postBet: (
         squadId: string,
         tournamentId: string,

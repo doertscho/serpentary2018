@@ -6,6 +6,7 @@ import { StoreState } from '../types'
 import { supportedLocales } from '../locales'
 import { sessionManager } from '../session'
 import {
+  Callbacks,
   InitAction,
   BaseSessionAction,
   SessionOperation
@@ -74,16 +75,17 @@ function fetchAttributes() {
   }
 }
 
-export function updatePreferredName(newName: string) {
+export function updatePreferredName(newName: string, callbacks?: Callbacks) {
   return function(dispatch: Dispatch<StoreState>) {
     sessionManager.updatePreferredName(
       newName,
       () => {
         dispatch(sessionResponse(constants.LOG_IN, undefined, newName))
-        dispatch(postNewPreferredName(newName))
+        dispatch(postNewPreferredName(newName, callbacks))
       },
       () => {
         console.log("error updating preferred name")
+        if (callbacks && callbacks.onError) callbacks.onError()
       }
     )
   }

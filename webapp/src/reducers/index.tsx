@@ -45,8 +45,10 @@ function copyWith(
   return {
     isInitialised: changed.isInitialised || state.isInitialised,
     pendingRequests: pendingRequests,
-    errorMessage: changed.errorMessage !== undefined ?
-        changed.errorMessage : state.errorMessage,
+    message: changed.message !== undefined ?
+        changed.message : state.message,
+    messageType: changed.messageType !== undefined ?
+        changed.messageType : state.messageType,
 
     data: changed.data || state.data,
     session: changed.session || state.session,

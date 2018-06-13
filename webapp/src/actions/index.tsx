@@ -12,11 +12,11 @@ export type SessionAction =
   session.SetLocale
 
 export type UiAction =
-  ui.UiRequest
+  ui.UiEvent
 
 export type Action =
   InitAction |
   data.DataRequest | data.DataResponse | data.DataError |
   session.SessionRequest | session.SessionResponse | session.SessionError |
   session.SetLocale |
-  ui.UiRequest
+  UiAction
