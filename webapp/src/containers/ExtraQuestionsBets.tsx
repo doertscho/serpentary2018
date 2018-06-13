@@ -39,6 +39,7 @@ class extraBetsPage extends LazyLoadingComponent<Props, {}> {
       <div>
         <h1>{ l('EXTRA_QUESTIONS_BETS_PAGE_TITLE', 'Extra question bets') }</h1>
         <h2>{tournamentId} – #{squadId}</h2>
+        <p>(sorry, this is not yet available.)</p>
         { this.refreshComponent }
       </div>
     )
