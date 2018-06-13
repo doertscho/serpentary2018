@@ -52,7 +52,8 @@ const handleSignUpEvent: Reducer<SessionAction> = (state, action) => {
       }
     case constants.ERROR:
       return {
-        errorMessage: action.errorMessage,
+        message: action.errorMessage,
+        messageType: constants.MESSAGE_ERROR,
         session: copyWith(state.session, {
           errorMessage: action.errorMessage,
           userId: null
@@ -82,7 +83,8 @@ const handleLogInEvent: Reducer<SessionAction> = (state, action) => {
       }
     case constants.ERROR:
       return {
-        errorMessage: action.errorMessage,
+        message: action.errorMessage,
+        messageType: constants.MESSAGE_ERROR,
         session: copyWith(state.session, {
           errorMessage: action.errorMessage,
           userId: null

@@ -35,7 +35,12 @@ export const SHOW_POPOVER = 'SHOW_POPOVER'
 export type SHOW_POPOVER = typeof SHOW_POPOVER
 export const HIDE_POPOVER = 'HIDE_POPOVER'
 export type HIDE_POPOVER = typeof HIDE_POPOVER
-export const HIDE_ERROR = 'HIDE_ERROR'
-export type HIDE_ERROR = typeof HIDE_ERROR
+export const SHOW_MESSAGE = 'SHOW_MESSAGE'
+export type SHOW_MESSAGE = typeof SHOW_MESSAGE
+export const HIDE_MESSAGE = 'HIDE_MESSAGE'
+export type HIDE_MESSAGE = typeof HIDE_MESSAGE
 export const SET_CURRENT_SQUAD = 'SET_CURRENT_SQUAD'
 export type SET_CURRENT_SQUAD = typeof SET_CURRENT_SQUAD
+
+export const MESSAGE_NOTE = 'MESSAGE_NOTE'
+export const MESSAGE_ERROR = 'MESSAGE_ERROR'

@@ -26,7 +26,7 @@ import Rules from './containers/Rules'
 import Statistics from './containers/Statistics'
 import PopoverContainer from './containers/PopoverContainer'
 import ActivityReporter from './containers/ActivityReporter'
-import ErrorReporter from './containers/ErrorReporter'
+import MessageReporter from './containers/MessageReporter'
 import NotFound from './components/NotFound'
 
 require('../styles/img/logo.png')
@@ -125,7 +125,7 @@ class App extends React.Component<Props, any> {
             </Switch>
           </main>
           <ActivityReporter />
-          <ErrorReporter />
+          <MessageReporter />
           <PopoverContainer />
         </div>
       </BrowserRouter>

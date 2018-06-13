@@ -7,11 +7,15 @@ import { StoreState } from '../types'
 import { deadlineHasPassed } from '../rules'
 import { Localisable, withLocaliser } from '../locales'
 import { Action } from '../actions'
+import { Callbacks } from '../actions/base'
 import {
   fetchExtraQuestions,
-  postExtraQuestionBets,
-  Callbacks
+  postExtraQuestionBets
 } from '../actions/data'
+import {
+  showMessage,
+  hideMessage
+} from '../actions/ui'
 import { getUserId } from '../selectors/session'
 import { makeGetUrlParameter } from '../selectors/util'
 import { makeGetPool, makeGetExtraQuestionBetBucket } from '../selectors/Pool'
@@ -39,6 +43,8 @@ interface Props extends Localisable {
       betBucket: m.ExtraQuestionUserBetBucket,
       callbacks?: Callbacks
     ) => void
+  showMessage: (message: string) => void
+  hideMessage: () => void
 }
 
 type State = { [answerKey: string]: m.IExtraQuestionBet }
@@ -134,10 +140,23 @@ class extraBetsInputPage extends LazyLoadingComponent<Props, State> {
       }
       bets.push(bet)
     }
+
+    let showMessage = this.props.showMessage
+    let hideMessage = this.props.hideMessage
+    let l = this.props.l
+
     let betBucket = m.ExtraQuestionUserBetBucket.create({
       bets: bets, userId: this.props.userId })
     this.props.postExtraQuestionBets(
-      this.props.squadId, this.props.tournamentId, betBucket)
+      this.props.squadId, this.props.tournamentId, betBucket,
+      {
+        onSuccess: () => {
+          showMessage(
+            l('EXTRA_BETS_STORED', 'Your extra question bets have been saved!'))
+          setTimeout(hideMessage, 3000)
+        }
+      }
+    )
   }
 
   buildAnswerInputForm(q: m.IExtraQuestion) {
@@ -379,6 +398,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
         dispatch(postExtraQuestionBets(
             squadId, tournamentId, betBucket, callbacks))
       },
+    showMessage: (message: string) => { dispatch(showMessage(message)) },
+    hideMessage: () => { dispatch(hideMessage()) },
   }
 }
 

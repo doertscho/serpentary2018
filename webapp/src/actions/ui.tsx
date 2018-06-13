@@ -9,34 +9,44 @@ import {
   UiOperation
 } from './base'
 
-export interface UiRequest extends BaseUiAction {
-  event: constants.REQUEST
+export interface UiEvent extends BaseUiAction {
+  event: constants.ONE_OFF
   operation: UiOperation
   popoverElement?: React.ReactElement<any>
+  message?: string
 }
 
 export function showPopover(
-    popoverElement: React.ReactElement<any>): UiRequest {
+    popoverElement: React.ReactElement<any>): UiEvent {
   return {
     type: constants.UI,
-    event: constants.REQUEST,
+    event: constants.ONE_OFF,
     operation: constants.SHOW_POPOVER,
     popoverElement: popoverElement
   }
 }
 
-export function hidePopover(): UiRequest {
+export function hidePopover(): UiEvent {
   return {
     type: constants.UI,
-    event: constants.REQUEST,
+    event: constants.ONE_OFF,
     operation: constants.HIDE_POPOVER
   }
 }
 
-export function hideError(): UiRequest {
+export function showMessage(message: string): UiEvent {
   return {
     type: constants.UI,
-    event: constants.REQUEST,
-    operation: constants.HIDE_ERROR
+    event: constants.ONE_OFF,
+    operation: constants.SHOW_MESSAGE,
+    message: message
+  }
+}
+
+export function hideMessage(): UiEvent {
+  return {
+    type: constants.UI,
+    event: constants.ONE_OFF,
+    operation: constants.HIDE_MESSAGE
   }
 }

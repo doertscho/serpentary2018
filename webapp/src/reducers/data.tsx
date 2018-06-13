@@ -19,7 +19,8 @@ export const dataReducer: Reducer<DataAction> = (state, action) => {
       }
     case constants.ERROR:
       return {
-        errorMessage: action.errorMessage,
+        message: action.errorMessage,
+        messageType: constants.MESSAGE_ERROR
       }
     default:
       return { }
