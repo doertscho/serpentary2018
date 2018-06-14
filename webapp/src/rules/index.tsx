@@ -21,7 +21,7 @@ export const isExact = (bet: m.Bet, match: m.Match) =>
   bet.homeGoals == match.homeGoals && bet.awayGoals == match.awayGoals
 
 export const isCorrectDifference = (bet: m.Bet, match: m.Match) =>
-  ((bet.homeGoals - bet.awayGoals) == (match.homeGoals - match.homeGoals)) &&
+  ((bet.homeGoals - bet.awayGoals) == (match.homeGoals - match.awayGoals)) &&
   (match.homeGoals != match.awayGoals)
 
 export const isCorrectTendency = (bet: m.Bet, match: m.Match) =>
