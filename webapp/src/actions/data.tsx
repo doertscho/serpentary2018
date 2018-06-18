@@ -255,9 +255,11 @@ function handleError(
     dispatch: Dispatch<StoreState>, callbacks?: Callbacks,
     retries?: number, retryFunc?: (remainingRetries: number) => void
 ) {
-  console.log("error:", error)
+  console.log("error:", error, error.response)
   console.log("retries:", retries)
-  if (retries) {
+  let errorCode = 404
+  if (error.response && error.response.status) errorCode = error.response.status
+  if (retries && errorCode == 401) {
     sessionManager.refreshSession(
       () => retryFunc(retries - 1),
       () => showError(error, path, dispatch, callbacks)

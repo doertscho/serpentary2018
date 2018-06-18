@@ -99,6 +99,7 @@ const translation_de: Translation = {
   MATCH_DAY_BETS_BY_SQUAD: 'Prognosen der Tipprunde #{}',
   COUNTDOWN_CLOSED: 'geschlossen!',
   BET_STORED: 'Dein Tipp wurde gespeichert!',
+  NEXT_MATCH_DAY_LINK: 'Zum nächsten Spieltag',
 
   // ranking tables
   RANKING_USER: 'Mensch / Hund',
