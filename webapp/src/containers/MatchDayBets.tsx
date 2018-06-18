@@ -84,7 +84,6 @@ const clickToJoinBox = (l: Localiser, onClick: () => void) =>
 class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   getRequiredProps() {
-    console.log(this.props)
     return ['matchDay', 'pool', 'betsByMatch']
   }
 
@@ -154,6 +153,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
   }
 
   renderWithData() {
+    console.log('rendering MatchDayBets', this.props)
     let squadId = this.props.squadId
     let tournamentId = this.props.tournamentId
     let matchDay = this.props.matchDay
@@ -185,6 +185,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
         <div className="betMatrix">
           <UserColumn participants={participants} />
           <MatchDayBetBlock
+            squadId={squadId}
             matchDay={matchDay} matches={matches} teamsById={teamsById}
             getBets={getBets} makeShowBetForm={makeShowBetForm} />
         </div>
@@ -198,6 +199,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
 
   constructor(props: Props) {
     super(props)
+    console.log('constructing MatchDayBets', props)
 
     this.showBetForm = this.showBetForm.bind(this)
     this.submitBet = this.submitBet.bind(this)

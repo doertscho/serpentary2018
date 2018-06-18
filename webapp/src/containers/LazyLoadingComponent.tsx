@@ -27,6 +27,8 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
 
   render() {
 
+    console.log('render()', this.props)
+
     if (this.loadingInProgress())
       return this.renderLoading()
 
@@ -75,7 +77,7 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
     if (this.loadingState == LoadingState.DataAvailable) {
       return
     }
-    if (this.allRequiredPropsProvided()) {
+    if (this.allRequiredPropsProvided(this.props)) {
       this.loadingState = LoadingState.DataAvailable
       this.forceUpdate()
     } else {
@@ -107,8 +109,10 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
     return this.loadingState == LoadingState.NoDataLoaded
   }
 
-  componentWillMount() {
-    if (!this.allRequiredPropsProvided()) {
+  checkDataAvailability() {
+    console.log('checkDataAvailability', this.props)
+    if (this.loadingState == LoadingState.NoDataLoaded) return
+    if (!this.allRequiredPropsProvided(this.props)) {
       console.log('required props are missing, will request data')
       this.loadingState = LoadingState.LoadingInProgress
       this.requestData()
@@ -122,8 +126,27 @@ export class LazyLoadingComponent<Props extends Localisable, State> extends
     }
   }
 
-  allRequiredPropsProvided() {
-    let providedProps: { [key: string]: any } = this.props
+  componentWillMount() {
+    console.log('componentWillMount')
+    this.checkDataAvailability()
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate')
+    this.checkDataAvailability()
+  }
+
+  componentWillUpdate(nextProps: Props) {
+    console.log('componentWillUpdate', this.props, nextProps)
+    if (this.loadingState == LoadingState.NoDataLoaded) return
+    if (!this.allRequiredPropsProvided(nextProps) ||
+        this.shouldRefreshOnMount()) {
+      this.loadingState = LoadingState.LoadingInProgress
+    }
+  }
+
+  allRequiredPropsProvided(providedProps: { [key: string]: any }) {
+    console.log('allRequiredPropsProvided', providedProps)
     let requiredProps = this.getRequiredProps()
     for (var i = 0; i < requiredProps.length; i++) {
       let key = requiredProps[i]

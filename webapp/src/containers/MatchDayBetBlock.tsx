@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createSelector, ParametricSelector } from 'reselect'
 
@@ -17,6 +18,7 @@ interface InfoBlock {
 }
 
 interface Props extends Localisable {
+  squadId: string
   matchDay: m.MatchDay
   matches: m.Match[]
   teamsById: Map<m.Team>
@@ -31,6 +33,8 @@ interface Props extends Localisable {
 class matchDayBetBlockView extends React.Component<Props, {}> {
 
   render() {
+    let squadId = this.props.squadId
+    let matchDay = this.props.matchDay
     let matches = this.props.matches
     let getBets = this.props.getBets
     let teamsById = this.props.teamsById
@@ -38,6 +42,7 @@ class matchDayBetBlockView extends React.Component<Props, {}> {
     let stageBlocks = this.props.stageBlocks
     let dateBlocks = this.props.dateBlocks
     let timeBlocks = this.props.timeBlocks
+    let l = this.props.l
 
     return (
       <div className="matchDayBlock">
@@ -52,6 +57,22 @@ class matchDayBetBlockView extends React.Component<Props, {}> {
               match={match} teamsById={teamsById} bets={getBets(match)}
               showBetForm={makeShowBetForm(match)} />
           ) }
+          {
+            matchDay.nextId ?
+              <div className="matchDayLink">
+                <Link to={
+                  '/tournaments/' + matchDay.tournamentId +
+                  '/match-days/' + matchDay.nextId +
+                  '/bets/' + squadId
+                }>
+                  <span>
+                    { l('NEXT_MATCH_DAY_LINK', 'Go to the next match day') }
+                  </span>
+                  <i className="fas fa-chevron-right"></i>
+                </Link>
+              </div>
+              : null
+          }
         </div>
       </div>
     )
