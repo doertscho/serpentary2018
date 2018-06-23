@@ -47,7 +47,8 @@ const handleSignUpEvent: Reducer<SessionAction> = (state, action) => {
         session: copyWith(state.session, {
           errorMessage: null,
           userId: null,
-          unconfirmedUserId: action.userId
+          unconfirmedUserId: action.userId,
+          isAdmin: false
         })
       }
     case constants.ERROR:
@@ -56,7 +57,8 @@ const handleSignUpEvent: Reducer<SessionAction> = (state, action) => {
         messageType: constants.MESSAGE_ERROR,
         session: copyWith(state.session, {
           errorMessage: action.errorMessage,
-          userId: null
+          userId: null,
+          isAdmin: false
         })
       }
     default:
@@ -79,6 +81,7 @@ const handleLogInEvent: Reducer<SessionAction> = (state, action) => {
           userId: action.userId,
           unconfirmedUserId: null,
           preferredUserName: action.preferredUserName,
+          isAdmin: action.isAdmin
         })
       }
     case constants.ERROR:
@@ -87,7 +90,8 @@ const handleLogInEvent: Reducer<SessionAction> = (state, action) => {
         messageType: constants.MESSAGE_ERROR,
         session: copyWith(state.session, {
           errorMessage: action.errorMessage,
-          userId: null
+          userId: null,
+          isAdmin: false
         })
       }
     default:
@@ -103,7 +107,8 @@ const handleLogOutEvent: Reducer<SessionAction> = (state, action) => {
         session: copyWith(state.session, {
           userId: null,
           errorMessage: null,
-          preferredUserName: null
+          preferredUserName: null,
+          isAdmin: false
         })
       }
     default:
@@ -145,6 +150,8 @@ function copyWith(
         s.unconfirmedUserId : c.unconfirmedUserId,
     preferredUserName: c.preferredUserName === undefined ?
         s.preferredUserName : c.preferredUserName,
+    isAdmin: c.isAdmin === undefined ?
+        s.isAdmin : c.isAdmin,
     errorMessage: c.errorMessage === undefined ?
         s.errorMessage : c.errorMessage,
     locale: c.locale === undefined ?

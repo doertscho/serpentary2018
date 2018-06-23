@@ -313,3 +313,22 @@ Resources:
           Properties:
             Path: /me/preferred-name
             Method: post
+  Admin:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambdas/dist/admin
+      Runtime: go1.x
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Events:
+        UpdateMatchOptions:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/matches/{matchId}
+            Method: options
+        UpdateMatch:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/matches/{matchId}
+            Method: post

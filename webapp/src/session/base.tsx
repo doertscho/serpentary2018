@@ -4,8 +4,10 @@ export interface SessionManager {
 
   getHeadersForAuthorisedRequest: () => { [key: string]: string }
 
-  retrieveSession:
-    (onSuccess: (userName: string) => void, onError?: () => void) => void
+  retrieveSession: (
+    onSuccess: (userName: string, isAdmin: boolean) => void,
+    onError?: () => void
+  ) => void
 
   refreshSession:
     (onSuccess: () => void, onError?: () => void) => void
@@ -26,7 +28,7 @@ export interface SessionManager {
   logInUser: (
     userName: string,
     password: string,
-    onSuccess: () => void,
+    onSuccess: (isAdmin: boolean) => void,
     onError: (errorMessage?: string) => void
   ) => void
 

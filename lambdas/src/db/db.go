@@ -30,6 +30,8 @@ type Db interface {
 	GetMatchesByMatchDayId(
 		tournamentId *string, matchDayId *string) []*models.Match
 
+	UpdateMatchData(match *models.Match) error
+
 	GetSquadById(squadId *string) (*models.Squad, *[]*models.User)
 	AddUserToSquad(squadId *string, userId *string) (*models.Squad, *models.User)
 	UpdatePreferredNameForUserOnSquad(

@@ -47,8 +47,8 @@ function initUser() {
 function recoverSession() {
   return function(dispatch: Dispatch<StoreState>) {
     sessionManager.retrieveSession(
-      (userId: string) => {
-        dispatch(sessionResponse(constants.LOG_IN, userId))
+      (userId: string, isAdmin: boolean) => {
+        dispatch(sessionResponse(constants.LOG_IN, userId, undefined, isAdmin))
         dispatch(fetchAttributes())
         dispatch(getMe({ onSuccess: () => dispatch(userDataReceived()) }))
         // Attributes are not mandatory, signal initialisation completion now.
@@ -135,8 +135,8 @@ export function logIn(userId: string, password: string) {
     sessionManager.logInUser(
       userId,
       password,
-      () => {
-        dispatch(sessionResponse(operation, userId))
+      (isAdmin: boolean) => {
+        dispatch(sessionResponse(operation, userId, undefined, isAdmin))
         dispatch(recoverSession())
       },
       (errorMessage: string) => {
@@ -180,16 +180,21 @@ export interface SessionResponse extends BaseSessionAction {
   operation: SessionOperation
   userId?: string
   preferredUserName?: string
+  isAdmin?: boolean
 }
 export function sessionResponse(
-    operation: SessionOperation, userId?: string, preferredUserName?: string
+    operation: SessionOperation,
+    userId?: string,
+    preferredUserName?: string,
+    isAdmin?: boolean
 ): SessionResponse {
   return {
     type: constants.SESSION,
     event: constants.RESPONSE,
     operation: operation,
     userId: userId,
-    preferredUserName: preferredUserName
+    preferredUserName: preferredUserName,
+    isAdmin: isAdmin
   }
 }
 

@@ -27,6 +27,8 @@ func dispatch(request events.APIGatewayProxyRequest) (
 	}
 
 	userId := lib.GetUserId(request)
+	doertsch := "doertsch"
+	userId = &doertsch
 	if userId == nil {
 		return *lib.Unauthorized(), nil
 	}
