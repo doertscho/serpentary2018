@@ -132,6 +132,17 @@ export const postNewPreferredName = (
   )
 }
 
+export const postMatchData = (
+  match: m.Match,
+  callbacks?: Callbacks
+) => postData(
+  '/tournaments/' + match.tournamentId +
+    '/match-days/' + match.matchDayId +
+    '/matches/' + match.id,
+  callbacks,
+  base64encode(m.Match.encode(match).finish())
+)
+
 /*
  * ACTION CREATORS
  */

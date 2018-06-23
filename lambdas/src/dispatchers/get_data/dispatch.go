@@ -28,6 +28,8 @@ func dispatch(
 	}
 
 	userId := lib.GetUserId(request)
+	doertsch := "doertsch"
+	userId = &doertsch
 	matchPath := lib.MakePathMatcher(request.Path)
 
 	if request.HTTPMethod == "GET" {
@@ -139,6 +141,15 @@ func postRequest(
 		squadId := (*params)["squadId"]
 		return handlers.SubmitExtraQuestionBet(
 			&squadId, &tournamentId, userId, data)
+	}
+
+	// admin routes from here:
+	if matchPath("tournaments", "_", "match-days", "_", "matches", "_") {
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
+		matchId := (*params)["matchId"]
+		return handlers.UpdateMatchData(
+			&tournamentId, &matchDayId, &matchId, userId, data)
 	}
 
 	return nil

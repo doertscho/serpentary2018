@@ -22,4 +22,6 @@ message Match {
 
   uint32 home_goals = 11;
   uint32 away_goals = 12;
+
+  string group = 13;
 }

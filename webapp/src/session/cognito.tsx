@@ -31,7 +31,10 @@ export default class CognitoSessionManager implements SessionManager {
     return { Authorization: this.cognitoSession.getIdToken().getJwtToken() }
   }
 
-  retrieveSession(onSuccess: (userName: string) => void, onError?: () => void) {
+  retrieveSession(
+    onSuccess: (userName: string, isAdmin: boolean) => void,
+    onError?: () => void
+  ) {
     console.log('Trying to retrieve session from local storage.')
     if (!this.cognitoUser) {
       if (onError) onError()
@@ -48,7 +51,10 @@ export default class CognitoSessionManager implements SessionManager {
     })
   }
 
-  refreshSession(onSuccess: (userName: string) => void, onError?: () => void) {
+  refreshSession(
+    onSuccess: (userName: string, isAdmin: boolean) => void,
+    onError?: () => void
+  ) {
     console.log('Trying to refresh session.')
     if (!this.cognitoUser || !this.cognitoSession) {
       if (onError) onError()
@@ -74,7 +80,8 @@ export default class CognitoSessionManager implements SessionManager {
 
   updateSession(
     newSession: CognitoUserSession,
-    onSuccess: (userName: string) => void, onError?: () => void
+    onSuccess: (userName: string, isAdmin: boolean) => void,
+    onError?: () => void
   ) {
     console.log('Received session:', newSession)
     this.cognitoSession = newSession
@@ -86,7 +93,7 @@ export default class CognitoSessionManager implements SessionManager {
       if (onError) onError()
       return
     }
-    onSuccess(userName)
+    onSuccess(userName, this.isAdmin())
   }
 
   retrieveUserAttributes(
@@ -121,6 +128,18 @@ export default class CognitoSessionManager implements SessionManager {
     })
   }
 
+  isAdmin() {
+    let s = this.cognitoSession
+    if (!s) return false
+    let t = s.getIdToken()
+    if (!t) return false
+    let p = t.decodePayload()
+    return p &&
+      p['cognito:groups'] &&
+      p['cognito:groups'].length &&
+      p['cognito:groups'][0] == 'admins'
+  }
+
   signUpUser(
     userName: string,
     password: string,
@@ -151,7 +170,7 @@ export default class CognitoSessionManager implements SessionManager {
   logInUser(
     userName: string,
     password: string,
-    onSuccess: () => void,
+    onSuccess: (isAdmin: boolean) => void,
     onError: (errorMessage?: string) => void
   ) {
 
@@ -170,7 +189,7 @@ export default class CognitoSessionManager implements SessionManager {
     this.cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
         console.log('got result:', result)
-        onSuccess()
+        onSuccess(this.isAdmin())
       },
       onFailure: (err: Error) => {
         self.cognitoUser = null

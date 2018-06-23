@@ -4,10 +4,17 @@ import { connect, Dispatch } from 'react-redux'
 import { models as m } from '../types/models'
 import { StoreState } from '../types'
 import { Map, joinKeys } from '../types/data'
+import { Callbacks } from '../actions/base'
 import { Action } from '../actions'
-import { showPopover } from '../actions/ui'
+import { postMatchData } from '../actions/data'
+import {
+  showPopover,
+  hidePopover,
+  showMessage,
+  hideMessage
+} from '../actions/ui'
 import { Localisable, withLocaliser } from '../locales'
-import { getUserId } from '../selectors/session'
+import { getUserId, getIsAdmin } from '../selectors/session'
 import {
   secondsToTimeout,
   EXACT_POINTS, DIFFERENCE_POINTS, TENDENCY_POINTS,
@@ -16,6 +23,7 @@ import {
 
 import Match from '../components/Match'
 import MatchCountdown from '../components/MatchCountdown'
+import MatchInputPopover from './MatchInputPopover'
 import TeamIcon from '../components/TeamIcon'
 
 interface Props extends Localisable {
@@ -24,6 +32,12 @@ interface Props extends Localisable {
   teamsById: Map<m.Team>
   userId: string
   showBetForm: (bet: m.Bet) => void
+  showAdminOptions: boolean
+  postMatchData: (updatedMatch: m.Match, callbacks?: Callbacks) => void
+  showPopover: (element: React.ReactElement<any>) => void
+  hidePopover: () => void
+  showMessage: (message: string) => void
+  hideMessage: () => void
 }
 
 interface State {
@@ -115,9 +129,12 @@ class matchColumnView extends React.Component<Props, State> {
     if (this.props.teamsById[match.awayTeamId])
       awayTeamName = l(this.props.teamsById[match.awayTeamId].name)
 
+    let showMatchUpdateForm = this.props.showAdminOptions ?
+      this.showMatchUpdateForm : null
+
     return (
       <div className="matchWithBets">
-        <div className="match">
+        <div className="match" onClick={showMatchUpdateForm}>
           <TeamIcon teamId={match.homeTeamId} teamName={homeTeamName} />
           <TeamIcon teamId={match.awayTeamId} teamName={awayTeamName} />
         </div>
@@ -156,6 +173,32 @@ class matchColumnView extends React.Component<Props, State> {
     return '' + homeGoals + ' : ' + awayGoals
   }
 
+  showMatchUpdateForm() {
+    console.log('showMatchUpdateForm', this)
+    let doSubmit = this.submitMatchData
+    let submit = (updatedMatch: m.Match) => { doSubmit(updatedMatch) }
+    this.props.showPopover(
+      <MatchInputPopover postMatchData={submit} match={this.props.match} />
+    )
+  }
+
+  submitMatchData(match: m.Match) {
+    let hidePopover = this.props.hidePopover
+    let showMessage = this.props.showMessage
+    let hideMessage = this.props.hideMessage
+    let l = this.props.l
+    this.props.postMatchData(
+      match,
+      {
+        onSuccess: () => {
+          hidePopover()
+          showMessage(l('MATCH_DATA_STORED', 'Match data has been updated!'))
+          setTimeout(hideMessage, 3000)
+        }
+      }
+    )
+  }
+
   constructor(props: Props) {
     super(props)
 
@@ -168,6 +211,9 @@ class matchColumnView extends React.Component<Props, State> {
     let open = timeToClosure > 0
     let showCountdown = open && timeToClosure < 3600
     this.state = { canEnterBets: open, showCountdown: showCountdown }
+
+    this.showMatchUpdateForm = this.showMatchUpdateForm.bind(this)
+    this.submitMatchData = this.submitMatchData.bind(this)
 
     if (open) {
       let self = this
@@ -194,8 +240,26 @@ class matchColumnView extends React.Component<Props, State> {
 
 const mapStateToProps = withLocaliser((state: StoreState) => {
   return {
-    userId: getUserId(state)
+    userId: getUserId(state),
+    showAdminOptions: getIsAdmin(state),
   }
 })
 
-export default connect(mapStateToProps)(matchColumnView)
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    showPopover: (element: React.ReactElement<any>) => {
+        dispatch(showPopover(element))
+      },
+    hidePopover: () => { dispatch(hidePopover()) },
+    showMessage: (message: string) => { dispatch(showMessage(message)) },
+    hideMessage: () => { dispatch(hideMessage()) },
+    postMatchData: (
+        match: m.Match,
+        callbacks?: Callbacks
+      ) => {
+        dispatch(postMatchData(match, callbacks))
+      }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(matchColumnView)

@@ -38,12 +38,12 @@ export const getCurrentMatchDayId =
   createSelector(
     [getMatchDays],
     (   matchDays) => {
-      for (let matchDayId in matchDays) {
+      /*for (let matchDayId in matchDays) {
         let matchDay = matchDays[matchDayId]
         return matchDay.id
         // just throw out the first one you find for now
         // TODO: change before the second one begins :)
-      }
-      return 'group-stage-1'
+      }*/
+      return 'group-stage-2'
     }
   )

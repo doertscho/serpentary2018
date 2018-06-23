@@ -7,6 +7,7 @@ export interface SessionState {
   errorMessage?: string
   locale?: string
   currentSquadId?: string
+  isAdmin?: boolean
 }
 
 export const INITIAL_SESSION_STATE: SessionState = {
