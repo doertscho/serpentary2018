@@ -73,6 +73,7 @@ phases:
       # TODO: automate to build all files in lambdas/src/dispatchers
       - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get_data get_data/dispatch.go
       - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/get_session get_session/dispatch.go
+      - go build -o ${CODEBUILD_SRC_DIR}/lambdas/dist/admin admin/dispatch.go
 
       # == Web App build ==
       # Enter the Web App root directory
