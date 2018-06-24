@@ -28,8 +28,6 @@ func dispatch(
 	}
 
 	userId := lib.GetUserId(request)
-	doertsch := "doertsch"
-	userId = &doertsch
 	matchPath := lib.MakePathMatcher(request.Path)
 
 	if request.HTTPMethod == "GET" {
