@@ -44,6 +44,6 @@ export const getCurrentMatchDayId =
         // just throw out the first one you find for now
         // TODO: change before the second one begins :)
       }*/
-      return 'group-stage-2'
+      return 'group-stage-3'
     }
   )
