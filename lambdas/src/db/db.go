@@ -69,4 +69,8 @@ type Db interface {
 		tournamentId *string, matchDayId *string, squadId *string,
 		userId *string, bet *models.Bet,
 	) *models.MatchDayBetBucket
+
+	GetBetsByMatchDay(
+		tournamentId *string, matchDayId *string,
+	) []*models.MatchDayBetBucket
 }
