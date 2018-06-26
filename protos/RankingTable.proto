@@ -1,0 +1,29 @@
+syntax = "proto3";
+package models;
+
+message RankingTable {
+
+  fixed32 updated = 1;
+
+  string squad_id = 2;
+  string tournament_id = 3;
+  string match_day_id = 4;
+
+  repeated RankingEntry entries = 5;
+}
+
+message RankingEntry {
+
+  string user_id = 1;
+
+  uint32 position = 2;
+  uint32 previous_position = 3;
+
+  uint32 score = 4;
+
+  uint32 exact = 5;
+  uint32 difference = 6;
+  uint32 tendency = 7;
+
+  uint32 points_from_extra_bets = 8;
+}

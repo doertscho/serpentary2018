@@ -32,6 +32,7 @@ type Db interface {
 
 	UpdateMatchData(match *models.Match) error
 
+	GetSquads() []*models.Squad
 	GetSquadById(squadId *string) (*models.Squad, *[]*models.User)
 	AddUserToSquad(squadId *string, userId *string) (*models.Squad, *models.User)
 	UpdatePreferredNameForUserOnSquad(
@@ -69,4 +70,9 @@ type Db interface {
 		tournamentId *string, matchDayId *string, squadId *string,
 		userId *string, bet *models.Bet,
 	) *models.MatchDayBetBucket
+
+	GetRankingByMatchDayAndSquadId(
+		tournamentId *string, matchDayId *string, squadId *string,
+	) *models.RankingTable
+	WriteRankingTable(table *models.RankingTable) error
 }

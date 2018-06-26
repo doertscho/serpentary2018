@@ -183,6 +183,27 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: "2"
         WriteCapacityUnits: "2"
+  RankingTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['', [!Ref 'DbTablePrefix', 'rankings']]
+      AttributeDefinitions:
+        -
+          AttributeName: "squad_id"
+          AttributeType: "S"
+        -
+          AttributeName: "tournament_and_match_day_id"
+          AttributeType: "S"
+      KeySchema:
+        -
+          AttributeName: "squad_id"
+          KeyType: "HASH"
+        -
+          AttributeName: "tournament_and_match_day_id"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "2"
+        WriteCapacityUnits: "2"
 
   # Authorizer for the API Gateway
   CognitoAuthorizer:

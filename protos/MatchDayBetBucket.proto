@@ -31,6 +31,6 @@ message Bet {
 
   BetStatus status = 3;
 
-  int32 home_goals = 4;
-  int32 away_goals = 5;
+  uint32 home_goals = 4;
+  uint32 away_goals = 5;
 }
