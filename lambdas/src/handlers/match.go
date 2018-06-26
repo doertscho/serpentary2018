@@ -33,6 +33,10 @@ func UpdateMatchData(
 		return lib.InternalError()
 	}
 
+	if match.MatchStatus == models.MatchStatus_FINISHED {
+		calculateRanking(tournamentId, matchDayId, match)
+	}
+
 	matches := []*models.Match{match}
 	update := &models.Update{Matches: matches}
 	return lib.BuildUpdate(update)

@@ -17,7 +17,7 @@ message RankingEntry {
   string user_id = 1;
 
   uint32 position = 2;
-  int32 delta = 3;
+  uint32 previous_position = 3;
 
   uint32 score = 4;
 

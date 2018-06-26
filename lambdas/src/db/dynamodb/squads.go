@@ -7,6 +7,28 @@ import (
 	attr "github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
+func (db DynamoDb) GetSquads() []*models.Squad {
+
+	result, err := db.scanTable("squads")
+	if err != nil {
+		log.Println("error occurred querying squads: " + err.Error())
+		return nil
+	}
+
+	squads := make([]*models.Squad, len(result.Items))
+	for idx, val := range result.Items {
+		squad := models.Squad{}
+		err = attr.UnmarshalMap(val, &squad)
+		if err != nil {
+			log.Println("error unmarshalling item: " + err.Error())
+			return nil
+		}
+		squads[idx] = &squad
+	}
+
+	return squads
+}
+
 func (db DynamoDb) GetSquadById(
 	squadId *string,
 ) (*models.Squad, *[]*models.User) {
