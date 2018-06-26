@@ -11,6 +11,10 @@ func (db DynamoDb) GetRankingByMatchDayAndSquadId(
 	tournamentId *string, matchDayId *string, squadId *string,
 ) *models.RankingTable {
 
+	if tournamentId == nil || matchDayId == nil || squadId == nil {
+		return nil
+	}
+
 	record, err := db.getItemByCompoundKey(
 		"rankings",
 		"squad_id", squadId,
