@@ -80,6 +80,10 @@ function mergeWithUpdate(
       state.bets, update.bets, m.MatchDayBetBucket.create,
       b => joinKeys(b.squadId, b.tournamentId, b.matchDayId)
     )
+  let newRankings = mergeRecords(
+      state.rankingTables, update.rankingTables, m.RankingTable.create,
+      b => joinKeys(b.squadId, b.tournamentId, b.matchDayId)
+    )
   let newExtraQuestionBets = mergeRecords(
       state.extraQuestionBets, update.extraQuestionBets,
       m.ExtraQuestionBetBucket.create,
@@ -103,7 +107,8 @@ function mergeWithUpdate(
     poolsBySquad: newPoolsBySquad,
 
     bets: newBets,
-    extraQuestionBets: newExtraQuestionBets
+    extraQuestionBets: newExtraQuestionBets,
+    rankingTables: newRankings
   }
 }
 

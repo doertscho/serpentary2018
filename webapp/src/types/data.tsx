@@ -46,6 +46,7 @@ export interface DataState {
 
   bets: Map<m.MatchDayBetBucket>
   extraQuestionBets: Map<m.ExtraQuestionBetBucket>
+  rankingTables: Map<m.RankingTable>
 }
 
 export const INITIAL_DATA_STATE: DataState = {
@@ -66,6 +67,7 @@ export const INITIAL_DATA_STATE: DataState = {
 
   bets: {},
   extraQuestionBets: {},
+  rankingTables: {},
 }
 
 const tournamentOneName =
@@ -200,4 +202,5 @@ export const SAMPLE_DATA_STATE: DataState = {
 
   bets: sampleBets,
   extraQuestionBets: {},
+  rankingTables: {},
 }

@@ -88,6 +88,14 @@ func getRequest(
 			&tournamentId, &matchDayId, &squadId, nil)
 	}
 
+	if matchPath("tournaments", "_", "match-days", "_", "ranking", "_") {
+		tournamentId := (*params)["tournamentId"]
+		matchDayId := (*params)["matchDayId"]
+		squadId := (*params)["squadId"]
+		return handlers.GetRankingByMatchDayAndSquadId(
+			&tournamentId, &matchDayId, &squadId)
+	}
+
 	if matchPath("tournaments", "_", "pools", "_") {
 		tournamentId := (*params)["tournamentId"]
 		squadId := (*params)["squadId"]

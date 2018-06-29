@@ -10,6 +10,7 @@ import "Pool.proto";
 import "MatchDayBetBucket.proto";
 import "ExtraQuestionBetBucket.proto";
 import "Team.proto";
+import "RankingTable.proto";
 
 message Update {
 
@@ -26,4 +27,6 @@ message Update {
   repeated ExtraQuestionBetBucket extraQuestionBets = 8;
 
   repeated Team teams = 9;
+
+  repeated RankingTable ranking_tables = 10;
 }
