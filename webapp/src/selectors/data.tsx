@@ -19,6 +19,8 @@ export const getPoolsByTournament =
 export const getPoolsBySquad =
     (state: StoreState) => getData(state).poolsBySquad
 export const getBets = (state: StoreState) => getData(state).bets
+export const getRankingTables =
+    (state: StoreState) => getData(state).rankingTables
 export const getExtraQuestionBets =
     (state: StoreState) => getData(state).extraQuestionBets
 export const getTeams = (state: StoreState) => getData(state).teams

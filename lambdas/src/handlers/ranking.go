@@ -8,7 +8,44 @@ import (
 	"main/lib"
 	"main/models"
 	"sort"
+
+	"github.com/aws/aws-lambda-go/events"
 )
+
+func GetRankingByMatchDayAndSquadId(
+	tournamentId *string,
+	matchDayId *string,
+	squadId *string,
+) *events.APIGatewayProxyResponse {
+
+	matchDay := db.GetDb().GetMatchDayById(tournamentId, matchDayId)
+	if matchDay == nil {
+		return lib.NotFound()
+	}
+	matchDays := []*models.MatchDay{matchDay}
+
+	pool, users := db.GetDb().GetPoolById(squadId, tournamentId)
+	if pool == nil {
+		return lib.NotFound()
+	}
+	pools := []*models.Pool{pool}
+
+	rankingTable := db.GetDb().GetRankingByMatchDayAndSquadId(
+		tournamentId, matchDayId, squadId)
+	if rankingTable == nil {
+		return lib.NotFound()
+	}
+	rankingTables := []*models.RankingTable{rankingTable}
+
+	data := &models.Update{
+		MatchDays:     matchDays,
+		Pools:         pools,
+		Users:         *users,
+		RankingTables: rankingTables,
+	}
+
+	return lib.BuildUpdate(data)
+}
 
 func calculateRanking(
 	tournamentId *string, matchDayId *string, updatedMatch *models.Match,

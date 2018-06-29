@@ -81,7 +81,8 @@ class navigationView extends React.Component<Props, {}> {
         <li>
           <Link to={
             '/tournaments/' + tournamentId +
-            '/pools/' + squadId
+            '/match-days/' + matchDayId +
+            '/ranking/' + squadId
           }>
             { l('NAV_RANKING', 'Ranking') }
           </Link>

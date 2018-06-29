@@ -64,6 +64,19 @@ export const fetchBetsAsUser = (
       true
   )
 
+export const fetchRanking = (
+  squadId: string,
+  tournamentId: string,
+  matchDayId: string,
+  callbacks?: Callbacks
+) =>
+  fetchData(
+      '/tournaments/' + tournamentId +
+        '/match-days/' + matchDayId +
+        '/ranking/' + squadId,
+      callbacks
+  )
+
 export const fetchSquad = (squadId: string, callbacks?: Callbacks) =>
   fetchData('/squads/' + squadId, callbacks)
 

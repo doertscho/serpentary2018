@@ -260,6 +260,11 @@ Resources:
           Properties:
             Path: /tournaments/{tournamentId}/match-days/{matchDayId}/bets/{squadId}/mine
             Method: options
+        GetRankingByMatchDayIdAndSquad:
+          Type: Api
+          Properties:
+            Path: /tournaments/{tournamentId}/match-days/{matchDayId}/ranking/{squadId}
+            Method: get
         GetPoolById:
           Type: Api
           Properties:
