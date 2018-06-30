@@ -2,6 +2,7 @@ syntax = "proto3";
 package models;
 
 import "LocalisableString.proto";
+import "MatchType.proto";
 
 message Pool {
 
@@ -14,6 +15,8 @@ message Pool {
 
   repeated ExtraQuestion extra_questions = 5;
   fixed32 extra_questions_deadline = 6;
+
+  repeated BonusPointConfiguration bonus_points = 7;
 }
 
 message ExtraQuestion {
@@ -31,4 +34,9 @@ enum ExtraQuestionType {
   TEXT = 0;
   TEAM = 1;
   PLAYER = 2;
+}
+
+message BonusPointConfiguration {
+  MatchType match_type = 1;
+  uint32 bonus_points = 2;
 }

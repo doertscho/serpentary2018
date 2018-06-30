@@ -21,12 +21,14 @@ interface RankingTableEntry {
   tendencies: number
   differences: number
   exacts: number
+  bonusPoints: number
 }
 
 interface Props extends Localisable {
   matches: m.Match[]
   betsByMatch: BetsByMatchTable
   participants: m.User[]
+  pool: m.Pool
 
   rankingTable: RankingTableEntry[]
 }
@@ -47,7 +49,8 @@ class matchDayRankingView extends React.Component<Props, {}> {
             <td>{ l('RANKING_TENDENCY', 'Tendency') }</td>
             <td>{ l('RANKING_DIFFERENCE', 'Difference') }</td>
             <td>{ l('RANKING_EXACT', 'Exact') }</td>
-            <td>{ l('RANKING_SCORE', 'Score') }</td>
+            <td>{ l('RANKING_BONUS', 'Bonus points') }</td>
+            <td>{ l('RANKING_SCORE', 'Total score') }</td>
           </tr>
         </thead>
         <tbody className="rankingBody">
@@ -64,6 +67,7 @@ class matchDayRankingView extends React.Component<Props, {}> {
               <td>{entry.tendencies}</td>
               <td>{entry.differences}</td>
               <td>{entry.exacts}</td>
+              <td>{entry.bonusPoints}</td>
               <td>{entry.score}</td>
             </tr>
           ) }
@@ -76,10 +80,11 @@ class matchDayRankingView extends React.Component<Props, {}> {
 const makeGetTable = (
     getMatches: ModelSelector<m.Match[]>,
     getParticipants: ModelSelector<m.User[]>,
-    getBetsByMatch: ModelSelector<BetsByMatchTable>
+    getBetsByMatch: ModelSelector<BetsByMatchTable>,
+    getPool: ModelSelector<m.Pool>
   ) => createSelector(
-    [getMatches, getParticipants, getBetsByMatch],
-    (matches,       participants,    betsByMatch) => {
+    [getMatches, getParticipants, getBetsByMatch, getPool],
+    (   matches,    participants,    betsByMatch,    pool) => {
 
       if (!participants || participants.length == 0) return []
 
@@ -87,6 +92,14 @@ const makeGetTable = (
       for (let i = 0; i < matches.length; i++) {
         if (matches[i].matchStatus == m.MatchStatus.FINISHED) {
           finishedMatches.push(matches[i])
+        }
+      }
+
+      let bonusPointsByMatchType: { [matchType: number]: number } = {}
+      if (pool && pool.bonusPoints) {
+        for (let i = 0; i < pool.bonusPoints.length; i++) {
+          let config = pool.bonusPoints[i]
+          bonusPointsByMatchType[config.matchType] = config.bonusPoints
         }
       }
 
@@ -100,7 +113,8 @@ const makeGetTable = (
           score: 0,
           tendencies: 0,
           differences: 0,
-          exacts: 0
+          exacts: 0,
+          bonusPoints: 0
         }
 
         for (let j = 0; j < finishedMatches.length; j++) {
@@ -109,15 +123,26 @@ const makeGetTable = (
 
           if (skipBet(bet)) continue
 
+          let didScore = false
           if (isExact(bet, match)) {
             entry.exacts++
             entry.score += EXACT_POINTS
+            didScore = true
           } else if (isCorrectDifference(bet, match)) {
             entry.differences++
             entry.score += DIFFERENCE_POINTS
+            didScore = true
           } else if (isCorrectTendency(bet, match)) {
             entry.tendencies++
             entry.score += TENDENCY_POINTS
+            didScore = true
+          }
+
+          let bonus = bonusPointsByMatchType[match.matchType]
+          console.log("bonus", bonus, bonusPointsByMatchType, pool)
+          if (didScore && bonus) {
+            entry.bonusPoints += bonus
+            entry.score += bonus
           }
         }
         table.push(entry)
@@ -146,8 +171,10 @@ const makeMapStateToProps = () => {
   let getMatches = (state: StoreState, props: any) => props.matches
   let getParticipants = (state: StoreState, props: any) => props.participants
   let getBetsByMatch = (state: StoreState, props: any) => props.betsByMatch
+  let getPool = (state: StoreState, props: any) => props.pool
 
-  let getTable = makeGetTable(getMatches, getParticipants, getBetsByMatch)
+  let getTable = makeGetTable(
+      getMatches, getParticipants, getBetsByMatch, getPool)
 
   return withLocaliser((state: StoreState, props: any) => {
     return {

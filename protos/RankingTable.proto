@@ -26,4 +26,5 @@ message RankingEntry {
   uint32 tendency = 7;
 
   uint32 points_from_extra_bets = 8;
+  uint32 bonus_points = 9;
 }

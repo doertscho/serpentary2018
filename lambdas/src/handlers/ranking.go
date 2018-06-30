@@ -111,6 +111,11 @@ func calculateRankingForSquad(
 	log.Println("Calculating ranking for match day " + *matchDayId +
 		" and squad " + *squadId)
 
+	bonusPointsByMatchType := make(map[models.MatchType]uint32)
+	for _, configuration := range pool.BonusPoints {
+		bonusPointsByMatchType[configuration.MatchType] = configuration.BonusPoints
+	}
+
 	betsByUser := make(map[string]*models.UserBetBucket)
 	for _, betBucket := range bets.Bets {
 		betsByUser[betBucket.UserId] = betBucket
@@ -125,7 +130,10 @@ func calculateRankingForSquad(
 		if rankingEntriesByUser[userId] == nil {
 			rankingEntriesByUser[userId] = &models.RankingEntry{UserId: userId}
 		}
-		updateEntry(matchesById, &betsByUser, rankingEntriesByUser[userId])
+		updateEntry(
+			matchesById, &betsByUser, &bonusPointsByMatchType,
+			rankingEntriesByUser[userId],
+		)
 	}
 
 	rankingEntries := make([]*models.RankingEntry, len(rankingEntriesByUser))
@@ -169,6 +177,7 @@ func calculateRankingForSquad(
 func updateEntry(
 	matchesById *map[uint32]*models.Match,
 	betsByUser *map[string]*models.UserBetBucket,
+	bonusPointsByMatchType *map[models.MatchType]uint32,
 	entry *models.RankingEntry,
 ) {
 
@@ -182,15 +191,24 @@ func updateEntry(
 		if match == nil || match.MatchStatus != models.MatchStatus_FINISHED {
 			continue
 		}
+		didScore := false
 		if lib.IsExact(bet, match) {
 			entry.Exact = entry.Exact + 1
 			entry.Score = entry.Score + lib.EXACT_POINTS
+			didScore = true
 		} else if lib.IsCorrectDifference(bet, match) {
 			entry.Difference = entry.Difference + 1
 			entry.Score = entry.Score + lib.DIFFERENCE_POINTS
+			didScore = true
 		} else if lib.IsCorrectTendency(bet, match) {
 			entry.Tendency = entry.Tendency + 1
 			entry.Score = entry.Score + lib.TENDENCY_POINTS
+			didScore = true
+		}
+		if didScore {
+			bonusPoints := (*bonusPointsByMatchType)[match.MatchType]
+			entry.BonusPoints = entry.BonusPoints + bonusPoints
+			entry.Score = entry.Score + bonusPoints
 		}
 	}
 }
