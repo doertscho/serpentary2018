@@ -84,7 +84,8 @@ class rankingPage extends LazyLoadingComponent<Props, {}> {
               <td>{ l('RANKING_TENDENCY', 'Tendency') }</td>
               <td>{ l('RANKING_DIFFERENCE', 'Difference') }</td>
               <td>{ l('RANKING_EXACT', 'Exact') }</td>
-              <td>{ l('RANKING_SCORE', 'Score') }</td>
+              <td>{ l('RANKING_BONUS', 'Bonus points') }</td>
+              <td>{ l('RANKING_SCORE', 'Total score') }</td>
             </tr>
           </thead>
           <tbody className="rankingBody">
@@ -103,6 +104,7 @@ class rankingPage extends LazyLoadingComponent<Props, {}> {
                 <td>{entry.tendency}</td>
                 <td>{entry.difference}</td>
                 <td>{entry.exact}</td>
+                <td>{entry.bonusPoints}</td>
                 <td>{entry.score}</td>
               </tr>
             ) }

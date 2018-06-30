@@ -191,7 +191,7 @@ class matchDayBetsPage extends LazyLoadingComponent<Props, {}> {
         </div>
         <h2>{ l('MATCH_DAY_RANKING', 'Match day ranking') }</h2>
         <MatchDayRanking matches={matches} participants={participants}
-          betsByMatch={betsByMatch} />
+          betsByMatch={betsByMatch} pool={pool} />
         { this.refreshComponent }
       </div>
     )

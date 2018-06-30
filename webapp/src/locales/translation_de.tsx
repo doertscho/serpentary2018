@@ -106,7 +106,8 @@ const translation_de: Translation = {
   RANKING_TENDENCY: 'Tendenz',
   RANKING_DIFFERENCE: 'Differenz',
   RANKING_EXACT: 'Volltreffer',
-  RANKING_SCORE: 'Punkte',
+  RANKING_BONUS: 'Bonuspunkte',
+  RANKING_SCORE: 'Gesamt',
 
   // squad page
   SQUAD_PAGE_TITLE: 'Tipprunde',
