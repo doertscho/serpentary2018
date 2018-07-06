@@ -44,8 +44,12 @@ class matchDayBetBlockView extends React.Component<Props, {}> {
     let timeBlocks = this.props.timeBlocks
     let l = this.props.l
 
+    setTimeout(() => {
+      document.getElementById('matchDayBetBlock').scrollLeft = 2000
+    }, 100)
+
     return (
-      <div className="matchDayBlock">
+      <div className="matchDayBlock" id="matchDayBetBlock">
         <div className="matchInfo">
           <div className="infoLine">{ buildBlocks(stageBlocks) }</div>
           <div className="infoLine">{ buildBlocks(dateBlocks) }</div>
